@@ -284,7 +284,7 @@ get_residuals <- function(data, condition_column, experimental_columns, response
     # plot(Data[,"condition_column"], Data[,"residual"], xlab=condition_column, ylab=paste0(response_column, " Residual Value"), main=NULL)
     # abline(lm( as.formula( paste0( "residual ~  condition_column") ), data=Data),col='blue')
 
-    p <- ggplot(Data, aes(x=condition_column, y=residual, color=experimental_column1)) +
+    p <- ggplot2::ggplot(Data, aes(x=condition_column, y=residual, color=experimental_column1)) +
       geom_point() +
       geom_smooth(method = "lm", se = FALSE) +
       theme_bw()

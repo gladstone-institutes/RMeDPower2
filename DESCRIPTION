@@ -12,15 +12,16 @@ LazyData: true
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Depends: 
-    R (>= 2.10),
-    lme4
+    R (>= 4.0),
+    lme4,
+    dplyr,
+    magrittr,
+    ggplot2
 biocViews:
 Imports: 
-    dplyr,
-    ggplot2,
-    magrittr,
     tidyr,
     lmerTest,
     DHARMa,
     influence.ME,
-    simr
+    simr,
+    magick
