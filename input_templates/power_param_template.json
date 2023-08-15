@@ -1,0 +1,11 @@
+{
+  "target_columns": "target_columns",
+  "power_curve": 1,
+  "nsimn": 10,
+  "levels": 1,
+  "max_size": 1,
+  "alpha": 0.05,
+  "breaks": null,
+  "effect_size": null,
+  "icc": null
+}
