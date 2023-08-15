@@ -6,5 +6,5 @@
 install.packages("devtools")
 library(devtools)
 install_github('gladstone-institutes/RMeDPower2', build_vignettes=TRUE)
-library(RMeDPower)
+library(RMeDPower2)
 ```
