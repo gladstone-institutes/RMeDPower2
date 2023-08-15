@@ -1,3 +1,15 @@
+#' @title readProbabilityModel
+#'
+#' @description This functions reads the underlying design for the data
+#'
+#'
+#' @param jsonfile the jsonfile with the necessary parameters for probability model: error_is_non_normal, family_p
+#'
+#' @return an object of class ProbabilityModel
+#' @export
+#'
+#' @examples design=readPowerParams(jsonfile)
+
 readProbabilityModel <- function(jsonfile) {
   Prob_Model_data <- jsonlite::fromJSON(jsonfile)
 

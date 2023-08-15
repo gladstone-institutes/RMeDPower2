@@ -1,4 +1,4 @@
-#' @title transform_data2_covariate
+#' @title transform_data
 #'
 #' @description This functions makes quantile-quanitle (qq) plots of i) raw residual values ii) log-transformed residual values iii) raw residual values after removing outliers, and iv) log-transformed residual values after removing outliers. To detect outliers, the function uses Rosner's test.
 #'
@@ -210,14 +210,14 @@ transform_data<-function(data, condition_column, experimental_columns, response_
     print(diag_plot2)
 
   }else{
-    simulationOutput <- simulateResiduals(lms[[1]], plot = F)
+    simulationOutput <- DHARMa::simulateResiduals(lms[[1]], plot = F)
     residual = residuals(simulationOutput, quantileFunction = qnorm)
     plot(simulationOutput)
-    plotResiduals(simulationOutput, form =  lms[[2]]$condition_column)
+    DHARMa::plotResiduals(simulationOutput, form =  lms[[2]]$condition_column)
   }
 
 
-  random_effects <- ranef(lms[[1]])
+  random_effects <- lme4::ranef(lms[[1]])
   temp_count_c <- 1
   for(c in rev(1:length(experimental_columns))) {
     qqnorm(random_effects[[temp_count_c]][,1], main = paste0("RANDOM_EFFECT_",experimental_columns[c], "_qq-plot"))
@@ -335,7 +335,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
     diag_plot2 <- plot(lms[[1]], sqrt(abs(resid(.))) ~ predict(., type = "link"), type = c("p", "smooth"), main = "scale-location (log transformed)")
     print(diag_plot2)
 
-    random_effects <- ranef(lms[[1]])
+    random_effects <- lme4::ranef(lms[[1]])
     temp_count_c <- 1
     for(c in rev(1:length(experimental_columns))) {
       qqnorm(random_effects[[temp_count_c]][,1], main = paste0("RANDOM_EFFECT_",experimental_columns[c], "_qq-plot"))

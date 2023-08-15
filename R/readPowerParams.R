@@ -1,3 +1,15 @@
+#' @title readPowerParams
+#'
+#' @description This functions reads the underlying design for the data
+#'
+#'
+#' @param jsonfile the jsonfile with the necessary parameters for statistical power estimation: target_columns, power_curve, nsimn, levels, max_size, alpha, breaks, effect_size, icc
+#'
+#' @return an object of class PowerParams
+#' @export
+#'
+#' @examples design=readPowerParams(jsonfile)
+
 readPowerParams <- function(jsonfile) {
   Power_Param_data <- jsonlite::fromJSON(jsonfile)
 

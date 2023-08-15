@@ -49,20 +49,6 @@ setClass("RMeDesign",
            na_action = "complete"
          ))
 
-# setValidity("RMeDesign", function(object) {
-#   if (!is.character(object@covariate) && !is.na(object@covariate)) {
-#     "covariate must be character or NA"
-#   } else {
-#     TRUE
-#   }
-#
-#   if (!is.character(object@crossed_columns) && !is.na(object@crossed_columns)) {
-#     "crossed_columns must be character or NA"
-#   } else {
-#     TRUE
-#   }
-#
-# })
 
 
 setClass("ProbabilityModel",
@@ -74,6 +60,7 @@ setClass("ProbabilityModel",
            error_is_non_normal = FALSE,
            family_p = NULL
          ))
+
 
 setClass("PowerParams",
          slots = list(
