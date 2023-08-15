@@ -200,7 +200,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
 
   if(error_is_non_normal==FALSE){
     ##raw qq
-    residual=check_normality_covariate(data, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
+    residual=check_normality(data, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
                                        response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
                                        error_is_non_normal = error_is_non_normal, image_title="QQplot (raw data)", na.action=na.action)
 
@@ -244,7 +244,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
       colnames(Data_updated)[1]=paste0(response_column,"_noOutlier")
 
       if(error_is_non_normal==FALSE){
-        check_normality_covariate(Data_noOutlier, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
+        check_normality(Data_noOutlier, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
                       response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
                       error_is_non_normal = FALSE,  image_title="QQplot (outlier excluded Data)", na.action=na.action)
       }
@@ -320,7 +320,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
     colnames(Data_updated)[1]=paste0(response_column,"_logTransformed")
 
 
-    residual=check_normality_covariate(Data_log, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
+    residual=check_normality(Data_log, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
                              response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
                              error_is_non_normal = FALSE,  image_title="QQplot (log transformed Data)", na.action=na.action)
 
@@ -367,7 +367,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
         colnames(Data_updated)[1]=paste0(response_column,"_logTransformed_noOutlier")
 
         ###qqplot
-        check_normality_covariate(Data_log_noOutlier, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
+        check_normality(Data_log_noOutlier, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
                         response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
                         error_is_non_normal = FALSE,  image_title="QQplot (log transformed & ouliter excluded Data)", na.action=na.action)
 
