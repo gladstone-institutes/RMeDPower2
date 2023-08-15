@@ -25,6 +25,272 @@
 #' @examples result=transform_data2(data=data, condition_column="classif", experimental_columns=c("experiment","line"), response_column="feature", condition_is_categorical=TRUE, error_is_non_normal=FALSE, alpha=0.05, crossed_columns = "line", method="cook", na.action="complete")
 #' @examples result=transform_data2(data=data, condition_column="classif", experimental_columns=c("experiment","line"), response_column="feature", condition_is_categorical=TRUE, error_is_non_normal=TRUE, family_p="poisson", alpha=0.05, crossed_columns = "line", method="cook", na.action="complete")
 
+transform_data<-function(data, condition_column, experimental_columns, response_column, total_column, condition_is_categorical, covariate=NA,
+                         crossed_columns = NA, error_is_non_normal=FALSE, family_p=NULL, alpha=0.05, na.action="complete"){
+
+
+  if(na.action=="complete"){
+
+    notNAindex=which( rowSums(is.na(data)) == 0 )
+
+  }else if(na.action=="unique"){
+
+    if(is.null(covariate)) notNAindex=which( rowSums(is.na(data[,c(condition_column, experimental_columns, response_column, covariate)])) == 0 )
+    else notNAindex=which( rowSums(is.na(data[,c(condition_column, experimental_columns, response_column)])) == 0 )
+
+
+  }
+
+
+
+  data=data[notNAindex,]
+
+
+  Data_updated=data
+
+
+  lms=get_model_and_data(data=data, condition_column=condition_column, experimental_columns=experimental_columns,
+                         response_column=response_column, total_column = total_column, condition_is_categorical=condition_is_categorical, covariate=covariate,
+                         crossed_columns=crossed_columns, error_is_non_normal=error_is_non_normal, family_p=family_p, na.action=na.action)
+
+
+  if(error_is_non_normal==FALSE){
+    ##raw qq
+    residual=check_normality(data, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
+                             response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
+                             error_is_non_normal = error_is_non_normal, image_title="QQplot (raw data)", na.action=na.action)
+
+    diag_plot1 <- plot(lms[[1]], resid(.) ~ predict(., type = "link"), type = c("p", "smooth"), main ="residuals vs fitted")
+    print(diag_plot1)
+    diag_plot2 <- plot(lms[[1]], sqrt(abs(resid(.))) ~ predict(., type = "link"), type = c("p", "smooth"), main ="scale-location")
+    print(diag_plot2)
+
+  }else{
+    simulationOutput <- DHARMa::simulateResiduals(lms[[1]], plot = F)
+    residual = residuals(simulationOutput, quantileFunction = qnorm)
+    plot(simulationOutput)
+    DHARMa::plotResiduals(simulationOutput, form =  lms[[2]]$condition_column)
+  }
+
+
+  random_effects <- lme4::ranef(lms[[1]])
+  temp_count_c <- 1
+  for(c in rev(1:length(experimental_columns))) {
+    qqnorm(random_effects[[temp_count_c]][,1], main = paste0("RANDOM_EFFECT_",experimental_columns[c], "_qq-plot"))
+    qqline(random_effects[[temp_count_c]][,1])
+    temp_count_c <- temp_count_c + 1
+  }
+
+  #if(method=="rosner"){
+
+  cutoffs=rosner_test(trait=residual, response_column=response_column, alpha=alpha, hist_text = "raw residual")
+
+  if(sum(is.na(cutoffs))<2){
+
+    Data_noOutlier=Data_updated
+    if(!is.na(cutoffs[1])){
+      Data_noOutlier[residual<=cutoffs[1],]=NA
+    }
+    if(!is.na(cutoffs[2])){
+      Data_noOutlier[residual>=cutoffs[2],]=NA
+    }
+
+
+    Data_updated=cbind(Data_noOutlier[,response_column], Data_updated)
+    colnames(Data_updated)[1]=paste0(response_column,"_noOutlier")
+
+    if(error_is_non_normal==FALSE){
+      check_normality(Data_noOutlier, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
+                      response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
+                      error_is_non_normal = FALSE,  image_title="QQplot (outlier excluded Data)", na.action=na.action)
+    }
+
+  }
+
+  #  }else if(method=="cook"){
+
+
+  #run regression
+
+  #run cook
+  fixed_global_variable_data<<-lms[[2]]
+  #family_p<<-family_p
+
+  choose_cols <- vector(mode = "character")
+  temp_count <- 0
+  for(c in 1:length(lms[[3]])) {
+    if(length(unique(lms[[2]][[lms[[3]][c]]])) > 2) {
+      temp_count <- temp_count + 1
+      choose_cols[temp_count] <- lms[[3]][c]
+    }
+  }
+
+  if(temp_count > 0) {
+    cooks_result=cooks_test(lms[[1]], lms[[2]], choose_cols, lms[[4]], response_column=response_column, hist_text="raw")
+  }
+  else {
+    print(paste("_________________________________Not enough grouping levels to perform the cook analyses on the experimental factors", sep=""))
+    return()
+  }
+
+
+  # }
+
+
+
+
+
+
+
+
+
+  if(error_is_non_normal==FALSE){
+
+    ########################do the same using log transformed values
+
+    ###log transform
+
+    Data_log=data
+    temp1=Data_log[, response_column]
+
+
+    #seperate zero and negative
+    if(min(Data_log[,response_column])<0){
+
+      temp2 = abs(min(temp1))/10 - min(temp1)
+      Data_log[,response_column]=log(Data_log[,response_column]+temp2)
+
+    }else if(min(Data_log[,response_column])==0){
+
+      temp2 = min(temp1[temp1>0])/10
+      Data_log[,response_column]=log(Data_log[,response_column]+temp2)
+
+    }else{
+
+      Data_log[,response_column]=log(Data_log[,response_column])
+
+    }
+
+
+    Data_updated=cbind(Data_log[,response_column], Data_updated)
+    colnames(Data_updated)[1]=paste0(response_column,"_logTransformed")
+
+
+    residual=check_normality(Data_log, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
+                             response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
+                             error_is_non_normal = FALSE,  image_title="QQplot (log transformed Data)", na.action=na.action)
+
+
+    lms=get_model_and_data(data=Data_log, condition_column=condition_column, experimental_columns=experimental_columns,
+                           response_column=response_column, condition_is_categorical=condition_is_categorical, covariate=covariate,
+                           crossed_columns=crossed_columns, error_is_non_normal=error_is_non_normal, family_p=family_p, na.action=na.action)
+
+
+    diag_plot1 <- plot(lms[[1]], resid(.) ~ predict(., type = "link"), type = c("p", "smooth"), main ="residuals vs fitted (log transformed)")
+    print(diag_plot1)
+    diag_plot2 <- plot(lms[[1]], sqrt(abs(resid(.))) ~ predict(., type = "link"), type = c("p", "smooth"), main = "scale-location (log transformed)")
+    print(diag_plot2)
+
+    random_effects <- lme4::ranef(lms[[1]])
+    temp_count_c <- 1
+    for(c in rev(1:length(experimental_columns))) {
+      qqnorm(random_effects[[temp_count_c]][,1], main = paste0("RANDOM_EFFECT_",experimental_columns[c], "_qq-plot"))
+      qqline(random_effects[[temp_count_c]][,1])
+      temp_count_c <- temp_count_c + 1
+    }
+
+    trait = residual ###change the feature as you want
+
+
+
+    #if(method=="rosner"){
+
+    cutoffs=rosner_test(trait=lms[[4]], response_column=response_column, alpha=alpha, hist_text = "log residual")
+
+    if(sum(is.na(cutoffs))<2){
+
+
+      Data_log_noOutlier=Data_log
+
+      if(!is.na(cutoffs[1])){
+        Data_log_noOutlier[residual<=cutoffs[1],]=NA
+      }
+      if(!is.na(cutoffs[2])){
+        Data_log_noOutlier[residual>=cutoffs[2],]=NA
+      }
+
+      Data_updated=cbind(Data_log_noOutlier[,response_column], Data_updated)
+      colnames(Data_updated)[1]=paste0(response_column,"_logTransformed_noOutlier")
+
+      ###qqplot
+      check_normality(Data_log_noOutlier, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
+                      response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
+                      error_is_non_normal = FALSE,  image_title="QQplot (log transformed & ouliter excluded Data)", na.action=na.action)
+
+    }
+
+    # }else if(method=="cook"){
+
+    #run regression
+
+    #run cook
+    fixed_global_variable_data<<-lms[[2]]
+    family_p<<-family_p
+
+    choose_cols <- vector(mode = "character")
+    temp_count <- 0
+    for(c in 1:length(lms[[3]])) {
+      if(length(unique(lms[[2]][[lms[[3]][c]]])) > 2) {
+        temp_count <- temp_count + 1
+        choose_cols[temp_count] <- lms[[3]][c]
+      }
+    }
+
+    if(temp_count > 0) {
+      cooks_result2=cooks_test(lms[[1]], lms[[2]], choose_cols, lms[[4]], response_column=response_column, hist_text="log transform")
+    }
+    else {
+      print(paste("_________________________________Not enough grouping levels to perform the cook analyses on the experimental factors", sep=""))
+      return()
+    }
+
+
+    #     }
+
+
+
+
+
+
+    # if(method=="rosner"){
+    #
+    #   return(Data_updated)
+    #
+    # }else if(method=="cook"){
+    names(cooks_result2) <- paste0(names(cooks_result2), "_logTransformed")
+    result=c(list(Data_updated ), cooks_result, cooks_result2)
+    names(result)[1]="Data_updated"
+    return(result)
+    # }
+
+  }else{
+
+    # if(method=="rosner"){
+    #
+    #   return(Data_updated)
+    #
+    # }else if(method=="cook"){
+    result=c(list(Data_updated ), cooks_result)
+    names(result)[1]="Data_updated"
+    return(result)
+    # }
+
+  }
+
+
+
+
+}
 
 rosner_test<- function (trait, response_column, alpha, hist_text) {
 
@@ -169,269 +435,3 @@ cooks_test<- function (model, fixed_global_variable_data, experimental_columns, 
 }
 
 
-transform_data<-function(data, condition_column, experimental_columns, response_column, total_column, condition_is_categorical, covariate=NA,
-                         crossed_columns = NA, error_is_non_normal=FALSE, family_p=NULL, alpha=0.05, na.action="complete"){
-
-
-  if(na.action=="complete"){
-
-    notNAindex=which( rowSums(is.na(data)) == 0 )
-
-  }else if(na.action=="unique"){
-
-    if(is.null(covariate)) notNAindex=which( rowSums(is.na(data[,c(condition_column, experimental_columns, response_column, covariate)])) == 0 )
-    else notNAindex=which( rowSums(is.na(data[,c(condition_column, experimental_columns, response_column)])) == 0 )
-
-
-  }
-
-
-
-  data=data[notNAindex,]
-
-
-  Data_updated=data
-
-
-  lms=get_model_and_data(data=data, condition_column=condition_column, experimental_columns=experimental_columns,
-                                   response_column=response_column, total_column = total_column, condition_is_categorical=condition_is_categorical, covariate=covariate,
-                                   crossed_columns=crossed_columns, error_is_non_normal=error_is_non_normal, family_p=family_p, na.action=na.action)
-
-
-  if(error_is_non_normal==FALSE){
-    ##raw qq
-    residual=check_normality(data, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
-                                       response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
-                                       error_is_non_normal = error_is_non_normal, image_title="QQplot (raw data)", na.action=na.action)
-
-    diag_plot1 <- plot(lms[[1]], resid(.) ~ predict(., type = "link"), type = c("p", "smooth"), main ="residuals vs fitted")
-    print(diag_plot1)
-    diag_plot2 <- plot(lms[[1]], sqrt(abs(resid(.))) ~ predict(., type = "link"), type = c("p", "smooth"), main ="scale-location")
-    print(diag_plot2)
-
-  }else{
-    simulationOutput <- DHARMa::simulateResiduals(lms[[1]], plot = F)
-    residual = residuals(simulationOutput, quantileFunction = qnorm)
-    plot(simulationOutput)
-    DHARMa::plotResiduals(simulationOutput, form =  lms[[2]]$condition_column)
-  }
-
-
-  random_effects <- lme4::ranef(lms[[1]])
-  temp_count_c <- 1
-  for(c in rev(1:length(experimental_columns))) {
-    qqnorm(random_effects[[temp_count_c]][,1], main = paste0("RANDOM_EFFECT_",experimental_columns[c], "_qq-plot"))
-    qqline(random_effects[[temp_count_c]][,1])
-    temp_count_c <- temp_count_c + 1
-  }
-
-  #if(method=="rosner"){
-
-    cutoffs=rosner_test(trait=residual, response_column=response_column, alpha=alpha, hist_text = "raw residual")
-
-    if(sum(is.na(cutoffs))<2){
-
-      Data_noOutlier=Data_updated
-      if(!is.na(cutoffs[1])){
-        Data_noOutlier[residual<=cutoffs[1],]=NA
-      }
-      if(!is.na(cutoffs[2])){
-        Data_noOutlier[residual>=cutoffs[2],]=NA
-      }
-
-
-      Data_updated=cbind(Data_noOutlier[,response_column], Data_updated)
-      colnames(Data_updated)[1]=paste0(response_column,"_noOutlier")
-
-      if(error_is_non_normal==FALSE){
-        check_normality(Data_noOutlier, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
-                      response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
-                      error_is_non_normal = FALSE,  image_title="QQplot (outlier excluded Data)", na.action=na.action)
-      }
-
-    }
-
-#  }else if(method=="cook"){
-
-
-    #run regression
-
-    #run cook
-    fixed_global_variable_data<<-lms[[2]]
-    #family_p<<-family_p
-
-    choose_cols <- vector(mode = "character")
-    temp_count <- 0
-    for(c in 1:length(lms[[3]])) {
-      if(length(unique(lms[[2]][[lms[[3]][c]]])) > 2) {
-        temp_count <- temp_count + 1
-        choose_cols[temp_count] <- lms[[3]][c]
-      }
-    }
-
-    if(temp_count > 0) {
-      cooks_result=cooks_test(lms[[1]], lms[[2]], choose_cols, lms[[4]], response_column=response_column, hist_text="raw")
-    }
-    else {
-      print(paste("_________________________________Not enough grouping levels to perform the cook analyses on the experimental factors", sep=""))
-      return()
-    }
-
-
- # }
-
-
-
-
-
-
-
-
-
-  if(error_is_non_normal==FALSE){
-
-    ########################do the same using log transformed values
-
-    ###log transform
-
-    Data_log=data
-    temp1=Data_log[, response_column]
-
-
-    #seperate zero and negative
-    if(min(Data_log[,response_column])<0){
-
-      temp2 = abs(min(temp1))/10 - min(temp1)
-      Data_log[,response_column]=log(Data_log[,response_column]+temp2)
-
-    }else if(min(Data_log[,response_column])==0){
-
-      temp2 = min(temp1[temp1>0])/10
-      Data_log[,response_column]=log(Data_log[,response_column]+temp2)
-
-    }else{
-
-      Data_log[,response_column]=log(Data_log[,response_column])
-
-    }
-
-
-    Data_updated=cbind(Data_log[,response_column], Data_updated)
-    colnames(Data_updated)[1]=paste0(response_column,"_logTransformed")
-
-
-    residual=check_normality(Data_log, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
-                             response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
-                             error_is_non_normal = FALSE,  image_title="QQplot (log transformed Data)", na.action=na.action)
-
-
-    lms=get_model_and_data(data=Data_log, condition_column=condition_column, experimental_columns=experimental_columns,
-                                     response_column=response_column, condition_is_categorical=condition_is_categorical, covariate=covariate,
-                                     crossed_columns=crossed_columns, error_is_non_normal=error_is_non_normal, family_p=family_p, na.action=na.action)
-
-
-    diag_plot1 <- plot(lms[[1]], resid(.) ~ predict(., type = "link"), type = c("p", "smooth"), main ="residuals vs fitted (log transformed)")
-    print(diag_plot1)
-    diag_plot2 <- plot(lms[[1]], sqrt(abs(resid(.))) ~ predict(., type = "link"), type = c("p", "smooth"), main = "scale-location (log transformed)")
-    print(diag_plot2)
-
-    random_effects <- lme4::ranef(lms[[1]])
-    temp_count_c <- 1
-    for(c in rev(1:length(experimental_columns))) {
-      qqnorm(random_effects[[temp_count_c]][,1], main = paste0("RANDOM_EFFECT_",experimental_columns[c], "_qq-plot"))
-      qqline(random_effects[[temp_count_c]][,1])
-      temp_count_c <- temp_count_c + 1
-    }
-
-    trait = residual ###change the feature as you want
-
-
-
-    #if(method=="rosner"){
-
-      cutoffs=rosner_test(trait=lms[[4]], response_column=response_column, alpha=alpha, hist_text = "log residual")
-
-      if(sum(is.na(cutoffs))<2){
-
-
-        Data_log_noOutlier=Data_log
-
-        if(!is.na(cutoffs[1])){
-          Data_log_noOutlier[residual<=cutoffs[1],]=NA
-        }
-        if(!is.na(cutoffs[2])){
-          Data_log_noOutlier[residual>=cutoffs[2],]=NA
-        }
-
-        Data_updated=cbind(Data_log_noOutlier[,response_column], Data_updated)
-        colnames(Data_updated)[1]=paste0(response_column,"_logTransformed_noOutlier")
-
-        ###qqplot
-        check_normality(Data_log_noOutlier, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
-                        response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
-                        error_is_non_normal = FALSE,  image_title="QQplot (log transformed & ouliter excluded Data)", na.action=na.action)
-
-      }
-
-   # }else if(method=="cook"){
-
-      #run regression
-
-      #run cook
-      fixed_global_variable_data<<-lms[[2]]
-      family_p<<-family_p
-
-      choose_cols <- vector(mode = "character")
-      temp_count <- 0
-      for(c in 1:length(lms[[3]])) {
-        if(length(unique(lms[[2]][[lms[[3]][c]]])) > 2) {
-          temp_count <- temp_count + 1
-          choose_cols[temp_count] <- lms[[3]][c]
-        }
-      }
-
-      if(temp_count > 0) {
-        cooks_result2=cooks_test(lms[[1]], lms[[2]], choose_cols, lms[[4]], response_column=response_column, hist_text="log transform")
-      }
-      else {
-        print(paste("_________________________________Not enough grouping levels to perform the cook analyses on the experimental factors", sep=""))
-        return()
-      }
-
-
-#     }
-
-
-
-
-
-
-    # if(method=="rosner"){
-    #
-    #   return(Data_updated)
-    #
-    # }else if(method=="cook"){
-      names(cooks_result2) <- paste0(names(cooks_result2), "_logTransformed")
-      result=c(list(Data_updated ), cooks_result, cooks_result2)
-      names(result)[1]="Data_updated"
-      return(result)
-    # }
-
-  }else{
-
-    # if(method=="rosner"){
-    #
-    #   return(Data_updated)
-    #
-    # }else if(method=="cook"){
-      result=c(list(Data_updated ), cooks_result)
-      names(result)[1]="Data_updated"
-      return(result)
-    # }
-
-  }
-
-
-
-
-}
