@@ -103,8 +103,8 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
 
   cat("\n")
-  print("__________________________________________________________________Summary of data:")
-  print(summary(Data))
+  # print("__________________________________________________________________Summary of data:")
+  # print(summary(Data))
   cat("\n")
 
   colnames_original=colnames(Data)
@@ -127,7 +127,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
 
     cat("\n")
-    print(paste("_________________________________",experimental_columns[i]," is assigned to experimental_column",i,sep=""))
+    # print(paste("_________________________________",experimental_columns[i]," is assigned to experimental_column",i,sep=""))
     cat("\n")
   }
 
@@ -280,8 +280,8 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
   slmerFit <- summary(lmerFit)
   cat("\n")
-  print("__________________________________________________________________Model statistics:")
-  print(slmerFit)
+  # print("__________________________________________________________________Model statistics:")
+  # print(slmerFit)
   cat("\n")
 
   fixed_effects=slmerFit$coefficients[,1]
@@ -309,7 +309,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
     if(length(experimental_columns)==1){
       varEs=(slmerFit$sigma)^2*ICC/(1-ICC)
       cat("\n")
-      print(paste("__________________________________________________________________Estimated variance of the experimental variable:",varEs))
+      # print(paste("__________________________________________________________________Estimated variance of the experimental variable:",varEs))
       cat("\n")
     }else if(length(experimental_columns)==2){
 
@@ -317,7 +317,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
       b <- matrix(c( ICC[1]*(slmerFit$sigma)^2, ICC[2]*(slmerFit$sigma)^2 ) , nrow=2, ncol=1)
       varEs=solve(a,b)
       cat("\n")
-      print(paste("__________________________________________________________________Estimated variance of the experimental variables:",paste(varEs)))
+      # print(paste("__________________________________________________________________Estimated variance of the experimental variables:",paste(varEs)))
       cat("\n")
 
 
@@ -342,7 +342,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
       b <- matrix(c( ICC[1]*(slmerFit$sigma)^2, ICC[2]*(slmerFit$sigma)^2, ICC[3]*(slmerFit$sigma)^2 ) , nrow=3, ncol=1)
       varEs=solve(a,b)
       cat("\n")
-      print(paste("__________________________________________________________________Estimated variance of the experimental variables:",paste(varEs)))
+      # print(paste("__________________________________________________________________Estimated variance of the experimental variables:",paste(varEs)))
       cat("\n")
 
       if(covariate==NA){
@@ -367,7 +367,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
       b <- matrix(c( ICC[1]*(slmerFit$sigma)^2, ICC[2]*(slmerFit$sigma)^2, ICC[3]*(slmerFit$sigma)^2, ICC[4]*(slmerFit$sigma)^2 ) , nrow=4, ncol=1)
       varEs=solve(a,b)
       cat("\n")
-      print(paste("__________________________________________________________________Estimated variance of the experimental variables:",paste(varEs)))
+      # print(paste("__________________________________________________________________Estimated variance of the experimental variables:",paste(varEs)))
       cat("\n")
 
       if(covariate==NA){
@@ -391,7 +391,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
       b <- matrix(c( ICC[1]*(slmerFit$sigma)^2, ICC[2]*(slmerFit$sigma)^2, ICC[3]*(slmerFit$sigma)^2, ICC[4]*(slmerFit$sigma)^2, ICC[5]*(slmerFit$sigma)^2 ) , nrow=4, ncol=1)
       varEs=solve(a,b)
       cat("\n")
-      print(paste("__________________________________________________________________Estimated variance of the experimental variables:",paste(varEs)))
+      # print(paste("__________________________________________________________________Estimated variance of the experimental variables:",paste(varEs)))
       cat("\n")
 
 
@@ -414,9 +414,9 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
 
     cat("\n")
-    print(artificial_lmer)
-    print("__________________________________________________________________Model statistics:")
-    print(summary(artificial_lmer))
+    # print(artificial_lmer)
+    # print("__________________________________________________________________Model statistics:")
+    # print(summary(artificial_lmer))
     cat("\n")
     lmerFit=artificial_lmer
 
@@ -432,12 +432,12 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   lens=NULL
   for(i in 1:length(experimental_columns)){
     cat("\n")
-    print(paste("__________________________________________________________________Levels and sample sizes of",experimental_columns[i]))
+    # print(paste("__________________________________________________________________Levels and sample sizes of",experimental_columns[i]))
     cat("\n")
     xtabs_s=stats::xtabs(~Data[,paste0("experimental_column",i)])
 
 
-    print(xtabs_s)
+    # print(xtabs_s)
     maxs=c(maxs,max(xtabs_s))
     if(xtabs_s[1]==0){
       mins=c(mins,min(xtabs_s[-1]))
@@ -447,9 +447,9 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
     lens=c(lens,length(xtabs_s))
     cat("\n")
-    print(paste("_________________________________Max sample size:",maxs[i]))
-    print(paste("_________________________________Min sample size:",mins[i]))
-    print(paste("_________________________________Count of levels:",lens[i]))
+    # print(paste("_________________________________Max sample size:",maxs[i]))
+    # print(paste("_________________________________Min sample size:",mins[i]))
+    # print(paste("_________________________________Count of levels:",lens[i]))
     cat("\n")
   }
 
@@ -463,10 +463,11 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   if(length(effect_size)>0){
 
 
-    fixef(lmerFit)["condition_column1"] <- effect_size
+    fixef(lmerFit)[2] <- effect_size
 
     cat("\n")
     print(paste0("_________________________________Effect size of the condition_column is now ",effect_size))
+    #print(summary(lmerFit))
     cat("\n")
 
   }
@@ -495,7 +496,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
           max_size[i]=lens[target_i[i]]*5
         }else if(max_size[i]<lens[target_i[i]]){
           cat("\n")
-          print(paste("_________________________________Max size is set to ",max_size[i]," which is smaller than the observed max size ",lens[target_i[i]],". The observed max size will be used instead.",sep=""))
+          # print(paste("_________________________________Max size is set to ",max_size[i]," which is smaller than the observed max size ",lens[target_i[i]],". The observed max size will be used instead.",sep=""))
           cat("\n")
           max_size[i]=lens[target_i[i]]
         }
@@ -511,7 +512,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
           max_size[i]=maxs[target_i[i]]*5
         }else if(max_size[i]<maxs[target_i[i]]){
           cat("\n")
-          print(paste("_________________________________Max size is set to ",max_size[i]," which is smaller than the observed max size ",maxs[target_i[i]],". The observed max size will be used instead.",sep=""))
+          # print(paste("_________________________________Max size is set to ",max_size[i]," which is smaller than the observed max size ",maxs[target_i[i]],". The observed max size will be used instead.",sep=""))
           cat("\n")
           max_size[i]=maxs[target_i[i]]
         }
@@ -523,33 +524,33 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
         }
       }
       cat("\n")
-      print(paste("Input max size of",target_columns[i]))
-      print(max_size[i])
+      # print(paste("Input max size of",target_columns[i]))
+      # print(max_size[i])
       cat("\n")
 
     }
 
     cat("\n")
-    print("__________________________________________________________________Extended parameters:")
+    # print("__________________________________________________________________Extended parameters:")
     for(i in 1:length(target_columns)){
       if(target_columns_renamed[i]=="experimental_column1"){
-        print(xtabs(~experimental_column1,data=attributes(extended_target_columns)$newData))
+        # print(xtabs(~experimental_column1,data=attributes(extended_target_columns)$newData))
         cat("\n")
       }
       if(target_columns_renamed[i]=="experimental_column2"){
-        print(xtabs(~experimental_column2,data=attributes(extended_target_columns)$newData))
+        # print(xtabs(~experimental_column2,data=attributes(extended_target_columns)$newData))
         cat("\n")
       }
       if(target_columns_renamed[i]=="experimental_column3"){
-        print(xtabs(~experimental_column3,data=attributes(extended_target_columns)$newData))
+        # print(xtabs(~experimental_column3,data=attributes(extended_target_columns)$newData))
         cat("\n")
       }
       if(target_columns_renamed[i]=="experimental_column4"){
-        print(xtabs(~experimental_column4,data=attributes(extended_target_columns)$newData))
+        # print(xtabs(~experimental_column4,data=attributes(extended_target_columns)$newData))
         cat("\n")
       }
       if(target_columns_renamed[i]=="experimental_column5"){
-        print(xtabs(~experimental_column5,data=attributes(extended_target_columns)$newData))
+        # print(xtabs(~experimental_column5,data=attributes(extended_target_columns)$newData))
         cat("\n")
       }
 
@@ -561,24 +562,24 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
           attributes(extended_target_columns)$newData[,experimental_columns_index[r]]=paste(attributes(extended_target_columns)$newData[,experimental_columns_index[r-1]],attributes(extended_target_columns)$newData[,experimental_columns_index[r]],sep="_")
         }
       }
-      print(attributes(extended_target_columns)$newData)
+      # print(attributes(extended_target_columns)$newData)
     }
 
 
 
     ###### power simulation
 
-    ps=simr::powerSim(extended_target_columns, test=simr::fixed("condition_column"), nsim=nsimn)
+    ps=simr::powerSim(extended_target_columns, test=simr::fixed("condition_column"), nsim=nsimn, progress = FALSE)
     cat("\n")
-    print("__________________________________________________________________Power simulation result:")
-    print(ps)
+    # print("__________________________________________________________________Power simulation result:")
+    # print(ps)
     cat("\n")
     if(length(output)!=0){
       sink(paste0(output,".txt"))
-      print(ps)
+      # print(ps)
       sink()
     }else{
-      print(ps)
+      # print(ps)
     }
 
 
@@ -607,7 +608,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
           max_size[i]=lens[target_i[i]]*5
         }else if(max_size[i]<lens[target_i[i]]){
           cat("\n")
-          print(paste("_________________________________Max size is set to ",max_size[i]," which is smaller than the observed max size ",lens[target_i[i]],". The observed max size will be used instead.",sep=""))
+          # print(paste("_________________________________Max size is set to ",max_size[i]," which is smaller than the observed max size ",lens[target_i[i]],". The observed max size will be used instead.",sep=""))
           cat("\n")
           max_size[i]=lens[target_i[i]]
         }
@@ -621,34 +622,34 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
         extended_target_columns=c(extended_target_columns,list(simr::extend(lmerFit,within=target_columns_renamed[i],n=max_size[i])))
       }
       cat("\n")
-      print(paste("_________________________________Power simulation will be performed based on the max size of",target_columns[i],":"))
-      print(max_size[i])
+      # print(paste("_________________________________Power simulation will be performed based on the max size of",target_columns[i],":"))
+      # print(max_size[i])
       cat("\n")
 
     }
 
 
     cat("\n")
-    print("__________________________________________________________________Extended parameters:")
+    # print("__________________________________________________________________Extended parameters:")
     for(i in 1:length(target_columns)){
       if(target_columns_renamed[i]=="experimental_column1"){
-        print(xtabs(~experimental_column1,data=attributes(extended_target_columns[[i]])$newData))
+        # print(xtabs(~experimental_column1,data=attributes(extended_target_columns[[i]])$newData))
         cat("\n")
       }
       if(target_columns_renamed[i]=="experimental_column2"){
-        print(xtabs(~experimental_column2,data=attributes(extended_target_columns[[i]])$newData))
+        # print(xtabs(~experimental_column2,data=attributes(extended_target_columns[[i]])$newData))
         cat("\n")
       }
       if(target_columns_renamed[i]=="experimental_column3"){
-        print(xtabs(~experimental_column3,data=attributes(extended_target_columns[[i]])$newData))
+        # print(xtabs(~experimental_column3,data=attributes(extended_target_columns[[i]])$newData))
         cat("\n")
       }
       if(target_columns_renamed[i]=="experimental_column4"){
-        print(xtabs(~experimental_column4,data=attributes(extended_target_columns[[i]])$newData))
+        # print(xtabs(~experimental_column4,data=attributes(extended_target_columns[[i]])$newData))
         cat("\n")
       }
       if(target_columns_renamed[i]=="experimental_column5"){
-        print(xtabs(~experimental_column5,data=attributes(extended_target_columns[[i]])$newData))
+        # print(xtabs(~experimental_column5,data=attributes(extended_target_columns[[i]])$newData))
         cat("\n")
       }
 
@@ -661,7 +662,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
                                                                                       attributes(extended_target_columns)$newData[noncrossed_columns[r]],sep="_")
         }
       }
-      print(attributes(extended_target_columns)$newData)
+      # print(attributes(extended_target_columns)$newData)
     }
 
 
@@ -671,10 +672,10 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
       if(levels[i]==1){
 
           pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"),along=target_columns_renamed[i], nsim=nsimn,
-                            breaks=seq(1,max_size[i],breaks[i])   )
+                            breaks=seq(1,max_size[i],breaks[i]), progress = FALSE   )
       }else{
           pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"),within=target_columns_renamed[i], nsim=nsimn,
-                            breaks=seq(1,max_size[i],breaks[i])   )
+                            breaks=seq(1,max_size[i],breaks[i]), progress = FALSE   )
       }
 
 

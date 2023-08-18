@@ -51,8 +51,8 @@ check_normality<-function(data, condition_column, experimental_columns, response
   Data=data[notNAindex,]
 
   cat("\n")
-  print("__________________________________________________________________Summary of data:")
-  print(summary(Data))
+  # print("__________________________________________________________________Summary of data:")
+  # print(summary(Data))
   cat("\n")
 
   colnames_original=colnames(Data)
@@ -79,7 +79,7 @@ check_normality<-function(data, condition_column, experimental_columns, response
 
 
     cat("\n")
-    print(paste("_________________________________",experimental_columns[i]," is assigned to experimental_column",i,sep=""))
+    # print(paste("_________________________________",experimental_columns[i]," is assigned to experimental_column",i,sep=""))
     cat("\n")
   }
 

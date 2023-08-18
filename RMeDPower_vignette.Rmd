@@ -13,7 +13,7 @@ output:
 abstract: |
   Biomedical research very often involves data generated from repeated measures experiments. RMeDPower2 is an R package that provides complete functionality to analyse data coming from repeated measures experiments, i.e., where one has repeated measures from the same biological/independent units or samples. RMeDPower2 helps test the modeling assumptions one makes, identify outlier observations, outlier units at different levels of the design, estimates statistical power or perform sample size calculations, estimate parameters of interest and also to visualize the association being tested. The functionality is limited to testing associations of one predictor (continuous or categorical, e.g., disease status or brain pathology) along with one another covariate (e.g., gender status) in the context of hierarchical or crossed experimental designs. This vignette illustrates the use of this package in multiple contexts relevant to biomedical research. 
   
-  RMeDPower2 defines the experimental design for the data, probability model of the data generating distribution and necessary parameters required for sample size calculation using convenient S4 class objects. It uses these objects in one framework that brings together the functionality implemented in multiple R packages - lme4 (implementation of linear mixed effects models), influence.ME (identification of outlier units), EnvStats (identification of outlier observations), DHARMa (testing of modeling assumptions), simr (sample-size calculations) and tidyverse (data manipulation and visualization).
+  RMeDPower2 defines the experimental design for the data, probability model of the data generating distribution and necessary parameters required for sample size calculation using convenient S4 class objects. It uses these objects in one framework that brings together the functionality implemented in multiple R packages - lme4 (implementation of linear mixed effects models), influence.ME (identification of outlier units), EnvStats (identification of outlier observations), DHARMa (testing of modeling assumptions for non-normal distributions), simr (sample-size calculations) and tidyverse (data manipulation and visualization).
 vignette: |
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
@@ -21,6 +21,16 @@ vignette: |
 ---
 
 # Getting started
+
+## Installing `RMeDPower2`
+`RMeDPower2` can be installed using the following commands
+```{r eval=FALSE}
+install.packages("devtools")
+library(devtools)
+install_github('gladstone-institutes/RMeDPower2', build_vignettes=TRUE)
+##load the library
+library(RMeDPower2)
+```
 
 ## Quick tutorial
 The workflow can be accomplished in 5 main steps.
@@ -88,7 +98,8 @@ data <- read.csv(paste0(template_dir, "cell_size_data.csv"), header = T) %>%
 str(data)
 ```
 
-## `RMeDesign` S4 class
+## Three key classes of `RMeDPower2`
+### `RMeDesign` S4 class
 The underlying design for the data will be stored in an object of this class. The slots of this class are:
 
 1. `response_column`: character that is the column name in the input data table that captures the responses or individual observations. This has to be set by the user.
@@ -122,18 +133,18 @@ template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_ma
 design <- readDesign(paste0(template_dir,"design_cell_assay.json"))
 print(design)
 ```
-## `ProbabilityModel` S4 class
+### `ProbabilityModel` S4 class
 The error probability distribution is specified by two slots in objects of the `ProbabilityModel` class.
 
 1. `error_is_non_normal`: logical value that is TRUE if the underlying probability distribution is not assumed to be Normal and is FALSE otherwise.
 
-2. `family_p`: character value that specifies the probability distribution. Accepted values are _poisson_(`=poisson(link="log")`), _binomial_(`=binomial(link="logit")`), _bionomial_log_(`=binomial(link="log")`), _Gamma_log_(`=Gamma(link="log")`), _Gamma_(`=Gamma(link="inverse")`). Defaults to `NULL`.
+2. `family_p`: character value that specifies the probability distribution. Accepted values are _poisson_(`=poisson(link="log")`), _binomial_(`=binomial(link="logit")`), _bionomial_log_(`=binomial(link="log")`), _Gamma_log_(`=Gamma(link="log")`), _Gamma_(`=Gamma(link="inverse")`), _negative_binomial_. Defaults to `NULL`.
 
 ```{r}
 model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
 print(model)
 ```
-## `PowerParams` S4 class
+### `PowerParams` S4 class
 The parameters necessary for sample-size estimation are stored in the following slots of the `PowerParams` class.
 
  1. `target_columns`: character vector with column names of experimental variables for which the sample-size estimation is to be performed
@@ -151,10 +162,30 @@ power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
 print(power_param)
 ```
 
+## Three key functions of `RMeDPower2`
 
+### `diagnoseDataModel(data, design, model)` function
+Tests the model assumptions using quantile-quantile, residuals vs fitted and residuals versus predicted plots, transforms responses if feasible and identifies outlier observations and also outlier experimental units
+
+### `calculatePower(data, design, model, power_param)` function
+Performs sample-size calculations for given experimental design/target variable
+
+### `getEstimatesOfInterest(data, design, model)` function
+Estimates parameter of interest and also plots the resulting association with predictor of interest using residuals from the model that removes the effects of the modeled experimental variables
 
 # Application examples
 ## Plate assays
+
+
+iPSC lines from control and patient derived iPSCs from sALS patients were obtained through the Answer ALS (AALS) consortium36 . AALS is the largest repository of ALS patient samples, and contains publicly available patient-specific iPSCs and multi-OMIC data from motor neurons derived from those iPSCs—including RNA Seq, proteomics and whole genome sequence data— all of which is matched with longitudinal clinical data (https://dataportal.answerals.org/home)36. 
+
+```{r ALS, echo=FALSE, fig.align = "center", fig.cap='iPSC-derived ALS cell lines', fig.wide=TRUE, echo=FALSE}
+knitr::include_graphics("https://answerals.org/wp-content/uploads/2018/02/Snip20170905_16-1.png")
+```
+
+We used 6 control lines and 4 sALS lines. We differentiated each line into motor neurons, transduced with a morphology marker and imaged on day ~25 using RM37-45 as previously
+described36. Images were processed and the soma size of neurons were captured using contour ellipse46 function adapted for use in python (https://www.python.org/).
+
 ```{r}
 template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/cell_assay_data/"
 
@@ -192,21 +223,23 @@ estimate_res <- getEstimatesOfInterest(data_update, design_update, model)
 ##print model summary output
 print(estimate_res[[1]])
 ```
-### Sample-size estimation: Example 1
+We can also perform calculate the number of experimental batches needed to estimate the  observed differences in soma size.  
 ```{r eval=FALSE}
 power_res <- calculatePower(data_update, design_update, model, power_param)
 ```
 
-### Example 2
-duhjjp hojo
 
-## single-cell assays
-We will use data derived from the single-nuclei RNA-seq experiments performed in Koutsodendris et al. paper. One of the goals in these experiments was to assess the effect of the APOE gene isoform on brain pathology in a mouse model of Alzheimer's Disease (AD). Specifically, APOE4 gene isoform is an known risk factor for this disease in humans compared to those with the APOE3 gene isoform. The design of the data involved order 1000 cells derived from the hippocampus brain region of 3 mice with the human APOE3 gene knocked-in the mouse Apoe locus and 4 other mice with the human APOE4 gene knocked-in. The single cell data allowed the identification of multiple clusters or cell-types including cluster 7 representing a group of excitatory neurons consisted of nuclei.
+## single-cell RNA-seq assays
+We will use data derived from the single-nuclei RNA-seq experiments performed in Koutsodendris et al. paper. One of the goals in these experiments was to assess the effect of the APOE gene isoform on brain pathology in a mouse model of Alzheimer's Disease (AD). Specifically, APOE4 gene isoform is an known risk factor for this disease in humans compared to those with the APOE3 gene isoform. The paper tests the role of expression of neuronal APOE expression in the development of disease pathology. The design of the data involved order 1000 cells derived from the hippocampus brain region of 4 mice with the human APOE4 gene knocked-in the mouse Apoe locus and 4 other mice (called E4-KI-Syn1-Cre) with the human APOE4 gene also  knocked-in in the same mouse. However, the APOE4 expression in these mice is knocked out specifically in the neurons. The single cell data allowed the identification of multiple clusters or cell-types including cluster 7 representing a group of excitatory neurons consisted of nuclei.
 
-### Between cluster association
-We can first ask the question whether or not the proportion of nuclei derived from the APOE4-KI mice are different in cluster 7 compared to those derived from the APOE3-KI mice. More exactly, we want to test whether or not there is a difference in the log odds of cluster membership in cluster 7 among the APOE4-KI mice versus the APOE3-KI. The data consists of the number of nuclei per animal present in the cluster and also the total number of nuclei that were isolated from this animal.
+```{r singleCell, echo=FALSE, fig.align = "center", fig.cap='single nuclei RNA sequencing', fig.wide=TRUE, echo=FALSE}
+knitr::include_graphics("https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs43587-023-00368-3/MediaObjects/43587_2023_368_Fig5_HTML.png?as=webp")
+```
 
-#### Association with genotype
+### Cell-type/cluster associations
+We can first ask the question whether or not the proportion of nuclei derived from the APOE4-KI mice are different in cluster 7 compared to those derived from the APOE4-KI-Syn1-Cre mice. More exactly, we want to test whether or not there is a difference in the log odds of cluster membership in cluster 7 among the APOE4-KI mice versus the APOE4-KI-Syn1-Cre. The data consists of the number of nuclei per animal present in the cluster and also the total number of nuclei that were isolated from this animal.
+
+#### Associations with genotype
 ```{r}
 template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/single_cell_data/celltype_proportions_with_genotype/"
 data <- read.csv(paste0(template_dir, "apoe_associated_cell_proportions.csv"), header = T)
@@ -236,61 +269,235 @@ We can now estimate the log odds ratio of interest.
 estimate_res <- getEstimatesOfInterest(data, design, model)
 print(estimate_res[[1]])
 ```
-### Within cluster association
-duhjjp hojo
 
-## behavior assay
+And estimate whether or not statistical power we have to estimate the given observed association with varying number of mice per group.
 
-# Figures
-
-Assign captions to figures in the code chunk option `fig.cap` to automatically number them, and to be able to reference them, see Figure \@ref(fig:plot). The figure label is generated from the code chunk label by prefixing it with `fig:`.
-
-```{r plot, fig.cap="Regular figure. The first sentence of the figure caption is automatically emphasized to serve as figure title.", echo=FALSE}
-plot(cars)
+```{r eval=TRUE}
+print(power_param@target_columns)
+power_res <- calculatePower(data, design, model, power_param)
 ```
 
-Small and wide figures can be specified by `fig.small` and `fig.wide` code chunk options.
+#### Associations with hippocampus volume
+Next, we can first ask the question whether or not the proportion of nuclei derived from each of the  mice are associated with their hippocampus volumes. Note, more neuro-degeneration is linked to smaller hippocampus volumes. More exactly, we want to test whether or not there is a change in the log odds of cluster membership in cluster 7 corresponding to a unit change in the hippocampus volume. The above data provided includes the hippocampus volume for each mouse.
 
-```{r small, fig.cap="Small figure. A plot produced by a code chunk with option `fig.small = TRUE`.", fig.small=TRUE, echo=FALSE}
-plot(cars)
+```{r}
+##Associations of cell-type proportions with hippocampus volume
+design@condition_column = "Hippocampus_Vol_mm"
+design@condition_is_categorical = FALSE
+design@experimental_columns = c("animal_model", "sample_id")
+
+diagnose_res <- diagnoseDataModel(data, design, model)
+
 ```
 
-```{r wide, fig.cap="Wide figure. A plot produced by a code chunk with option `fig.wide = TRUE`.", fig.wide=TRUE, echo=FALSE}
-plot(cars)
+We can also estimate the parameter of interest - log odds ratio of cluster 7 membership per unit increase in hippocampus volume of associated mouse.
+
+```{r}
+estimate_res <- getEstimatesOfInterest(data, design, model)
+
+```
+
+And calculate the statistical power to estimate this association for different numbers of animals per group.
+
+```{r eval=TRUE}
+power_res <- calculatePower(data, design, model, power_param)
+```
+
+### Gene expression associations with genotype
+We will now estimate the association of the expression levels of the Snhg11 gene with genotype among cells in cluster 7 in the same data set. We will now load the raw counts for this gene and create the relevant RMeDesign, ProbabilityModel and PowerParams objects.
+
+```{r}
+template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/single_cell_data/gene_expression_with_genotype/"
+
+data <- read.csv(paste0(template_dir, "raw_counts_Snhg11_gene_cluster_7_snRNAseq_Koutsodendris_et_al_2023.csv"), header = T)
+# data %<>% mutate(genotype = gsub(" ", "-", genotype))
+# data %>% write.csv(., paste0(template_dir, "raw_counts_Snhg11_gene_cluster_7_snRNAseq_Koutsodendris_et_al_2023.csv"), row.names = F)
+head(data)
+
+design <- readDesign(paste0(template_dir,"design_gene_expression.json"))
+print(design)
+
+model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+print(model)
+
+power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+print(power_param)
+```
+
+Note, we will assume the underlying probability distribution for the counts is negative binomial and will control for differences in the sequencing depths or the total reads each cell receives using `library_size`.
+
+Diagnosis of the data and the model
+```{r}
+diagnose_res <- diagnoseDataModel(data, design, model)
 ```
 
 
-# Equations
+Estimate log-fold change of the Snhg11 gene with genotype.
+```{r}
+estimate_res <- getEstimatesOfInterest(data, design, model)
+print(estimate_res[[1]])
+```
+We can also perform a power analyses to detect a log(2) fold-change in this gene.
 
-To number and reference equations, put them in equation environments and assign labels to them, see Equation \@ref(eq:binom).
+```{r eval = FALSE}
+power_param@effect_size <- log(2)
+power_res <- calculatePower(data, design, model, power_param)
+```
 
-\begin{equation}
-  f\left(k\right) = \binom{n}{k} p^k\left(1-p\right)^{n-k}
-  (\#eq:binom)
-\end{equation}
+## Behavior assays
+Morris Water Maze (MWM) is an assay used to test spatial learning in animal models of diseases like Alzheimer's disease. The time recorded by each mouse to reach a target region (in the MWM) over multiple trials denoted as latency is the response of interest. Mouse models deficient in spatial learning would demonstrate an increased latency to reach the target region across the learning trials.
 
-
-# Tables
-
-Like figures, tables with captions will also be numbered and can be referenced, see Table \@ref(tab:table).
-
-Fruit   | Price
-------- | -----
-bananas | 1.2
-apples  | 1.0
-oranges | 2.5
-
-: (\#tab:table) A simple table. With caption.
+```{r MWM, echo=FALSE, fig.align = "center", fig.cap='Morris Water Maze', fig.wide=TRUE, echo=FALSE}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/MorrisWaterMaze.svg/1920px-MorrisWaterMaze.svg.png")
+```
 
 
-# Cross-references
+```{r}
+template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/behavior_data/"
+data <- read.csv(paste0(template_dir, "MWM_data.csv"), header = T)
+design <- readDesign(paste0(template_dir,"design_behavior.json"))
+model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
 
-Apart from referencing figures (Section \@ref(figures)), tables (Section \@ref(tables)), and equations (Section \@ref(equations)), you can also use the same syntax to refer to sections by their default labels generated by pandoc.
+
+```
+
+```{r}
+diagnose_res <- diagnoseDataModel(data, design, model)
+```
+Based on the above plots, it seems like the log transformed versions of the latency responses better fit the model assumptions. Therefore using these transformed responses we will estimate and visualize our parameter of interest.
+```{r}
+data_update <- diagnose_res$Data_updated
+design_update <- design
+design_update@response_column %<>% paste0(., "_logTransformed")
+estimate_res <- getEstimatesOfInterest(data_update, design_update, model)
+print(estimate_res[[1]])
+```
+We will also perform sample-size calculations for the number of mice needed per cohort.
+```{r eval=FALSE}
+power_param@target_columns <- "MouseID"
+power_res <- calculatePower(data_update, design_update, model, power_param)
+```
+
+## Brain electrical signal assays
+Patch clamp is a technique that can be used to measure membrane action potential in excitable cells like neurons. We will work with (simulated) data from two sets of mice - one representing a Alzheimer's Disease model (hAPP) and the other representing control or wild-type mice. In each of these mice, multiple brain tissue slices are isolated and the membrane action potential for at least one neuronal cell in each slice is recorded.
+
+```{r Patch, echo=FALSE, fig.align = "center", fig.cap='Patch clamp assay', fig.small=TRUE, echo=FALSE}
+knitr::include_graphics("https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41598-017-05607-3/MediaObjects/41598_2017_5607_Fig1_HTML.jpg")
+```
+
+```{r}
+template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/electrical_patch_clamp_data/"
+data <- read.csv(paste0(template_dir, "patch_clamp_data.csv"), header = T)
+head(data)
+
+design <- readDesign(paste0(template_dir,"design_patch_clamp.json"))
+print(design)
+
+model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+print(model)
+
+power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+print(power_param)
+
+```
+
+We will now evaluate the model.
+
+```{r}
+diagnose_res <-diagnoseDataModel(data, design, model)
+```
+
+ It does not look like the log transformation resulted significantly changed how well the model assumptions were being met. We will estimate the association of genotype using the responses in their natural scale.
+ 
+```{r}
+estimate_res <- getEstimatesOfInterest(data, design, model)
+print(estimate_res[[1]])
+```
+
+This is not significant at all. How many mice do we need to have 80% power to estimate the observed difference?
+
+```{r eval=FALSE}
+
+power_param@target_columns <- "Mice"
+power_param@effect_size <- 7
+power_res <- calculatePower(data, design, model, power_param)
+
+power_param@target_columns <- "slice_number"
+power_res <- calculatePower(data, design, model, power_param)
+
+```
+# Understanding simulations to estimate the power
+
+`RMeDPower2` is designed to simulate the effect of variability of the responses which could come from differences in the  processing batch, plates or cell lines on the responses of interest the cell assay data (described above for exampel). There are several ways to assess the impact of different choices for the experimental variables in this package as outlined below.
+
+First, a user can assess how increasing the number of independent experiments affects power. For example, if a user has a pilot dataset that consists of 3 experimental batches that each contain 2 plates, expanding this dataset two-fold would have the effect of simulating 6 experiments with a total of 12 plates \@ref(fig:exp). 
+
+```{r exp, echo=FALSE, fig.align = "center", fig.cap='Some cool caption', fig.wide=TRUE, echo=FALSE}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Figures/J-Kaye_M-Shin 20222503_Part5.png")
+```
+Alternatively, a user can assess how increasing the number of plates per experiment affects power. In the case where there are two experiments that each contain two plates, the user can double the number of plates used per experiment. In this way, the user can simulate how the statistical power changes as a result of increasing the number of plates used per experiment rather than increasing the number of experimental batches \@ref(fig:plate). 
+
+```{r plate, echo=FALSE, fig.align = "center", fig.cap='Some cool caption', fig.wide=TRUE, echo=FALSE}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Figures/J-Kaye_M-Shin 20222503_Part7.png")
+```
+
+In a third example, a user can examine the effect of expanding the number of cell lines within each experiment affects power \@ref(fig:line). This would capture the effect of increasing the number of cells assayed as a consequence of having more cell lines. This type of variable expansion can be accomplished by setting ‘level=1’ in the calculate_power function. 
+
+```{r line, echo=FALSE, fig.align = "center", fig.cap='Some cool caption', fig.wide=TRUE, echo=FALSE}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Figures/J-Kaye_M-Shin 20222503_Part9.png")
+```
 
 
-# Side notes
+Tables 1-3, in addition to the figures, show the change in cell number after variable expansion in experiment, plate or cell line, especially when the cell distribution is asymmetric.
+A user may want to examine the power of increasing the total number of cells measured from each experimental variable per experiment. For example, if there are 12 cells per cell line on plate 1, doubling the number of cells from each plate will result in assessing the effect in twice the number
+of cells per cell line, even if the number of experiments and cell lines remain the same \@ref(fig:plateCell). 
 
-Footnotes are displayed as side notes on the right margin^[this is a side note entered as a footnote], which has the advantage that they appear close to the place where they are defined.
+```{r plateCell, echo=FALSE, fig.align = "center", fig.cap='Some cool caption', fig.wide=TRUE, echo=FALSE}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Figures/J-Kaye_M-Shin 20222503_Part8.png")
+```
+
+
+Alternatively, one might want to assess the effect of increasing the total number of cells by increasing the number of cells per cell line \@ref(fig:lineCell). 
+
+```{r lineCell, echo=FALSE, fig.align = "center", fig.cap='Some cool caption', fig.wide=TRUE, echo=FALSE}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Figures/J-Kaye_M-Shin 20222503_Part10.png")
+```
+
+Expansion results for plates and cell lines may differ if cells are asymmetrically distributed in different settings. Tables 4 and 5 show the
+different results users can get in an asymmetric distributed cell scenario. This type of variable expansion can be accomplished by setting ‘level=0’ in the calculate_power function.
+
+<!-- # Equations -->
+
+<!-- To number and reference equations, put them in equation environments and assign labels to them, see Equation \@ref(eq:binom). -->
+
+<!-- \begin{equation} -->
+<!--   f\left(k\right) = \binom{n}{k} p^k\left(1-p\right)^{n-k} -->
+<!--   (\#eq:binom) -->
+<!-- \end{equation} -->
+
+
+<!-- # Tables -->
+
+<!-- Like figures, tables with captions will also be numbered and can be referenced, see Table \@ref(tab:table). -->
+
+<!-- Fruit   | Price -->
+<!-- ------- | ----- -->
+<!-- bananas | 1.2 -->
+<!-- apples  | 1.0 -->
+<!-- oranges | 2.5 -->
+
+<!-- : (\#tab:table) A simple table. With caption. -->
+
+
+<!-- # Cross-references -->
+
+<!-- Apart from referencing figures (Section \@ref(figures)), tables (Section \@ref(tables)), and equations (Section \@ref(equations)), you can also use the same syntax to refer to sections by their default labels generated by pandoc. -->
+
+
+<!-- # Side notes -->
+
+<!-- Footnotes are displayed as side notes on the right margin^[this is a side note entered as a footnote], which has the advantage that they appear close to the place where they are defined. -->
 
 # References {.unnumbered}
 

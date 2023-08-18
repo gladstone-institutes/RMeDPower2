@@ -79,8 +79,8 @@ calculate_lmer_estimates <- function(data, condition_column, experimental_column
 
 
   cat("\n")
-  print("__________________________________________________________________Summary of data:")
-  print(summary(Data))
+  # print("__________________________________________________________________Summary of data:")
+  # print(summary(Data))
   cat("\n")
 
   colnames_original=colnames(Data)
@@ -104,7 +104,7 @@ calculate_lmer_estimates <- function(data, condition_column, experimental_column
 
 
     cat("\n")
-    print(paste("_________________________________",experimental_columns[i]," is assigned to experimental_column",i,sep=""))
+    # print(paste("_________________________________",experimental_columns[i]," is assigned to experimental_column",i,sep=""))
     cat("\n")
   }
 
@@ -242,8 +242,8 @@ calculate_lmer_estimates <- function(data, condition_column, experimental_column
 
   slmerFit <- summary(lmerFit)
   cat("\n")
-  print("__________________________________________________________________Model statistics:")
-  print(slmerFit)
+  # print("__________________________________________________________________Model statistics:")
+  # print(slmerFit)
   cat("\n")
 
   return(slmerFit)

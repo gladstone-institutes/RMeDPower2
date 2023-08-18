@@ -74,8 +74,8 @@ get_residuals <- function(data, condition_column, experimental_columns, response
 
 
   cat("\n")
-  print("__________________________________________________________________Summary of data:")
-  print(summary(Data))
+  # print("__________________________________________________________________Summary of data:")
+  # print(summary(Data))
   cat("\n")
 
   colnames_original=colnames(Data)
@@ -99,7 +99,7 @@ get_residuals <- function(data, condition_column, experimental_columns, response
 
 
     cat("\n")
-    print(paste("_________________________________",experimental_columns[i]," is assigned to experimental_column",i,sep=""))
+    # print(paste("_________________________________",experimental_columns[i]," is assigned to experimental_column",i,sep=""))
     cat("\n")
   }
 
@@ -234,8 +234,8 @@ get_residuals <- function(data, condition_column, experimental_columns, response
 
   slmerFit <- summary(lmerFit)
   cat("\n")
-  print("__________________________________________________________________Model statistics:")
-  print(slmerFit)
+  # print("__________________________________________________________________Model statistics:")
+  # print(slmerFit)
   cat("\n")
 
   residuals=slmerFit$residuals

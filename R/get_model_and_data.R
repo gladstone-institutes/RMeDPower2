@@ -72,8 +72,8 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
 
 
   cat("\n")
-  print("__________________________________________________________________Summary of data:")
-  print(summary(fixed_global_variable_data))
+  # print("__________________________________________________________________Summary of data:")
+  # print(summary(fixed_global_variable_data))
   cat("\n")
 
   colnames_original=colnames(fixed_global_variable_data)
@@ -97,7 +97,7 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
 
 
     cat("\n")
-    print(paste("_________________________________",experimental_columns[i]," is assigned to experimental_column",i,sep=""))
+    # print(paste("_________________________________",experimental_columns[i]," is assigned to experimental_column",i,sep=""))
     cat("\n")
   }
 
@@ -234,8 +234,8 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
   slmerFit <- summary(lmerFit)
 
   cat("\n")
-  print("__________________________________________________________________Model statistics:")
-  print(slmerFit)
+  # print("__________________________________________________________________Model statistics:")
+  # print(slmerFit)
   cat("\n")
 
 
