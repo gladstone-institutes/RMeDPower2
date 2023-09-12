@@ -294,7 +294,7 @@ We can also estimate the parameter of interest - log odds ratio of cluster 7 mem
 
 ```{r}
 estimate_res <- getEstimatesOfInterest(data, design, model)
-
+print(estimate_res[[1]])
 ```
 
 And calculate the statistical power to estimate this association for different numbers of animals per group.
@@ -345,7 +345,7 @@ power_res <- calculatePower(data, design, model, power_param)
 ```
 
 ## Behavior assays
-Morris Water Maze (MWM) is an assay used to test spatial learning in animal models of diseases like Alzheimer's disease. The time recorded by each mouse to reach a target region (in the MWM) over multiple trials denoted as latency is the response of interest. Mouse models deficient in spatial learning would demonstrate an increased latency to reach the target region across the learning trials.
+Morris Water Maze (MWM) is an assay used to test spatial learning in animal models of diseases like Alzheimer's disease. The time recorded by each mouse to reach a target region (in the MWM) over multiple trials denoted as latency is the response of interest. Mouse models deficient in spatial learning would demonstrate an increased latency to reach a target region (invisible platform in Figure \@ref(fig:MWM)) across the learning trials.
 
 ```{r MWM, echo=FALSE, fig.align = "center", fig.cap='Morris Water Maze', fig.wide=TRUE, echo=FALSE}
 knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/MorrisWaterMaze.svg/1920px-MorrisWaterMaze.svg.png")
