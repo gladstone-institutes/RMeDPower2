@@ -345,7 +345,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
       # print(paste("__________________________________________________________________Estimated variance of the experimental variables:",paste(varEs)))
       cat("\n")
 
-      if(covariate==NA){
+      if(is.null(covariate)){
         artificial_lmer=simr::makeLmer(formula = response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) +
                                          (1 | experimental_column3) , data=Data,
                                        VarCorr = as.list(varEs), sigma = slmerFit$sigma,
@@ -370,7 +370,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
       # print(paste("__________________________________________________________________Estimated variance of the experimental variables:",paste(varEs)))
       cat("\n")
 
-      if(covariate==NA){
+      if(is.null(covariate)){
         artificial_lmer=simr::makeLmer(formula = response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) +
                                          (1 | experimental_column3) + (1 | experimental_column4) , data=Data,
                                        VarCorr = as.list(varEs), sigma = slmerFit$sigma,
@@ -395,7 +395,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
       cat("\n")
 
 
-      if(covariate==NA){
+      if(is.null(covariate)){
         artificial_lmer=simr::makeLmer(formula = response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) +
                                          (1 | experimental_column3) + (1 | experimental_column4) + (1 | experimental_column5), data=Data,
                                        VarCorr = as.list(varEs), sigma = slmerFit$sigma,
