@@ -436,18 +436,83 @@ First, a user can assess how increasing the number of independent experiments af
 ```{r exp, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of experimental variability for 'experiment' for the power analysis. If level=1 is set, RMeDPower simulates the effect of adding in additional experiments by inheriting the experimental design structure from the existing data. This describes the situation where the pilot study involves data from 3 experiments, with 2 plates used per experiment, 3 cell lines within each plate and 12 cells per cell line are assayed.", fig.wide=TRUE, echo=FALSE , fig.topcaption=TRUE}
 knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Figures/J-Kaye_M-Shin 20222503_Part5.png")
 ```
+
+In the code that tests power using the example data 'RMeDPower_data1', this scenario can be simulated by setting 'target_columns' to 'line' and 'levels' to 1 where 'line' corresponds to the cell line. The 'condition_column' of the data corresponds to 'classification' indicating the cell state, and there are two experimental variables: 'experiment' and 'line'. Since the same cell line may appear in multiple experiments,  "line" is treated as "repetable_column". "cell_size2" is used as 'response_column' for the simulation (Figure \@ref(fig:Sim1)).
+
+```{r}
+
+template_dir="~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/tutorial_session3/"
+
+##load the design
+design <- readDesign(paste0(template_dir,"design_cell_assay_sim1.json"))
+##load the probability model
+model <- readProbabilityModel(paste0(template_dir,"prob_model_sim1.json"))
+##load the relevant power parameters
+power_param <- readPowerParams(paste0(template_dir,"power_param_sim1.json"))
+
+print(design)
+print(model)
+print(power_param)
+
+
+```
+
+```{r eval=FALSE}
+
+##calculate power
+power_res <- calculatePower(RMeDPower_data1, design, model, power_param)
+
+```
+
+```{r Sim1, echo=FALSE, fig.align = "center", fig.cap='Sim1', fig.small=TRUE, echo=FALSE}
+template_dir="~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/tutorial_session3/"
+
+knitr::include_graphics(paste0(template_dir,"RMeDPower2_ex1.jpg"))
+```
+In a similar context, users can evaluate power for a given number of experiments. To do this, we assign a value corresponding to the number of experiments to 'max_size' and set 'power_curve' to 0. We can set the 'output' variable to specify the output file name.
+
+```{r}
+
+template_dir="~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/tutorial_session3/"
+
+##load the design
+design <- readDesign(paste0(template_dir,"design_cell_assay_sim3.json"))
+##load the probability model
+model <- readProbabilityModel(paste0(template_dir,"prob_model_sim3.json"))
+##load the relevant power parameters
+power_param <- readPowerParams(paste0(template_dir,"power_param_sim3.json"))
+
+print(power_param)
+
+```
+
+```{r echo=FALSE}
+load(file='/Users/mingyoungshin/git/RMeDPower/data/RMeDPower_data1.rda')
+load(file='/Users/mingyoungshin/git/RMeDPower/data/RMeDPower_data2.rda')
+
+##calculate power
+power_res <- calculatePower(RMeDPower_data1, design, model, power_param)
+
+print(power_res)
+```
+
 Alternatively, a user can assess how increasing the number of plates per experiment affects power. In the case where there are two experiments that each contain two plates, the user can double the number of plates used per experiment. In this way, the user can simulate how the statistical power changes as a result of increasing the number of plates used per experiment rather than increasing the number of experimental batches (Figure \@ref(fig:plate)). 
 
 ```{r plate, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of plate variability for ‘plate' power analysis. If level=1 is set, RMeDPower simulates new plates by inheriting the experimental design structure from the existing data.", fig.wide=TRUE, echo=FALSE, fig.topcaption=TRUE}
 knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Figures/J-Kaye_M-Shin 20222503_Part7.png")
 ```
 
-In a third example, a user can examine the effect of expanding the number of cell lines within each experiment affects power (Figure \@ref(fig:line)). This would capture the effect of increasing the number of cells assayed as a consequence of having more cell lines. This type of variable expansion can be accomplished by setting ‘level=1’ in the calculate_power function. 
+In a third example, a user can examine the effect of expanding the number of cell lines within each experiment affects power (Figure \@ref(fig:line)). This would capture the effect of increasing the number of cells assayed as a consequence of having more cell lines. 
 
 ```{r line, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of cell line variability for ‘cell line' power analysis. If level=1 is set, RMeDPower simulates new cell lines by inheriting the experimental design structure from the existing data.", fig.wide=TRUE,  fig.topcaption=TRUE}
 knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Figures/J-Kaye_M-Shin 20222503_Part9.png")
 ```
 
+Alternatively, one might want to assess the effect of increasing the total number of cells by increasing the number of cells per cell line (Figure \@ref(fig:lineCell)). 
+
+```{r lineCell, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of a sample size increase by increasing the number of cell line. If level=0 is set, RMeDPower multiplies the number of cells per cell line by M/N, where N is the maximum number of cells per cell line and M is a value assigned to the parameter ‘max_size’.", fig.wide=TRUE, echo=FALSE, fig.topcaption=TRUE}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Figures/J-Kaye_M-Shin 20222503_Part10.png")
+```
 
 Tables 1-3, in addition to the figures, show the change in cell number after variable expansion in experiment, plate or cell line, especially when the cell distribution is asymmetric.
 A user may want to examine the power of increasing the total number of cells measured from each experimental variable per experiment. For example, if there are 12 cells per cell line on plate 1, doubling the number of cells from each plate will result in assessing the effect in twice the number
@@ -494,14 +559,11 @@ knitr::kable(rbind(c("(A)", "Cell line 1", "Cell line 2", "", "", "", ""),
 )
 ```
 
-Alternatively, one might want to assess the effect of increasing the total number of cells by increasing the number of cells per cell line (Figure \@ref(fig:lineCell)). 
 
-```{r lineCell, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of a sample size increase by increasing the number of cell line. If level=0 is set, RMeDPower multiplies the number of cells per cell line by M/N, where N is the maximum number of cells per cell line and M is a value assigned to the parameter ‘max_size’.", fig.wide=TRUE, echo=FALSE, fig.topcaption=TRUE}
-knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Figures/J-Kaye_M-Shin 20222503_Part10.png")
-```
 
-Expansion results for plates and cell lines may differ if cells are asymmetrically distributed in different settings. Tables 4 and 5 show the
-different results users can get in an asymmetric distributed cell scenario. This type of variable expansion can be accomplished by setting ‘level=0’ in the calculate_power function.
+
+
+Expansion results for plates and cell lines may differ if cells are asymmetrically distributed in different settings. Tables 4 and 5 show the different results users can get in an asymmetric distributed cell scenario. This type of variable expansion can be accomplished by setting ‘level=0’ in the calculate_power function.
 
 ```{r echo=FALSE}
 knitr::kable(rbind(c("(A)", "Cell line 1", "Cell line2"),
@@ -524,6 +586,106 @@ knitr::kable(rbind(c("(A)", "Cell line 1", "Cell line 2"),
   caption="Example of cell line-based cell count expansion simulation. (A) Original data structure and (B) changed data structure after simulation. An example of a simulation in tabular format shows the change in the number of cells per cell line and experiment after simulation. The simulation is based on level=0 which results in an increased number of cells per cell line."
 )
 ```
+
+The type of variable expansion shown in Table 3 and 5  can be accomplished by setting 'target_columns' to 'line' and 'levels' to 0. In the code example, we modified the maximum number of cell lines by setting 'max_size' to 700 (Figure \@ref(fig:Sim2)). 
+
+```{r}
+
+template_dir="~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/tutorial_session3/"
+
+##load the design
+design <- readDesign(paste0(template_dir,"design_cell_assay_sim2.json"))
+##load the probability model
+model <- readProbabilityModel(paste0(template_dir,"prob_model_sim2.json"))
+##load the relevant power parameters
+power_param <- readPowerParams(paste0(template_dir,"power_param_sim2.json"))
+
+print(power_param)
+
+```
+
+```{r eval=FALSE}
+
+##calculate power
+power_res <- calculatePower(RMeDPower_data1, design, model, power_param)
+
+```
+
+```{r Sim2, echo=FALSE, fig.align = "center", fig.cap='Sim2', fig.small=TRUE, echo=FALSE}
+template_dir="~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/tutorial_session3/"
+
+knitr::include_graphics(paste0(template_dir,"RMeDPower2_ex2.jpg"))
+```
+
+We can also test the power of two experimental variables by assigning a vector of variable names to 'target_columns' (Figure\@ref(fig:Sim5)).
+
+```{r}
+
+template_dir="~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/tutorial_session3/"
+
+##load the design
+design <- readDesign(paste0(template_dir,"design_cell_assay_sim5.json"))
+##load the probability model
+model <- readProbabilityModel(paste0(template_dir,"prob_model_sim5.json"))
+##load the relevant power parameters
+power_param <- readPowerParams(paste0(template_dir,"power_param_sim5.json"))
+
+print(power_param)
+
+```
+
+```{r eval=FALSE}
+
+##calculate power
+power_res <- calculatePower(RMeDPower_data1, design, model, power_param)
+
+```
+
+```{r Sim5, echo=FALSE, fig.align = "center", fig.cap='Sim5', fig.small=TRUE, echo=FALSE}
+template_dir="~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/tutorial_session3/"
+
+knitr::include_graphics(paste0(template_dir,"RMeDPower2_ex5a.jpg"))
+knitr::include_graphics(paste0(template_dir,"RMeDPower2_ex5b.jpg"))
+```
+
+Our power simulations depend on the variance components estimated from the input dataset. However, in some cases there may not be enough data to estimate the variance component. For example, the pilot data might have only a single category for 'experimental batch', ‘plate’ or 'line'. When this occurs, the user needs to provide ICC values. These values can be estimated from another dataset for which the variance components are assumed to be similar to those inherent for the new response being considered in the input dataset. ICC can be estimated by taking the ratio between the variance estimates using the following formula:
+
+〖ICC〗_i=V_i/(∑_(j∈S)▒〖V_i+e〗) 
+                                                                                                                                                             
+ where V_i represents the variance of the random effect linked to experimental variable (e.g., experimental batch, plate or cell-line) i, and epsilon represents the variance of the residual error. S represents all the modeled sources of variability of the response under consideration. We will test this scenario using the example RMeDPower_data2 with only single experiment and cell line. To test power in scenarios with varying number of experiments, we set the ‘icc’ parameter to 0.8, 0.05, 0.05. (Figure\@ref(fig:Sim6)).
+
+```{r}
+
+template_dir="~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/tutorial_session3/"
+
+##load the design
+design <- readDesign(paste0(template_dir,"design_cell_assay_sim6.json"))
+##load the probability model
+model <- readProbabilityModel(paste0(template_dir,"prob_model_sim6.json"))
+##load the relevant power parameters
+power_param <- readPowerParams(paste0(template_dir,"power_param_sim6.json"))
+
+#print(design)
+#print(model)
+print(power_param)
+
+
+```
+
+```{r eval=FALSE}
+
+##calculate power
+power_res <- calculatePower(RMeDPower_data2, design, model, power_param)
+
+```
+
+```{r Sim6, echo=FALSE, fig.align = "center", fig.cap='Sim6', fig.small=TRUE, echo=FALSE}
+template_dir="~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/tutorial_session3/"
+
+knitr::include_graphics(paste0(template_dir,"RMeDPower2_ex6.jpg"))
+
+```
+
 <!-- # Equations -->
 
 <!-- To number and reference equations, put them in equation environments and assign labels to them, see Equation \@ref(eq:binom). -->
