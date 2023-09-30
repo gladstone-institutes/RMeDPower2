@@ -20,9 +20,9 @@ readPowerParams <- function(jsonfile) {
   power_param@nsimn = Power_Param_data$nsimn
   power_param@levels = Power_Param_data$levels
   power_param@alpha = Power_Param_data$alpha
-  if(!is.null(Power_Param_data@max_size)) power_param@max_size = Power_Param_data$max_size
-  if(!is.null(Power_Param_data@breaks)) power_param@breaks = Power_Param_data$breaks
-  if(!is.null(Power_Param_data@effect_size)) power_param@effect_size = Power_Param_data$effect_size
-  if(!is.null(Power_Param_data@icc)) power_param@icc = Power_Param_data$icc
+  if(!is.null(Power_Param_data$max_size)) power_param@max_size = Power_Param_data$max_size
+  if(!is.null(Power_Param_data$breaks)) power_param@breaks = Power_Param_data$breaks
+  if(!is.null(Power_Param_data$effect_size)) power_param@effect_size = Power_Param_data$effect_size
+  if(!is.null(Power_Param_data$icc)) power_param@icc = Power_Param_data$icc
   return(power_param)
 }
