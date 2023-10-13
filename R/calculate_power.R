@@ -576,10 +576,10 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
     cat("\n")
     if(length(output)!=0){
       sink(paste0(output,".txt"))
-      # print(ps)
+       print(ps)
       sink()
     }else{
-      # print(ps)
+       print(ps)
     }
 
 
