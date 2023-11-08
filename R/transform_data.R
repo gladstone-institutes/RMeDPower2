@@ -30,6 +30,33 @@ transform_data<-function(data, condition_column, experimental_columns, response_
   
   
   
+  # data,
+  # condition_column = design@condition_column,
+  # experimental_columns = design@experimental_columns,
+  # response_column = design@response_column,
+  # total_column = design@total_column,
+  # condition_is_categorical = design@condition_is_categorical,
+  # covariate= design@covariate,
+  # crossed_columns = design@crossed_columns,
+  # error_is_non_normal=model@error_is_non_normal,
+  # family_p=model@family_p,
+  # alpha=design@outlier_alpha,
+  # na.action=design@na_action)
+  # 
+  # data=Data
+  # condition_column = design@condition_column
+  # experimental_columns = design@experimental_columns
+  # response_column = design@response_column
+  # total_column = design@total_column
+  # condition_is_categorical=design@condition_is_categorical
+  # covariate=design@covariate
+  # crossed_columns = design@crossed_columns
+  # error_is_non_normal=FALSE
+  # family_p=NULL
+  # alpha=0.05
+  # na.action="complete"
+  
+  
   if(na.action=="complete"){
     
     notNAindex=which( rowSums(is.na(data)) == 0 )
@@ -127,7 +154,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
   }
   
   if(temp_count > 0) {
-    cooks_result=cooks_test(lms[[1]], lms[[2]], choose_cols, response_column=response_column, hist_text="raw")
+    cooks_result=cooks_test(lms[[1]], lms[[2]], choose_cols, response_column="response_column", hist_text="raw")
   }
   else {
     print(paste("_________________________________Not enough grouping levels to perform the cook analyses on the experimental factors", sep=""))
@@ -248,7 +275,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
     }
     
     if(temp_count > 0) {
-      cooks_result2=cooks_test(lms[[1]], lms[[2]], choose_cols, response_column=response_column, hist_text="log transform")
+      cooks_result2=cooks_test(lms[[1]], lms[[2]], choose_cols, response_column="response_column", hist_text="log transform")
     }
     else {
       print(paste("_________________________________Not enough grouping levels to perform the cook analyses on the experimental factors", sep=""))
@@ -359,22 +386,24 @@ rosner_test<- function (trait, response_column, alpha, hist_text) {
   return(c(cutoff2,cutoff1))
 }
 
-
 cooks_test<- function (model, fixed_global_variable_data, experimental_columns, response_column, hist_text) {
   
   require(influence.ME)
-  
+  require(rlang)
   cooks_result=lapply(1:length(experimental_columns),
                       function(i){
                         
-
-                        tb=fixed_global_variable_data%>%group_by(across(all_of(c("condition_column",experimental_columns[i]))))%>%count(condition_column)
-                        condition_counts=table(tb[,"condition_column"])
-                        condition_counts=condition_counts[condition_counts>0]
+                        tb=table(fixed_global_variable_data[,"condition_column"], fixed_global_variable_data[,experimental_columns[i]])
+                        tb=tb[rowSums(tb)>0,]
+                        tb[tb>0]=1
+                        condition_counts=rowSums(tb)
                         
                         
                         if(length(condition_counts)==2 & sum(condition_counts==1)==1){
-                          not2exclude=as.matrix(tb%>%filter( condition_column==names(condition_counts[condition_counts==1])))[,experimental_columns[i]]
+                          not2exclude=fixed_global_variable_data[fixed_global_variable_data[,"condition_column"]==names(condition_counts[condition_counts==1]), experimental_columns[i]][1]
+                          not2exclude=as.character(not2exclude)
+                          
+                          print(paste("_________________________________excluding",not2exclude,"from cooks distance calculation" sep=" "))
                           
                           alt.est <- influence2(model, group=experimental_columns[i], not2exclude )
                           
@@ -443,5 +472,4 @@ cooks_test<- function (model, fixed_global_variable_data, experimental_columns, 
   return(cooks_result)
   
 }
-  
 
