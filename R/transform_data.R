@@ -403,7 +403,7 @@ cooks_test<- function (model, fixed_global_variable_data, experimental_columns, 
                           not2exclude=fixed_global_variable_data[fixed_global_variable_data[,"condition_column"]==names(condition_counts[condition_counts==1]), experimental_columns[i]][1]
                           not2exclude=as.character(not2exclude)
                           
-                          print(paste("_________________________________excluding",not2exclude,"from cooks distance calculation" sep=" "))
+                          print(paste("_________________________________excluding",not2exclude,"from cooks distance calculation", sep=" "))
                           
                           alt.est <- influence2(model, group=experimental_columns[i], not2exclude )
                           
