@@ -2,6 +2,7 @@
   function(model, group=NULL, always2include=NULL, select=NULL, obs=FALSE, gf="single", count = FALSE, delete=TRUE, ...)
   {
     
+    
     ## Checks, errors, and warnings
     # obs=TRUE cannot be used with delete=FALSE, group, gf,  parameters
     
@@ -133,6 +134,8 @@
           altered.no.estex <- which(substr(names(fixef(model.updated)), 1,6) != "estex.")
           
           alt.fixed[i,] 	<- as.matrix(fixef(model.updated)[altered.no.estex])
+          print(paste0("Model without ",grouping.names[i]))
+          print(model.updated)
           alt.se[i,] 		<- as.matrix(se.fixef(model.updated)[altered.no.estex])
           alt.vcov[[i]] 	<- as.matrix(vcov(model.updated)[altered.no.estex, altered.no.estex])
           alt.test[i,] 		<- as.matrix(coef(summary(model.updated))[,3][altered.no.estex])
@@ -222,6 +225,7 @@
           names(fixef(model.updated))[altered.no.estex])
         
         # Standard Error of the modified model(s)
+
         alt.se <- matrix(ncol = n.pred , nrow = 1, data = se.fixef(model.updated)[altered.no.estex])
         dimnames(alt.se) <- list("Altered model", names(fixef(model.updated))[altered.no.estex])
         
@@ -257,4 +261,3 @@
     return(estex)
     
   }
-
