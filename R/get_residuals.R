@@ -33,8 +33,8 @@
 #' @examples error_is_non_normal=FALSE)
 
 
-get_residuals <- function(data, condition_column, experimental_columns, response_column, total_column, condition_is_categorical, covariate=NULL,
-                        crossed_columns=NULL, error_is_non_normal=FALSE, family_p=NULL, na.action="complete"){
+get_residuals <- function(data, condition_column, experimental_columns, response_column,  condition_is_categorical, covariate=NULL,
+                        crossed_columns=NULL, total_column=FALSE, error_is_non_normal=FALSE, family_p=NULL, na.action="complete"){
 
 
 
