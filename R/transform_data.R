@@ -388,8 +388,7 @@ rosner_test<- function (trait, response_column, alpha, hist_text) {
 
 cooks_test<- function (model, fixed_global_variable_data, experimental_columns, response_column, hist_text) {
   
-  require(influence.ME)
-  require(rlang)
+
   cooks_result=lapply(1:length(experimental_columns),
                       function(i){
                         
@@ -403,18 +402,22 @@ cooks_test<- function (model, fixed_global_variable_data, experimental_columns, 
                           not2exclude=fixed_global_variable_data[fixed_global_variable_data[,"condition_column"]==names(condition_counts[condition_counts==1]), experimental_columns[i]][1]
                           not2exclude=as.character(not2exclude)
                           
-                          print(paste("_________________________________excluding",not2exclude,"from cooks distance calculation", sep=" "))
+                          cd=NULL
                           
-                          alt.est <- influence2(model, group=experimental_columns[i], not2exclude )
-                          
-                          alt.est$alt.fixed=alt.est$alt.fixed[rownames(alt.est$alt.fixed)!=not2exclude,]
-                          alt.est$alt.se=alt.est$alt.se[rownames(alt.est$alt.se)!=not2exclude,]
-                          alt.est$alt.test=alt.est$alt.test[rownames(alt.est$alt.test)!=not2exclude,]
+                          levels=setdiff(fixed_global_variable_data[,experimental_columns[i]],not2exclude)
+                          for(level2test in levels ){
+                            alt.est <- influence.ME::influence(model, group=experimental_columns[i], select=level2test)
+                            cd=rbind(cd, cooks.distance(alt.est))
+                          }
+                            rownames(cd)=levels
+                            cd  
+              
                         }else{
-                          alt.est <- influence.ME::influence(model, group=experimental_columns[i] )     
+                          alt.est <- influence.ME::influence(model, group=experimental_columns[i] )
+                          cooks.distance(alt.est)
                         }
                         
-                        cooks.distance(alt.est)
+                        
                       }
   )
   
