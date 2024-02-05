@@ -33,8 +33,8 @@ getEstimatesOfInterest <- function(data, design, model) {
   res[[1]] <- calculate_lmer_estimates(data, condition_column, experimental_columns, response_column, total_column, condition_is_categorical, covariate,
                                                  crossed_columns, error_is_non_normal, family_p, na.action)
   ##visualize estimates
-  res[[2]] <- get_residuals(data, condition_column, experimental_columns, response_column, total_column, condition_is_categorical, covariate,
-                                                crossed_columns, error_is_non_normal, family_p, na.action)
+  res[[2]] <- get_residuals(data, condition_column, experimental_columns, response_column, condition_is_categorical, covariate,
+                                                crossed_columns, total_column, error_is_non_normal, family_p, na.action)
 
   return(res)
 
