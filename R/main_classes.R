@@ -35,7 +35,10 @@ setClass("RMeDesign",
            crossed_columns = "character",
            total_column = "character",
            outlier_alpha = "numeric",
-           na_action = "character"
+           na_action = "character",
+           # NEW SLOTS FOR ENHANCED FUNCTIONALITY
+           include_interaction = "logical",    # Whether to include condition * covariate interaction
+           random_slope_variable = "character" # Variable for random slopes (typically condition_column)
          ),
          prototype = list(
            response_column = "response_column",
@@ -46,7 +49,10 @@ setClass("RMeDesign",
            crossed_columns = NULL,
            total_column = NULL,
            outlier_alpha = 0.05,
-           na_action = "complete"
+           na_action = "complete",
+           # NEW DEFAULTS
+           include_interaction = FALSE,        # Default: no interaction
+           random_slope_variable = NULL        # Default: no random slopes
          ))
 
 
