@@ -100,7 +100,16 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
   colnames_original=colnames(fixed_global_variable_data)
   experimental_columns_index=NULL
   ####### assign categorical variables
-  if(condition_is_categorical==TRUE) fixed_global_variable_data[,condition_column]=as.factor(fixed_global_variable_data[,condition_column])
+  if(condition_is_categorical==TRUE)
+    fixed_global_variable_data[,condition_column]=as.factor(fixed_global_variable_data[,condition_column])
+
+  # random slope should be allowed only with a continuous variable
+  if(!is.null(random_slope_variable)) {
+    if(class(fixed_global_variable_data[,random_slope_variable]) != "numeric") {
+      print("random_slope_variable should be a numeric variable")
+      return(NULL)
+    }
+  }
 
   #cat("\n")
 
@@ -320,29 +329,6 @@ build_random_formula <- function(experimental_columns, random_slope_variable = N
   return(paste(random_parts, collapse = " + "))
 }
 
-# # Enhanced formula construction function
-# construct_model_formula <- function(fixed_formula, random_formula,
-#                                     error_is_non_normal = FALSE, family_p = NULL,
-#                                     total_column = NULL) {
-#
-#   if (error_is_non_normal == FALSE) {
-#     # Linear mixed effects model
-#     formula_str <- paste("response_column ~", fixed_formula, "+", random_formula)
-#   } else if (!is.null(family_p) && family_p$family == "binomial" && !is.null(total_column)) {
-#     # Binomial with total column
-#     formula_str <- paste("cbind(response_column, (total_column - response_column)) ~",
-#                          fixed_formula, "+", random_formula)
-#   } else if (!is.null(family_p) && family_p$family == "negative_binomial" && !is.null(total_column)) {
-#     # Negative binomial with offset
-#     formula_str <- paste("response_column ~", fixed_formula, "+", random_formula,
-#                          "+ offset(log(total_column))")
-#   } else {
-#     # Other GLMMs
-#     formula_str <- paste("response_column ~", fixed_formula, "+", random_formula)
-#   }
-#
-#   return(as.formula(formula_str))
-# }
 
 generate_model_fit <- function(data, fixed_formula, random_formula,
                                     error_is_non_normal = FALSE, family_p = NULL,
