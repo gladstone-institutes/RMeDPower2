@@ -25,6 +25,9 @@ diagnoseDataModel <- function(data, design, model) {
                   error_is_non_normal=model@error_is_non_normal,
                   family_p=model@family_p,
                   alpha=design@outlier_alpha,
-                  na.action=design@na_action)
+                  na.action=design@na_action,
+                 include_interaction = design@include_interaction,
+                 random_slope_variable = design@random_slope_variable
+                 )
 
 }
