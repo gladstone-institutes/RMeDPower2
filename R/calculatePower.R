@@ -35,6 +35,9 @@ calculatePower <- function(data, design, model, power_param) {
                             ICC=power_param@icc,
                             na.action=design@na_action,
                             output=NULL,
-                            alpha = power_param@alpha)
+                            alpha = power_param@alpha,
+                            include_interaction = design@include_interaction,
+                            random_slope_variable = design@random_slope_variable
+                  )
 
 }

@@ -349,7 +349,7 @@ generate_model_fit <- function(data, fixed_formula, random_formula,
                          "+ offset(log(total_column))"))
     lmerFit <- lme4::glmer.nb(formula_str, data = data, family = family_p)
   } else if (!is.null(family_p) && family_p$family == "poisson" && !is.null(total_column)) {
-    # Negative binomial with offset
+    # poisson with offset
     formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
                          "+ offset(log(total_column))"))
     lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
@@ -361,7 +361,7 @@ generate_model_fit <- function(data, fixed_formula, random_formula,
   }
 
   lmerFit@call$formula = formula_str
-  lmerFit@call$data = "fixed_global_variable_data"
+  lmerFit@call$data = as.name("fixed_global_variable_data")
   return(lmerFit)
 }
 
@@ -382,7 +382,7 @@ generate_model_fit0 <- function(data,  random_formula,
     formula_str <- paste("response_column ~", random_formula, "+ offset(log(total_column))")
     lmerFit <- lme4::glmer.nb(as.formula(formula_str), data = data, family = family_p)
   } else if (!is.null(family_p) && family_p$family == "poisson" && !is.null(total_column)) {
-    # Negative binomial with offset
+    # Poisson with offset
     formula_str <- paste("response_column ~",  random_formula,"+ offset(log(total_column))")
     lmerFit <- lme4::glmer(as.formula(formula_str), data = data, family = family_p)
   }
@@ -394,6 +394,41 @@ generate_model_fit0 <- function(data,  random_formula,
 
 
   lmerFit@call$formula = formula_str
-  lmerFit@call$data = "fixed_global_variable_data"
+  lmerFit@call$data = as.name("fixed_global_variable_data")
+  return(lmerFit)
+}
+
+generate_model_fit_4_power_estimates <- function(data, fixed_formula, random_formula,
+                               error_is_non_normal = FALSE, family_p = NULL,
+                               total_column = NULL) {
+
+  if (error_is_non_normal == FALSE) {
+    # Linear mixed effects model
+    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
+    lmerFit <- lme4::lmer(formula_str, data = data)
+  } else if (!is.null(family_p) && family_p$family == "binomial" && !is.null(total_column)) {
+    # Binomial with total column
+    formula_str <<- as.formula(paste("cbind(response_column, (total_column - response_column)) ~",
+                                     fixed_formula, "+", random_formula))
+    lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
+  } else if (!is.null(family_p) && family_p$family == "negative_binomial" && !is.null(total_column)) {
+    # Negative binomial with offset
+    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
+                                     "+ offset(log(total_column))"))
+    lmerFit <- lme4::glmer.nb(formula_str, data = data, family = family_p)
+  } else if (!is.null(family_p) && family_p$family == "poisson" && !is.null(total_column)) {
+    # Negative binomial with offset
+    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
+                                     "+ offset(log(total_column))"))
+    lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
+  }
+  else {
+    # Other GLMMs
+    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
+    lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
+  }
+
+  lmerFit@call$formula = formula_str
+  lmerFit@call$data = as.name("Data")
   return(lmerFit)
 }
