@@ -23,6 +23,7 @@
 #' @param na.action "complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, and response columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.
 #' @param include_interaction Whether to include condition * covariate interaction
 #' @param random_slope_variable Variable for random slopes (typically "condition_column")
+#' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #'
 #' @return A list of the linear mixed model result, original data, experimental column names, and residual values
 #'
@@ -34,7 +35,8 @@
 get_model_and_data <- function(data, condition_column, experimental_columns, response_column, total_column = NULL, condition_is_categorical,  covariate=NULL,
                                      crossed_columns=NULL, error_is_non_normal=FALSE, family_p=NULL, na.action="complete",
                                include_interaction = FALSE,
-                               random_slope_variable = NULL){
+                               random_slope_variable = NULL,
+                               covariate_is_categorical = TRUE){
 
 
 
@@ -47,6 +49,7 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
   if(!response_column%in%colnames(data)){  print("response_column should be one of the column names");return(NULL) }
   if(is.null(condition_is_categorical) | !condition_is_categorical%in%c(TRUE,FALSE)){ print("condition_is_categorical must be TRUE or FALSE");return(NULL) }
   if(!is.null(crossed_columns)){if(sum(crossed_columns%in%colnames(data))!=length(crossed_columns) ){ print("crossed_columns must match column names");return(NULL) }}
+  if(is.null(covariate_is_categorical) | !covariate_is_categorical%in%c(TRUE,FALSE)){ print("covariate_is_categorical must be TRUE or FALSE");return(NULL) }
 
   # Validation for new parameters
   if (include_interaction && is.null(covariate)) {
@@ -102,6 +105,13 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
   ####### assign categorical variables
   if(condition_is_categorical==TRUE)
     fixed_global_variable_data[,condition_column]=as.factor(fixed_global_variable_data[,condition_column])
+  else
+    fixed_global_variable_data[,condition_column]=as.numeric(fixed_global_variable_data[,condition_column])
+
+  if(covariate_is_categorical==TRUE)
+    fixed_global_variable_data[,covariate]=as.factor(fixed_global_variable_data[,covariate])
+  else
+    fixed_global_variable_data[,covariate]=as.numeric(fixed_global_variable_data[,covariate])
 
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {
@@ -398,37 +408,37 @@ generate_model_fit0 <- function(data,  random_formula,
   return(lmerFit)
 }
 
-generate_model_fit_4_power_estimates <- function(data, fixed_formula, random_formula,
-                               error_is_non_normal = FALSE, family_p = NULL,
-                               total_column = NULL) {
-
-  if (error_is_non_normal == FALSE) {
-    # Linear mixed effects model
-    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
-    lmerFit <- lme4::lmer(formula_str, data = data)
-  } else if (!is.null(family_p) && family_p$family == "binomial" && !is.null(total_column)) {
-    # Binomial with total column
-    formula_str <<- as.formula(paste("cbind(response_column, (total_column - response_column)) ~",
-                                     fixed_formula, "+", random_formula))
-    lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
-  } else if (!is.null(family_p) && family_p$family == "negative_binomial" && !is.null(total_column)) {
-    # Negative binomial with offset
-    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
-                                     "+ offset(log(total_column))"))
-    lmerFit <- lme4::glmer.nb(formula_str, data = data, family = family_p)
-  } else if (!is.null(family_p) && family_p$family == "poisson" && !is.null(total_column)) {
-    # Negative binomial with offset
-    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
-                                     "+ offset(log(total_column))"))
-    lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
-  }
-  else {
-    # Other GLMMs
-    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
-    lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
-  }
-
-  lmerFit@call$formula = formula_str
-  lmerFit@call$data = as.name("Data")
-  return(lmerFit)
-}
+# generate_model_fit_4_power_estimates <- function(data, fixed_formula, random_formula,
+#                                error_is_non_normal = FALSE, family_p = NULL,
+#                                total_column = NULL) {
+#
+#   if (error_is_non_normal == FALSE) {
+#     # Linear mixed effects model
+#     formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
+#     lmerFit <- lme4::lmer(formula_str, data = data)
+#   } else if (!is.null(family_p) && family_p$family == "binomial" && !is.null(total_column)) {
+#     # Binomial with total column
+#     formula_str <<- as.formula(paste("cbind(response_column, (total_column - response_column)) ~",
+#                                      fixed_formula, "+", random_formula))
+#     lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
+#   } else if (!is.null(family_p) && family_p$family == "negative_binomial" && !is.null(total_column)) {
+#     # Negative binomial with offset
+#     formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
+#                                      "+ offset(log(total_column))"))
+#     lmerFit <- lme4::glmer.nb(formula_str, data = data, family = family_p)
+#   } else if (!is.null(family_p) && family_p$family == "poisson" && !is.null(total_column)) {
+#     # Negative binomial with offset
+#     formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
+#                                      "+ offset(log(total_column))"))
+#     lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
+#   }
+#   else {
+#     # Other GLMMs
+#     formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
+#     lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
+#   }
+#
+#   lmerFit@call$formula = formula_str
+#   lmerFit@call$data = as.name("Data")
+#   return(lmerFit)
+# }

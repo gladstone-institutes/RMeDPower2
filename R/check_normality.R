@@ -15,6 +15,7 @@
 #' @param na.action "complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, and response columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.
 #' @param include_interaction Whether to include condition * covariate interaction
 #' @param random_slope_variable Variable for random slopes (typically "condition_column")
+#' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #'
 #' @return A quantile-quantile (qq) plot of residual values in a mixed-effects model
 #'
@@ -29,7 +30,8 @@
 check_normality<-function(data, condition_column, experimental_columns, response_column,  condition_is_categorical, covariate = NA,
                           crossed_columns = NA, error_is_non_normal=FALSE, image_title = NULL, na.action="complete",
                           include_interaction = FALSE,
-                          random_slope_variable = NULL){
+                          random_slope_variable = NULL,
+                          covariate_is_categorical = TRUE){
 
   # if(!is.null(covariate))
   #   if(!covariate%in%colnames(data))
@@ -150,7 +152,8 @@ check_normality<-function(data, condition_column, experimental_columns, response
                                crossed_columns = crossed_columns,
                                na.action = na.action,
                                include_interaction =include_interaction,
-                               random_slope_variable = random_slope_variable)
+                               random_slope_variable = random_slope_variable,
+                               covariate_is_categorical = covariate_is_categorical)
 
 
     ###QQ plot

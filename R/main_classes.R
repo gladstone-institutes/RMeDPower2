@@ -16,6 +16,7 @@
 #' @param family_p The type of distribution family to specify when the response is categorical. If family is "binary" then binary(link="log") is used, if family is "poisson" then poisson(link="logit") is used, if family is "poisson_log" then poisson(link=") log") is used.
 #' @param alpha numeric scalar between 0 and 1 indicating the Type I error associated with the test of outliers
 #' @param na.action "complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, and response columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.
+#' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #'
 #' @return For continuous data, the function returns quantile-quanitle (qq) plots of i) raw residual values ii) log-transformed residual values iii) raw residual values after removing outliers, and iv) log-transformed residual values. For discrete data, it returns a histogram. If "rosner" is chosen, a matrix with updated feature values after transformation will be returned. If "cook" is choose, a list with  a matrix with updated feature values after transformation will be returned,
 #'
@@ -38,7 +39,8 @@ setClass("RMeDesign",
            na_action = "character",
            # NEW SLOTS FOR ENHANCED FUNCTIONALITY
            include_interaction = "logical",    # Whether to include condition * covariate interaction
-           random_slope_variable = "character" # Variable for random slopes (typically condition_column)
+           random_slope_variable = "character", # Variable for random slopes (typically condition_column)
+           covariate_is_categorical = "logical" # Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
          ),
          prototype = list(
            response_column = "response_column",
@@ -52,7 +54,8 @@ setClass("RMeDesign",
            na_action = "complete",
            # NEW DEFAULTS
            include_interaction = FALSE,        # Default: no interaction
-           random_slope_variable = NULL        # Default: no random slopes
+           random_slope_variable = NULL,        # Default: no random slopes
+           covariate_is_categorical = TRUE
          ))
 
 

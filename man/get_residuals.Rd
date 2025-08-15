@@ -9,13 +9,15 @@ get_residuals(
   condition_column,
   experimental_columns,
   response_column,
-  total_column,
   condition_is_categorical,
   covariate = NULL,
   crossed_columns = NULL,
+  total_column = FALSE,
   error_is_non_normal = FALSE,
   family_p = NULL,
-  na.action = "complete"
+  na.action = "complete",
+  include_interaction = FALSE,
+  random_slope_variable = NULL
 )
 }
 \arguments{
@@ -27,19 +29,23 @@ get_residuals(
 
 \item{response_column}{Name of the variable observed by performing the experiment. ex) intensity.}
 
-\item{total_column}{Set this column only when family_p="binomial" and it is equal to the total number of observations (number of cases plus number of controls) for a given number of cases}
-
 \item{condition_is_categorical}{Specify whether the condition variable is categorical. TRUE: Categorical, FALSE: Continuous.}
 
 \item{covariate}{The name of the covariate to control in the regression model}
 
 \item{crossed_columns}{Name of experimental variables that may appear repeatedly with the same ID. For example, cell_line C1 may appear in multiple experiments, but plate P1 cannot appear in more than one experiment}
 
+\item{total_column}{Set this column only when family_p="binomial" and it is equal to the total number of observations (number of cases plus number of controls) for a given number of cases}
+
 \item{error_is_non_normal}{Default: the observed variable is continuous Categorical response variable will be implemented in the future. TRUE: Categorical , FALSE: Continuous (default).}
 
 \item{family_p}{The type of distribution family to specify when the response is categorical. If family is "binary" then binary(link="log") is used, if family is "poisson" then poisson(link="logit") is used, if family is "poisson_log" then poisson(link=") log") is used.}
 
 \item{na.action}{"complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, and response columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.}
+
+\item{include_interaction}{Whether to include condition * covariate interaction}
+
+\item{random_slope_variable}{Variable for random slopes (typically "condition_column")}
 }
 \value{
 The adjusted residual values for the experimental variables will be returned along with the original input data. A boxplot of residual values and a plot of 95% confidence interval mean residual values adjusted for the experimental variables will be returned.

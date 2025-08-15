@@ -25,7 +25,9 @@ calculate_power(
   ICC = NULL,
   na.action = "complete",
   output = NULL,
-  alpha = 0.05
+  alpha = 0.05,
+  include_interaction = FALSE,
+  random_slope_variable = NULL
 )
 }
 \arguments{
@@ -70,6 +72,10 @@ calculate_power(
 \item{output}{Output file name}
 
 \item{alpha}{Threshold for Type I error}
+
+\item{include_interaction}{Whether to include condition * covariate interaction}
+
+\item{random_slope_variable}{Variable for random slopes (typically "condition_column")}
 }
 \value{
 A power curve image or a power calculation result printed in a text file

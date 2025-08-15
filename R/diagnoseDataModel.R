@@ -27,7 +27,8 @@ diagnoseDataModel <- function(data, design, model) {
                   alpha=design@outlier_alpha,
                   na.action=design@na_action,
                  include_interaction = design@include_interaction,
-                 random_slope_variable = design@random_slope_variable
+                 random_slope_variable = design@random_slope_variable,
+                 covariate_is_categorical = design@covariate_is_categorical
                  )
 
 }

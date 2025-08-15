@@ -14,7 +14,9 @@ check_normality(
   crossed_columns = NA,
   error_is_non_normal = FALSE,
   image_title = NULL,
-  na.action = "complete"
+  na.action = "complete",
+  include_interaction = FALSE,
+  random_slope_variable = NULL
 )
 }
 \arguments{
@@ -37,6 +39,10 @@ check_normality(
 \item{image_title}{The title of the qq plot}
 
 \item{na.action}{"complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, and response columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.}
+
+\item{include_interaction}{Whether to include condition * covariate interaction}
+
+\item{random_slope_variable}{Variable for random slopes (typically "condition_column")}
 }
 \value{
 A quantile-quantile (qq) plot of residual values in a mixed-effects model

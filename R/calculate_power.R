@@ -36,6 +36,7 @@
 #' @param  ICC Intra-Class Coefficients (ICC) for each parameter
 #' @param include_interaction Whether to include condition * covariate interaction
 #' @param random_slope_variable Variable for random slopes (typically "condition_column")
+#' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #'
 #'
 #' @return A power curve image or a power calculation result printed in a text file
@@ -58,7 +59,8 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
                             crossed_columns = NA, error_is_non_normal=FALSE, nsimn=1000, family_p=NULL,
                             levels=NULL, max_size=NULL, breaks=NULL, effect_size=NULL, ICC=NULL, na.action="complete", output=NULL, alpha =0.05,
                             include_interaction = FALSE,
-                            random_slope_variable = NULL){
+                            random_slope_variable = NULL,
+                            covariate_is_categorical = TRUE){
 
 
 
@@ -74,6 +76,8 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   if(!response_column%in%colnames(data)){  print("response_column should be one of the column names");return(NULL) }
 
   if(is.null(condition_is_categorical) | !condition_is_categorical%in%c(TRUE,FALSE)){ print("condition_is_categorical must be TRUE or FALSE");return(NULL) }
+  if(is.null(covariate_is_categorical) | !covariate_is_categorical%in%c(TRUE,FALSE)){ print("covariate_is_categorical must be TRUE or FALSE");return(NULL) }
+
   if(!is.null(covariate))
     if(!covariate%in%colnames(data))
     { print("covariate should be NA or one of the column names");return(NULL) }
@@ -111,13 +115,13 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
   }else if(na.action=="unique"){
 
-    if(is.null(covariate)) notNAindex=which( rowSums(is.na(data[,c(condition_column, experimental_columns, response_column, covariate)])) == 0 )
+    if(!is.null(covariate)) notNAindex=which( rowSums(is.na(data[,c(condition_column, experimental_columns, response_column, covariate)])) == 0 )
     else notNAindex=which( rowSums(is.na(data[,c(condition_column, experimental_columns, response_column)])) == 0 )
 
 
   }
 
-  Data=data[notNAindex,]
+  Data <- data[notNAindex,]
 
 
   # cat("\n")
@@ -130,6 +134,8 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   ####### assign categorical variables
   if(condition_is_categorical==TRUE) Data[,condition_column]=as.factor(Data[,condition_column])
 
+  if(covariate_is_categorical==TRUE)
+    fixed_global_variable_data[,covariate]=as.factor(fixed_global_variable_data[,covariate])
 
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {
@@ -161,6 +167,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
     for(r in 2:length(experimental_columns)){
       if(colnames(Data)[experimental_columns_index[r]]%in%noncrossed_columns){
         Data[,experimental_columns_index[r]]=paste(Data[,experimental_columns_index[r-1]], Data[,experimental_columns_index[r]],sep="_")
+        Data[,experimental_columns_index[r]]=as.factor(Data[,experimental_columns_index[r]])
       }
     }
 
@@ -213,14 +220,43 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
     # Build formula components
     fixed_formula <- build_fixed_formula(covariate, include_interaction)
     random_formula <- build_random_formula(experimental_columns, random_slope_variable)
-    lmerFit <- generate_model_fit_4_power_estimates(data=Data,
-                                  fixed_formula,
-                                  random_formula,
-                                  error_is_non_normal,
-                                  family_p,
-                                  total_column)
+    # lmerFit <- generate_model_fit_4_power_estimates(data=Data,
+    #                               fixed_formula,
+    #                               random_formula,
+    #                               error_is_non_normal,
+    #                               family_p,
+    #                               total_column)
 
+    #Data <<- getData(lmerFit)
 
+    if (error_is_non_normal == FALSE) {
+      # Linear mixed effects model
+      formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
+      lmerFit <- lme4::lmer(formula_str, data = Data)
+    } else if (!is.null(family_p) && family_p$family == "binomial" && !is.null(total_column)) {
+      # Binomial with total column
+      formula_str <<- as.formula(paste("cbind(response_column, (total_column - response_column)) ~",
+                                       fixed_formula, "+", random_formula))
+      lmerFit <- lme4::glmer(formula_str, data = Data, family = family_p)
+    } else if (!is.null(family_p) && family_p$family == "negative_binomial" && !is.null(total_column)) {
+      # Negative binomial with offset
+      formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
+                                       "+ offset(log(total_column))"))
+      lmerFit <- lme4::glmer.nb(formula_str, data = Data, family = family_p)
+    } else if (!is.null(family_p) && family_p$family == "poisson" && !is.null(total_column)) {
+      # Negative binomial with offset
+      formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
+                                       "+ offset(log(total_column))"))
+      lmerFit <- lme4::glmer(formula_str, data = Data, family = family_p)
+    }
+    else {
+      # Other GLMMs
+      formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
+      lmerFit <- lme4::glmer(formula_str, data = Data, family = family_p)
+    }
+
+    # lmerFit@call$formula = formula_str
+    # lmerFit@call$data = as.name("Data")
 
     # if(is.null(covariate)){
     #   if(error_is_non_normal==FALSE){
@@ -518,9 +554,9 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   mins=NULL
   lens=NULL
   for(i in 1:length(experimental_columns)){
-    cat("\n")
+    # cat("\n")
     # print(paste("__________________________________________________________________Levels and sample sizes of",experimental_columns[i]))
-    cat("\n")
+    # cat("\n")
     xtabs_s=stats::xtabs(~Data[,paste0("experimental_column",i)])
 
 
@@ -533,11 +569,11 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
     }
 
     lens=c(lens,length(xtabs_s))
-    cat("\n")
+    # cat("\n")
     # print(paste("_________________________________Max sample size:",maxs[i]))
     # print(paste("_________________________________Min sample size:",mins[i]))
     # print(paste("_________________________________Count of levels:",lens[i]))
-    cat("\n")
+    # cat("\n")
   }
 
 
@@ -582,9 +618,9 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
         if(max_size[i]==0){
           max_size[i]=lens[target_i[i]]*5
         }else if(max_size[i]<lens[target_i[i]]){
-          cat("\n")
+          # cat("\n")
           # print(paste("_________________________________Max size is set to ",max_size[i]," which is smaller than the observed max size ",lens[target_i[i]],". The observed max size will be used instead.",sep=""))
-          cat("\n")
+          # cat("\n")
           max_size[i]=lens[target_i[i]]
         }
         if(breaks[i]==0) breaks[i] = max(1, round( lens[target_i[i]] / 5 ))
@@ -598,9 +634,9 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
         if(max_size[i]==0){
           max_size[i]=maxs[target_i[i]]*5
         }else if(max_size[i]<maxs[target_i[i]]){
-          cat("\n")
+          # cat("\n")
           # print(paste("_________________________________Max size is set to ",max_size[i]," which is smaller than the observed max size ",maxs[target_i[i]],". The observed max size will be used instead.",sep=""))
-          cat("\n")
+          # cat("\n")
           max_size[i]=maxs[target_i[i]]
         }
         if(breaks[i]==0) breaks[i] = max(1, round( maxs[target_i[i]] / 5 ))
@@ -610,38 +646,38 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
           extended_target_columns=simr::extend(extended_target_columns,within=target_columns_renamed[i],n=max_size[i])
         }
       }
-      cat("\n")
+      # cat("\n")
       # print(paste("Input max size of",target_columns[i]))
       # print(max_size[i])
-      cat("\n")
+      # cat("\n")
 
     }
 
-    cat("\n")
+    #cat("\n")
     # print("__________________________________________________________________Extended parameters:")
-    for(i in 1:length(target_columns)){
-      if(target_columns_renamed[i]=="experimental_column1"){
-        # print(xtabs(~experimental_column1,data=attributes(extended_target_columns)$newData))
-        cat("\n")
-      }
-      if(target_columns_renamed[i]=="experimental_column2"){
-        # print(xtabs(~experimental_column2,data=attributes(extended_target_columns)$newData))
-        cat("\n")
-      }
-      if(target_columns_renamed[i]=="experimental_column3"){
-        # print(xtabs(~experimental_column3,data=attributes(extended_target_columns)$newData))
-        cat("\n")
-      }
-      if(target_columns_renamed[i]=="experimental_column4"){
-        # print(xtabs(~experimental_column4,data=attributes(extended_target_columns)$newData))
-        cat("\n")
-      }
-      if(target_columns_renamed[i]=="experimental_column5"){
-        # print(xtabs(~experimental_column5,data=attributes(extended_target_columns)$newData))
-        cat("\n")
-      }
-
-    }
+    # for(i in 1:length(target_columns)){
+    #   if(target_columns_renamed[i]=="experimental_column1"){
+    #     # print(xtabs(~experimental_column1,data=attributes(extended_target_columns)$newData))
+    #     cat("\n")
+    #   }
+    #   if(target_columns_renamed[i]=="experimental_column2"){
+    #     # print(xtabs(~experimental_column2,data=attributes(extended_target_columns)$newData))
+    #     cat("\n")
+    #   }
+    #   if(target_columns_renamed[i]=="experimental_column3"){
+    #     # print(xtabs(~experimental_column3,data=attributes(extended_target_columns)$newData))
+    #     cat("\n")
+    #   }
+    #   if(target_columns_renamed[i]=="experimental_column4"){
+    #     # print(xtabs(~experimental_column4,data=attributes(extended_target_columns)$newData))
+    #     cat("\n")
+    #   }
+    #   if(target_columns_renamed[i]=="experimental_column5"){
+    #     # print(xtabs(~experimental_column5,data=attributes(extended_target_columns)$newData))
+    #     cat("\n")
+    #   }
+    #
+    # }
 
     if(length(experimental_columns)>=2){
             for(r in 2:length(experimental_columns)){
@@ -657,10 +693,10 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
     ###### power simulation
 
     ps=simr::powerSim(extended_target_columns, test=simr::fixed("condition_column"), nsim=nsimn, progress = FALSE)
-    cat("\n")
+    # cat("\n")
     # print("__________________________________________________________________Power simulation result:")
     # print(ps)
-    cat("\n")
+    # cat("\n")
     if(length(output)!=0){
       sink(paste0(output,".txt"))
        print(ps)
@@ -694,9 +730,9 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
         if(max_size[i]==0){
           max_size[i]=lens[target_i[i]]*5
         }else if(max_size[i]<lens[target_i[i]]){
-          cat("\n")
+          # cat("\n")
           # print(paste("_________________________________Max size is set to ",max_size[i]," which is smaller than the observed max size ",lens[target_i[i]],". The observed max size will be used instead.",sep=""))
-          cat("\n")
+          # cat("\n")
           max_size[i]=lens[target_i[i]]
         }
         if(breaks[i]==0) breaks[i] = max(1, round( lens[target_i[i]] / 5 ))
@@ -708,39 +744,39 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
         if(breaks[i]==0) breaks[i] = max(1, round( maxs[target_i[i]] / 5 ))
         extended_target_columns=c(extended_target_columns,list(simr::extend(lmerFit,within=target_columns_renamed[i],n=max_size[i])))
       }
-      cat("\n")
+      # cat("\n")
       # print(paste("_________________________________Power simulation will be performed based on the max size of",target_columns[i],":"))
       # print(max_size[i])
-      cat("\n")
+      # cat("\n")
 
     }
 
 
-    cat("\n")
+    # cat("\n")
     # print("__________________________________________________________________Extended parameters:")
-    for(i in 1:length(target_columns)){
-      if(target_columns_renamed[i]=="experimental_column1"){
-        # print(xtabs(~experimental_column1,data=attributes(extended_target_columns[[i]])$newData))
-        cat("\n")
-      }
-      if(target_columns_renamed[i]=="experimental_column2"){
-        # print(xtabs(~experimental_column2,data=attributes(extended_target_columns[[i]])$newData))
-        cat("\n")
-      }
-      if(target_columns_renamed[i]=="experimental_column3"){
-        # print(xtabs(~experimental_column3,data=attributes(extended_target_columns[[i]])$newData))
-        cat("\n")
-      }
-      if(target_columns_renamed[i]=="experimental_column4"){
-        # print(xtabs(~experimental_column4,data=attributes(extended_target_columns[[i]])$newData))
-        cat("\n")
-      }
-      if(target_columns_renamed[i]=="experimental_column5"){
-        # print(xtabs(~experimental_column5,data=attributes(extended_target_columns[[i]])$newData))
-        cat("\n")
-      }
-
-    }
+    # for(i in 1:length(target_columns)){
+    #   if(target_columns_renamed[i]=="experimental_column1"){
+    #     # print(xtabs(~experimental_column1,data=attributes(extended_target_columns[[i]])$newData))
+    #     cat("\n")
+    #   }
+    #   if(target_columns_renamed[i]=="experimental_column2"){
+    #     # print(xtabs(~experimental_column2,data=attributes(extended_target_columns[[i]])$newData))
+    #     cat("\n")
+    #   }
+    #   if(target_columns_renamed[i]=="experimental_column3"){
+    #     # print(xtabs(~experimental_column3,data=attributes(extended_target_columns[[i]])$newData))
+    #     cat("\n")
+    #   }
+    #   if(target_columns_renamed[i]=="experimental_column4"){
+    #     # print(xtabs(~experimental_column4,data=attributes(extended_target_columns[[i]])$newData))
+    #     cat("\n")
+    #   }
+    #   if(target_columns_renamed[i]=="experimental_column5"){
+    #     # print(xtabs(~experimental_column5,data=attributes(extended_target_columns[[i]])$newData))
+    #     cat("\n")
+    #   }
+    #
+    # }
 
     if(length(experimental_columns)>=2){
             for(r in 2:length(experimental_columns)){

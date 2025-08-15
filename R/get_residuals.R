@@ -21,6 +21,7 @@
 #' @param na.action "complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, and response columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.
 #' @param include_interaction Whether to include condition * covariate interaction
 #' @param random_slope_variable Variable for random slopes (typically "condition_column")
+#' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #' @return The adjusted residual values for the experimental variables will be returned along with the original input data. A boxplot of residual values and a plot of 95% confidence interval mean residual values adjusted for the experimental variables will be returned.
 #'
 #' @export
@@ -36,7 +37,7 @@
 
 
 get_residuals <- function(data, condition_column, experimental_columns, response_column,  condition_is_categorical, covariate=NULL,
-                          crossed_columns=NULL, total_column=FALSE, error_is_non_normal=FALSE, family_p=NULL, na.action="complete", include_interaction=FALSE, random_slope_variable=NULL){
+                          crossed_columns=NULL, total_column=FALSE, error_is_non_normal=FALSE, family_p=NULL, na.action="complete", include_interaction=FALSE, random_slope_variable=NULL, covariate_is_categorical = TRUE){
 
 
 
@@ -49,6 +50,7 @@ get_residuals <- function(data, condition_column, experimental_columns, response
   if(sum(experimental_columns%in%colnames(data))!=length(experimental_columns) ){ print("experimental_columns must match column names");return(NULL) }
 
   if(is.null(condition_is_categorical) | !condition_is_categorical%in%c(TRUE,FALSE)){ print("condition_is_categorical must be TRUE or FALSE");return(NULL) }
+  if(is.null(covariate_is_categorical) | !covariate_is_categorical%in%c(TRUE,FALSE)){ print("covariate_is_categorical must be TRUE or FALSE");return(NULL) }
   if(!is.null(crossed_columns)){if(sum(crossed_columns%in%colnames(data))!=length(crossed_columns) ){ print("crossed_columns must match column names");return(NULL) }}
 
   # Validation for new parameters
@@ -95,7 +97,15 @@ get_residuals <- function(data, condition_column, experimental_columns, response
   colnames_original=colnames(Data)
   experimental_columns_index=NULL
   ####### assign categorical variables
-  if(condition_is_categorical==TRUE) Data[,condition_column]=as.factor(Data[,condition_column])
+  if(condition_is_categorical==TRUE)
+    Data[,condition_column]=as.factor(Data[,condition_column])
+  else
+    Data[,condition_column]=as.numeric(Data[,condition_column])
+
+  if(covariate_is_categorical==TRUE)
+    Data[,covariate]=as.factor(Data[,covariate])
+  else
+    Data[,covariate]=as.numeric(Data[,covariate])
 
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {

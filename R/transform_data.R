@@ -16,6 +16,9 @@
 #' @param family_p The type of distribution family to specify when the response is categorical. If family is "binary" then binary(link="log") is used, if family is "poisson" then poisson(link="logit") is used, if family is "poisson_log" then poisson(link=") log") is used.
 #' @param alpha numeric scalar between 0 and 1 indicating the Type I error associated with the test of outliers
 #' @param na.action "complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, and response columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.
+#' @param include_interaction Whether to include condition * covariate interaction
+#' @param random_slope_variable Variable for random slopes (typically "condition_column")
+#' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #'
 #' @return For continuous data, the function returns quantile-quanitle (qq) plots of i) raw residual values ii) log-transformed residual values iii) raw residual values after removing outliers, and iv) log-transformed residual values. For discrete data, it returns a histogram. If "rosner" is chosen, a matrix with updated feature values after transformation will be returned. If "cook" is choose, a list with  a matrix with updated feature values after transformation will be returned,
 #'
@@ -26,7 +29,7 @@
 #' @examples result=transform_data2(data=data, condition_column="classif", experimental_columns=c("experiment","line"), response_column="feature", condition_is_categorical=TRUE, error_is_non_normal=TRUE, family_p="poisson", alpha=0.05, crossed_columns = "line", method="cook", na.action="complete")
 
 transform_data<-function(data, condition_column, experimental_columns, response_column, total_column, condition_is_categorical, covariate=NA,
-                         crossed_columns = NA, error_is_non_normal=FALSE, family_p=NULL, alpha=0.05, na.action="complete", include_interaction = FALSE, random_slope_variable = NULL){
+                         crossed_columns = NA, error_is_non_normal=FALSE, family_p=NULL, alpha=0.05, na.action="complete", include_interaction = FALSE, random_slope_variable = NULL, covariate_is_categorical = TRUE){
 
 
 
@@ -79,14 +82,14 @@ transform_data<-function(data, condition_column, experimental_columns, response_
 
   lms=get_model_and_data(data=data, condition_column=condition_column, experimental_columns=experimental_columns,
                          response_column=response_column, total_column = total_column, condition_is_categorical=condition_is_categorical, covariate=covariate,
-                         crossed_columns=crossed_columns, error_is_non_normal=error_is_non_normal, family_p=family_p, na.action=na.action,include_interaction=include_interaction, random_slope_variable=random_slope_variable)
+                         crossed_columns=crossed_columns, error_is_non_normal=error_is_non_normal, family_p=family_p, na.action=na.action,include_interaction=include_interaction, random_slope_variable=random_slope_variable, covariate_is_categorical = covariate_is_categorical)
 
 
   if(error_is_non_normal==FALSE){
     ##raw qq
     residual=check_normality(data, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
                              response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
-                             error_is_non_normal = error_is_non_normal, image_title="QQplot (raw data)", na.action=na.action, include_interaction=include_interaction, random_slope_variable=random_slope_variable)
+                             error_is_non_normal = error_is_non_normal, image_title="QQplot (raw data)", na.action=na.action, include_interaction=include_interaction, random_slope_variable=random_slope_variable, covariate_is_categorical = covariate_is_categorical)
 
     diag_plot1 <- plot(lms[[1]], resid(.) ~ predict(., type = "link"), type = c("p", "smooth"), main ="residuals vs fitted")
     print(diag_plot1)
@@ -138,7 +141,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
     if(error_is_non_normal==FALSE){
       check_normality(Data_noOutlier, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
                       response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
-                      error_is_non_normal = FALSE,  image_title="QQplot (outlier excluded Data)", na.action=na.action,include_interaction=include_interaction,random_slope_variable=random_slope_variable)
+                      error_is_non_normal = FALSE,  image_title="QQplot (outlier excluded Data)", na.action=na.action,include_interaction=include_interaction,random_slope_variable=random_slope_variable, covariate_is_categorical = covariate_is_categorical)
     }
 
   }
@@ -214,12 +217,12 @@ transform_data<-function(data, condition_column, experimental_columns, response_
 
     residual=check_normality(Data_log, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
                              response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
-                             error_is_non_normal = FALSE,  image_title="QQplot (log transformed Data)", na.action=na.action, include_interaction=include_interaction, random_slope_variable=random_slope_variable)
+                             error_is_non_normal = FALSE,  image_title="QQplot (log transformed Data)", na.action=na.action, include_interaction=include_interaction, random_slope_variable=random_slope_variable, covariate_is_categorical = covariate_is_categorical)
 
 
     lms=get_model_and_data(data=Data_log, condition_column=condition_column, experimental_columns=experimental_columns,
                            response_column=response_column, condition_is_categorical=condition_is_categorical, covariate=covariate,
-                           crossed_columns=crossed_columns, error_is_non_normal=error_is_non_normal, family_p=family_p, na.action=na.action, include_interaction=include_interaction, random_slope_variable=random_slope_variable)
+                           crossed_columns=crossed_columns, error_is_non_normal=error_is_non_normal, family_p=family_p, na.action=na.action, include_interaction=include_interaction, random_slope_variable=random_slope_variable, covariate_is_categorical = covariate_is_categorical)
 
 
     diag_plot1 <- plot(lms[[1]], resid(.) ~ predict(., type = "link"), type = c("p", "smooth"), main ="residuals vs fitted (log transformed)")
@@ -268,7 +271,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
       ###qqplot
       check_normality(Data_log_noOutlier, condition_column = condition_column, experimental_columns = experimental_columns,  crossed_columns = crossed_columns,
                       response_column = response_column,  condition_is_categorical = condition_is_categorical, covariate=covariate,
-                      error_is_non_normal = FALSE,  image_title="QQplot (log transformed & ouliter excluded Data)", na.action=na.action, include_interaction=include_interaction, random_slope_variable=random_slope_variable)
+                      error_is_non_normal = FALSE,  image_title="QQplot (log transformed & ouliter excluded Data)", na.action=na.action, include_interaction=include_interaction, random_slope_variable=random_slope_variable, covariate_is_categorical = covariate_is_categorical)
 
     }
 
@@ -403,7 +406,11 @@ rosner_test<- function (trait, response_column, alpha, hist_text) {
 
 cooks_test<- function (model, fixed_global_variable_data, experimental_columns, response_column, hist_text) {
 
-  cooks_result=lapply(1:length(experimental_columns),
+  n_cols_2_test <- length(experimental_columns)
+  ##influence takes a very long time for testing influential observations higher than the first level
+  if(summary(model)$family == "binomial")
+    n_cols_2_test <- 1
+  cooks_result=lapply(1:n_cols_2_test,
                       function(i){
 
                         tb=table(fixed_global_variable_data[,"condition_column"], fixed_global_variable_data[,experimental_columns[i]])
@@ -442,7 +449,7 @@ cooks_test<- function (model, fixed_global_variable_data, experimental_columns, 
   # cooks_result_sample=cooks.distance(alt.est)
   # cooks_result=c(list(cooks_result_sample), cooks_result)
   # names(cooks_result)=c("cooks_distance_sample", paste0("cooks_distance_",experimental_columns) )
-  names(cooks_result)=c(paste0("cooks_distance_",experimental_columns) )
+  names(cooks_result)=c(paste0("cooks_distance_",experimental_columns[1:n_cols_2_test]) )
 
   # filtering_targets=cooks_result_sample>4/nrow(fixed_global_variable_data)
   #

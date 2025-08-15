@@ -24,6 +24,7 @@
 #' @param na.action "complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, and response columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.
 #' @param include_interaction Whether to include condition * covariate interaction
 #' @param random_slope_variable Variable for random slopes (typically "condition_column")
+#' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #'
 #' @return A linear mixed model result
 #'
@@ -43,7 +44,8 @@
 calculate_lmer_estimates <- function(data, condition_column, experimental_columns, response_column, total_column, condition_is_categorical, covariate = NULL,
                                      crossed_columns=NULL, error_is_non_normal=FALSE, family_p=NULL, na.action="complete",
                                      include_interaction = FALSE,
-                                     random_slope_variable = NULL){
+                                     random_slope_variable = NULL,
+                                     covariate_is_categorical = TRUE){
 
 
 
@@ -56,6 +58,7 @@ calculate_lmer_estimates <- function(data, condition_column, experimental_column
     if(!covariate%in%colnames(data))
       { print("covariate should be NA or one of the column names");return(NULL) }
   if(!is.null(crossed_columns)){if(sum(crossed_columns%in%colnames(data))!=length(crossed_columns) ){ print("crossed_columns must match column names");return(NULL) }}
+  if(is.null(covariate_is_categorical) | !covariate_is_categorical%in%c(TRUE,FALSE)){ print("covariate_is_categorical must be TRUE or FALSE");return(NULL) }
 
   # Validation for new parameters
   if (include_interaction && is.null(covariate)) {
@@ -102,7 +105,15 @@ calculate_lmer_estimates <- function(data, condition_column, experimental_column
   colnames_original=colnames(Data)
   experimental_columns_index=NULL
   ####### assign categorical variables
-  if(condition_is_categorical==TRUE) Data[,condition_column]=as.factor(Data[,condition_column])
+  if(condition_is_categorical==TRUE)
+    Data[,condition_column]=as.factor(Data[,condition_column])
+  else
+    Data[,condition_column]=as.numeric(Data[,condition_column])
+
+  if(covariate_is_categorical==TRUE)
+    Data[,covariate]=as.factor(Data[,covariate])
+  else
+    Data[,covariate]=as.numeric(Data[,covariate])
 
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {

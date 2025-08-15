@@ -16,7 +16,9 @@ transform_data(
   error_is_non_normal = FALSE,
   family_p = NULL,
   alpha = 0.05,
-  na.action = "complete"
+  na.action = "complete",
+  include_interaction = FALSE,
+  random_slope_variable = NULL
 )
 }
 \arguments{

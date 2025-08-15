@@ -23,6 +23,6 @@ readDesign <- function(jsonfile) {
   if(!is.null(design_data$crossed_columns)) design@crossed_columns = design_data$crossed_columns
   if(!is.null(design_data$total_column)) design@total_column = design_data$total_column
   design@outlier_alpha = design_data$outlier_alpha
-
+  design@covariate_is_categorical = design_data$covariate_is_categorical
   return(design)
 }
