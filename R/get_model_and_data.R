@@ -108,11 +108,12 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
   else
     fixed_global_variable_data[,condition_column]=as.numeric(fixed_global_variable_data[,condition_column])
 
-  if(covariate_is_categorical==TRUE)
-    fixed_global_variable_data[,covariate]=as.factor(fixed_global_variable_data[,covariate])
-  else
-    fixed_global_variable_data[,covariate]=as.numeric(fixed_global_variable_data[,covariate])
-
+  if(!is.null(covariate)) {
+    if(covariate_is_categorical==TRUE)
+      fixed_global_variable_data[,covariate]=as.factor(fixed_global_variable_data[,covariate])
+    else
+      fixed_global_variable_data[,covariate]=as.numeric(fixed_global_variable_data[,covariate])
+  }
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {
     if(class(fixed_global_variable_data[,random_slope_variable]) != "numeric") {

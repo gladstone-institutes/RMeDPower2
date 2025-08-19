@@ -8,20 +8,21 @@ test_that("RMeDesign class can be created with valid parameters", {
     condition_is_categorical = TRUE,
     experimental_columns = c("experiment", "plate"),
     covariate = NULL,
-    covariate_is_categorical = TRUE,
+    covariate_is_categorical = NA,
     crossed_columns = NULL,
-    include_interaction = FALSE,
+    include_interaction = NA,
     random_slope_variable = NULL,
     total_column = NULL,
     na_action = "complete"
   )
-  
+
   expect_s4_class(design, "RMeDesign")
   expect_equal(design@response_column, "cell_size")
   expect_equal(design@condition_column, "treatment")
   expect_true(design@condition_is_categorical)
   expect_equal(design@experimental_columns, c("experiment", "plate"))
   expect_null(design@covariate)
+  expect_null(design@covariate_is_categorical)
   expect_false(design@include_interaction)
 })
 
@@ -39,7 +40,7 @@ test_that("RMeDesign class handles covariate parameters correctly", {
     total_column = NULL,
     na_action = "unique"
   )
-  
+
   expect_equal(design@covariate, "age")
   expect_false(design@covariate_is_categorical)
   expect_true(design@include_interaction)
@@ -54,14 +55,14 @@ test_that("RMeDesign class handles crossed columns correctly", {
     condition_is_categorical = TRUE,
     experimental_columns = c("experiment", "cell_line"),
     covariate = NULL,
-    covariate_is_categorical = TRUE,
+    covariate_is_categorical = NULL,
     crossed_columns = "cell_line",
     include_interaction = FALSE,
     random_slope_variable = NULL,
     total_column = NULL,
     na_action = "complete"
   )
-  
+
   expect_equal(design@crossed_columns, "cell_line")
 })
 
@@ -70,7 +71,7 @@ test_that("ProbabilityModel class can be created for normal distribution", {
     error_is_non_normal = FALSE,
     family_p = NULL
   )
-  
+
   expect_s4_class(model, "ProbabilityModel")
   expect_false(model@error_is_non_normal)
   expect_null(model@family_p)
@@ -82,24 +83,24 @@ test_that("ProbabilityModel class can be created for non-normal distributions", 
     error_is_non_normal = TRUE,
     family_p = "poisson"
   )
-  
+
   expect_true(model_poisson@error_is_non_normal)
   expect_equal(model_poisson@family_p, "poisson")
-  
+
   # Test binomial
   model_binomial <- new("ProbabilityModel",
     error_is_non_normal = TRUE,
     family_p = "binomial"
   )
-  
+
   expect_equal(model_binomial@family_p, "binomial")
-  
+
   # Test negative binomial
   model_nb <- new("ProbabilityModel",
     error_is_non_normal = TRUE,
     family_p = "negative_binomial"
   )
-  
+
   expect_equal(model_nb@family_p, "negative_binomial")
 })
 
@@ -115,7 +116,7 @@ test_that("PowerParams class can be created with basic parameters", {
     effect_size = NULL,
     icc = NULL
   )
-  
+
   expect_s4_class(power_params, "PowerParams")
   expect_equal(power_params@target_columns, "experiment")
   expect_equal(power_params@levels, 1)
@@ -137,7 +138,7 @@ test_that("PowerParams class can be created with multiple target columns", {
     effect_size = 0.5,
     icc = c(0.1, 0.05)
   )
-  
+
   expect_equal(power_params@target_columns, c("experiment", "plate"))
   expect_equal(power_params@levels, c(1, 0))
   expect_equal(power_params@nsimn, 500)
@@ -160,7 +161,7 @@ test_that("PowerParams class handles single values correctly", {
     effect_size = 1.2,
     icc = 0.2
   )
-  
+
   expect_equal(power_params@target_columns, "subject")
   expect_equal(power_params@levels, 0)
   expect_equal(power_params@power_curve, 0)
@@ -173,7 +174,7 @@ test_that("Class slots have correct types", {
   design <- create_test_design("basic")
   model <- create_test_model("normal")
   power_params <- create_test_power_params("basic")
-  
+
   # Test RMeDesign slot types
   expect_type(design@response_column, "character")
   expect_type(design@condition_column, "character")
@@ -182,10 +183,10 @@ test_that("Class slots have correct types", {
   expect_type(design@covariate_is_categorical, "logical")
   expect_type(design@include_interaction, "logical")
   expect_type(design@na_action, "character")
-  
+
   # Test ProbabilityModel slot types
   expect_type(model@error_is_non_normal, "logical")
-  
+
   # Test PowerParams slot types
   expect_type(power_params@target_columns, "character")
   expect_type(power_params@levels, "double")

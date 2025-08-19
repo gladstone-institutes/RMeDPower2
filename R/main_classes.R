@@ -53,9 +53,9 @@ setClass("RMeDesign",
            outlier_alpha = 0.05,
            na_action = "complete",
            # NEW DEFAULTS
-           include_interaction = FALSE,        # Default: no interaction
+           include_interaction = NA,        # Default: no interaction
            random_slope_variable = NULL,        # Default: no random slopes
-           covariate_is_categorical = TRUE
+           covariate_is_categorical = NA
          ))
 
 

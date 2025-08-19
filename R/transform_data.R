@@ -408,8 +408,13 @@ cooks_test<- function (model, fixed_global_variable_data, experimental_columns, 
 
   n_cols_2_test <- length(experimental_columns)
   ##influence takes a very long time for testing influential observations higher than the first level
-  if(summary(model)$family == "binomial")
-    n_cols_2_test <- 1
+  if("glmerMod" %in% class(model)) {
+    if(summary(model)$family == "binomial")
+      n_cols_2_test <- 1
+  }
+
+
+
   cooks_result=lapply(1:n_cols_2_test,
                       function(i){
 

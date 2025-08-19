@@ -134,8 +134,12 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   ####### assign categorical variables
   if(condition_is_categorical==TRUE) Data[,condition_column]=as.factor(Data[,condition_column])
 
-  if(covariate_is_categorical==TRUE)
-    fixed_global_variable_data[,covariate]=as.factor(fixed_global_variable_data[,covariate])
+  if(!is.null(covariate)) {
+    if(covariate_is_categorical==TRUE)
+      fixed_global_variable_data[,covariate]=as.factor(fixed_global_variable_data[,covariate])
+    else
+      fixed_global_variable_data[,covariate]=as.numeric(fixed_global_variable_data[,covariate])
+  }
 
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {

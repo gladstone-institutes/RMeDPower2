@@ -102,10 +102,12 @@ get_residuals <- function(data, condition_column, experimental_columns, response
   else
     Data[,condition_column]=as.numeric(Data[,condition_column])
 
-  if(covariate_is_categorical==TRUE)
-    Data[,covariate]=as.factor(Data[,covariate])
-  else
-    Data[,covariate]=as.numeric(Data[,covariate])
+  if(!is.null(covariate)) {
+    if(covariate_is_categorical==TRUE)
+      fixed_global_variable_data[,covariate]=as.factor(fixed_global_variable_data[,covariate])
+    else
+      fixed_global_variable_data[,covariate]=as.numeric(fixed_global_variable_data[,covariate])
+  }
 
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {
