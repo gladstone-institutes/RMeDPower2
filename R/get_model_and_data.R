@@ -47,14 +47,16 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
   if(!condition_column%in%colnames(data)){ print("condition_column should be one of the column names");return(NULL) }
   if(sum(experimental_columns%in%colnames(data))!=length(experimental_columns) ){ print("experimental_columns must match column names");return(NULL) }
   if(!response_column%in%colnames(data)){  print("response_column should be one of the column names");return(NULL) }
-  if(is.null(condition_is_categorical) | !condition_is_categorical%in%c(TRUE,FALSE)){ print("condition_is_categorical must be TRUE or FALSE");return(NULL) }
+  if(!is.na(condition_is_categorical) && !condition_is_categorical%in%c(TRUE,FALSE)){ print("condition_is_categorical must be TRUE or FALSE");return(NULL) }
   if(!is.null(crossed_columns)){if(sum(crossed_columns%in%colnames(data))!=length(crossed_columns) ){ print("crossed_columns must match column names");return(NULL) }}
-  if(is.null(covariate_is_categorical) | !covariate_is_categorical%in%c(TRUE,FALSE)){ print("covariate_is_categorical must be TRUE or FALSE");return(NULL) }
+  if(!is.na(covariate_is_categorical) && !covariate_is_categorical%in%c(TRUE,FALSE)){ print("covariate_is_categorical must be TRUE or FALSE");return(NULL) }
 
   # Validation for new parameters
-  if (include_interaction && is.null(covariate)) {
-    print("Cannot include interaction when covariate is NULL")
-    return(NULL)
+  if(!is.na(include_interaction)) {
+    if (include_interaction && is.null(covariate)) {
+      print("Cannot include interaction when covariate is NULL")
+      return(NULL)
+    }
   }
 
   if (!is.null(random_slope_variable) &&

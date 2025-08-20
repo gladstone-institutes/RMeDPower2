@@ -50,21 +50,24 @@ calculate_lmer_estimates <- function(data, condition_column, experimental_column
 
 
   ######input error handler
+  if(!is.null(covariate) )
+    if(!covariate%in%colnames(data))
+    { print("covariate should be null or one of the column names");return(NULL) }
   if(!condition_column%in%colnames(data)){ print("condition_column should be one of the column names");return(NULL) }
   if(sum(experimental_columns%in%colnames(data))!=length(experimental_columns) ){ print("experimental_columns must match column names");return(NULL) }
   if(!response_column%in%colnames(data)){  print("response_column should be one of the column names");return(NULL) }
-  if(is.null(condition_is_categorical) | !condition_is_categorical%in%c(TRUE,FALSE)){ print("condition_is_categorical must be TRUE or FALSE");return(NULL) }
-  if(!is.null(covariate) )
-    if(!covariate%in%colnames(data))
-      { print("covariate should be NA or one of the column names");return(NULL) }
+  if(!is.na(condition_is_categorical) && !condition_is_categorical%in%c(TRUE,FALSE)){ print("condition_is_categorical must be TRUE or FALSE");return(NULL) }
   if(!is.null(crossed_columns)){if(sum(crossed_columns%in%colnames(data))!=length(crossed_columns) ){ print("crossed_columns must match column names");return(NULL) }}
-  if(is.null(covariate_is_categorical) | !covariate_is_categorical%in%c(TRUE,FALSE)){ print("covariate_is_categorical must be TRUE or FALSE");return(NULL) }
+  if(!is.na(covariate_is_categorical) && !covariate_is_categorical%in%c(TRUE,FALSE)){ print("covariate_is_categorical must be TRUE or FALSE");return(NULL) }
 
   # Validation for new parameters
-  if (include_interaction && is.null(covariate)) {
-    print("Cannot include interaction when covariate is NULL")
-    return(NULL)
+  if(!is.na(include_interaction)) {
+    if (include_interaction && is.null(covariate)) {
+      print("Cannot include interaction when covariate is NULL")
+      return(NULL)
+    }
   }
+
 
   if (!is.null(random_slope_variable) &&
       !random_slope_variable %in% c("condition_column", condition_column, "covariate", covariate)) {
@@ -112,9 +115,9 @@ calculate_lmer_estimates <- function(data, condition_column, experimental_column
 
   if(!is.null(covariate)) {
     if(covariate_is_categorical==TRUE)
-      fixed_global_variable_data[,covariate]=as.factor(fixed_global_variable_data[,covariate])
+      Data[,covariate]=as.factor(Data[,covariate])
     else
-      fixed_global_variable_data[,covariate]=as.numeric(fixed_global_variable_data[,covariate])
+      Data[,covariate]=as.numeric(Data[,covariate])
   }
 
   # random slope should be allowed only with a continuous variable
