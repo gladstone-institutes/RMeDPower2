@@ -28,7 +28,7 @@
 
 
 check_normality<-function(data, condition_column, experimental_columns, response_column,  condition_is_categorical, covariate = NA,
-                          crossed_columns = NA, error_is_non_normal=FALSE, image_title = NULL, na.action="complete",
+                          crossed_columns = NULL, error_is_non_normal=FALSE, image_title = NULL, na.action="complete",
                           include_interaction = FALSE,
                           random_slope_variable = NULL,
                           covariate_is_categorical = TRUE){

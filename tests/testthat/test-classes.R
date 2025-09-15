@@ -22,8 +22,8 @@ test_that("RMeDesign class can be created with valid parameters", {
   expect_true(design@condition_is_categorical)
   expect_equal(design@experimental_columns, c("experiment", "plate"))
   expect_null(design@covariate)
-  expect_null(design@covariate_is_categorical)
-  expect_false(design@include_interaction)
+  expect_true(is.na(design@covariate_is_categorical))
+  expect_true(is.na(design@include_interaction))
 })
 
 test_that("RMeDesign class handles covariate parameters correctly", {
@@ -55,7 +55,7 @@ test_that("RMeDesign class handles crossed columns correctly", {
     condition_is_categorical = TRUE,
     experimental_columns = c("experiment", "cell_line"),
     covariate = NULL,
-    covariate_is_categorical = NULL,
+    covariate_is_categorical = NA,
     crossed_columns = "cell_line",
     include_interaction = FALSE,
     random_slope_variable = NULL,

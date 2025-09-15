@@ -3,15 +3,15 @@
 # Create simple test dataset
 create_test_data <- function(n_experiments = 2, n_plates = 3, n_wells = 10) {
   set.seed(123)  # For reproducible tests
-  
+
   n_total <- n_experiments * n_plates * n_wells
-  
+
   data.frame(
     experiment = rep(1:n_experiments, each = n_plates * n_wells),
     plate = rep(rep(1:n_plates, each = n_wells), n_experiments),
     well = rep(1:n_wells, n_experiments * n_plates),
     treatment = rep(c("control", "treated"), length.out = n_total),
-    cell_size = rnorm(n_total, mean = 100, sd = 15) + 
+    cell_size = rnorm(n_total, mean = 100, sd = 15) +
                 rep(c(0, 10), length.out = n_total), # treatment effect
     batch = rep(c("A", "B"), length.out = n_total),
     age = runif(n_total, min = 20, max = 60),
@@ -32,9 +32,9 @@ create_test_data_with_na <- function() {
 # Create count data for testing non-normal distributions
 create_count_data <- function(n_experiments = 2, n_plates = 3, n_wells = 10) {
   set.seed(123)
-  
+
   n_total <- n_experiments * n_plates * n_wells
-  
+
   data.frame(
     experiment = rep(1:n_experiments, each = n_plates * n_wells),
     plate = rep(rep(1:n_plates, each = n_wells), n_experiments),
@@ -54,12 +54,12 @@ create_test_design <- function(type = "basic") {
       condition_column = "treatment",
       condition_is_categorical = TRUE,
       experimental_columns = c("experiment", "plate"),
-      covariate = "",
-      covariate_is_categorical = TRUE,
-      crossed_columns = "",
+      covariate = NULL,
+      covariate_is_categorical = NA,
+      crossed_columns = NULL,
       include_interaction = FALSE,
-      random_slope_variable = "",
-      total_column = "",
+      random_slope_variable = NULL,
+      total_column = NULL,
       na_action = "complete"
     ),
     "with_covariate" = new("RMeDesign",
@@ -69,10 +69,10 @@ create_test_design <- function(type = "basic") {
       experimental_columns = c("experiment", "plate"),
       covariate = "age",
       covariate_is_categorical = FALSE,
-      crossed_columns = "",
+      crossed_columns = NULL,
       include_interaction = FALSE,
-      random_slope_variable = "",
-      total_column = "",
+      random_slope_variable = NULL,
+      total_column = NULL,
       na_action = "complete"
     ),
     "count_data" = new("RMeDesign",
@@ -80,11 +80,11 @@ create_test_design <- function(type = "basic") {
       condition_column = "treatment",
       condition_is_categorical = TRUE,
       experimental_columns = c("experiment", "plate"),
-      covariate = "",
+      covariate = NULL,
       covariate_is_categorical = TRUE,
-      crossed_columns = "",
+      crossed_columns = NULL,
       include_interaction = FALSE,
-      random_slope_variable = "",
+      random_slope_variable = NULL,
       total_column = "total_count",
       na_action = "complete"
     )
@@ -96,7 +96,7 @@ create_test_model <- function(type = "normal") {
   switch(type,
     "normal" = new("ProbabilityModel",
       error_is_non_normal = FALSE,
-      family_p = ""
+      family_p = NULL
     ),
     "poisson" = new("ProbabilityModel",
       error_is_non_normal = TRUE,
@@ -119,9 +119,9 @@ create_test_power_params <- function(type = "basic") {
       nsimn = 10,  # Small number for fast testing
       alpha = 0.05,
       max_size = 5,
-      breaks = 2,
-      effect_size = 0.5,
-      icc = 0.1
+      breaks = NULL,
+      effect_size = NULL,
+      icc = NULL
     ),
     "multiple_targets" = new("PowerParams",
       target_columns = c("experiment", "plate"),
@@ -130,9 +130,9 @@ create_test_power_params <- function(type = "basic") {
       nsimn = 10,
       alpha = 0.05,
       max_size = c(5, 10),
-      breaks = c(2, 3),
-      effect_size = 0.5,
-      icc = c(0.1, 0.05)
+      breaks = NULL,
+      effect_size = NULL,
+      icc = NULL
     )
   )
 }

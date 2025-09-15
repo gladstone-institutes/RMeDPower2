@@ -150,6 +150,7 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
       for(r in 2:length(experimental_columns)){
       if(colnames(fixed_global_variable_data)[experimental_columns_index[r]]%in%noncrossed_columns){
         fixed_global_variable_data[,experimental_columns_index[r]]=paste(fixed_global_variable_data[,experimental_columns_index[r-1]], fixed_global_variable_data[,experimental_columns_index[r]],sep="_")
+        fixed_global_variable_data[,experimental_columns_index[r]]=as.factor(fixed_global_variable_data[,experimental_columns_index[r]])
       }
     }
 

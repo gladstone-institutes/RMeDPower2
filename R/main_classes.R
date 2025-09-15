@@ -29,17 +29,17 @@
 setClass("RMeDesign",
          slots = list(
            response_column = "character",
-           covariate = "character",
+           covariate = "ANY",
            condition_column = "character",
            condition_is_categorical = "logical",
            experimental_columns = "character",
-           crossed_columns = "character",
-           total_column = "character",
+           crossed_columns = "ANY",
+           total_column = "ANY",
            outlier_alpha = "numeric",
            na_action = "character",
            # NEW SLOTS FOR ENHANCED FUNCTIONALITY
            include_interaction = "logical",    # Whether to include condition * covariate interaction
-           random_slope_variable = "character", # Variable for random slopes (typically condition_column)
+           random_slope_variable = "ANY", # Variable for random slopes (typically condition_column)
            covariate_is_categorical = "logical" # Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
          ),
          prototype = list(
@@ -63,7 +63,7 @@ setClass("RMeDesign",
 setClass("ProbabilityModel",
          slots = list(
            error_is_non_normal = "logical",
-           family_p = "character"
+           family_p = "ANY"
          ),
          prototype = list(
            error_is_non_normal = FALSE,
@@ -77,11 +77,11 @@ setClass("PowerParams",
            power_curve = "numeric",
            nsimn = "numeric",
            levels = "numeric",
-           max_size = "numeric",
+           max_size = "ANY",
            alpha = "numeric",
-           breaks = "numeric",
-           effect_size = "numeric",
-           icc = "numeric"
+           breaks = "ANY",
+           effect_size = "ANY",
+           icc = "ANY"
          ),
          prototype = list(
            target_columns = "experimental_column",

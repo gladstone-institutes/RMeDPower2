@@ -56,7 +56,7 @@
 
 
 calculate_power <- function(data, condition_column, experimental_columns, response_column, total_column = NULL, target_columns, power_curve, condition_is_categorical, covariate=NA,
-                            crossed_columns = NA, error_is_non_normal=FALSE, nsimn=1000, family_p=NULL,
+                            crossed_columns = NULL, error_is_non_normal=FALSE, nsimn=1000, family_p=NULL,
                             levels=NULL, max_size=NULL, breaks=NULL, effect_size=NULL, ICC=NULL, na.action="complete", output=NULL, alpha =0.05,
                             include_interaction = FALSE,
                             random_slope_variable = NULL,
@@ -70,7 +70,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   ######input error handler
   if(length(levels)!=length(target_columns)){ print("User should specify levels of all target parameters") }
   if(length(power_curve)==0 | !power_curve%in%c(0,1)){ print("power_curve must be 0 or 1");return(NULL) }
-  if(!condition_column%in%colnames(data)){ print("condition_column should be one of the column names");return(NULL) }
+  if(!condition_column %in% colnames(data)){ print("condition_column should be one of the column names");return(NULL) }
   if(sum(experimental_columns%in%colnames(data))!=length(experimental_columns) ){ print("experimental_columns must match column names");return(NULL) }
   if(!is.null(crossed_columns)){if(sum(crossed_columns%in%colnames(data))!=length(crossed_columns) ){ print("crossed_columns must match column names");return(NULL) }}
   if(!response_column%in%colnames(data)){  print("response_column should be one of the column names");return(NULL) }
@@ -88,7 +88,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   if(!( is.null(breaks) | (is.numeric(breaks)&&breaks>0) ) ){ print("breaks must be a positive integer");return(NULL) }
   if(!( is.null(effect_size) | (is.numeric(effect_size)&&effect_size>0) ) ){ print("effect_size a positive integer");return(NULL) }
   if(!is.null(ICC) & error_is_non_normal==TRUE ){ print("ICC-based simulations are not supported when the response is categorical.");return(NULL) }
-
+  if(length(ICC) != length(experimental_columns)) {print("The ICC vector should be of the same dimension as the number of experimental columns");return(NULL)}
   # Validation for new parameters
   if(!is.na(include_interaction)) {
     if (include_interaction && is.null(covariate)) {
@@ -138,9 +138,9 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
   if(!is.null(covariate)) {
     if(covariate_is_categorical==TRUE)
-      fixed_global_variable_data[,covariate]=as.factor(fixed_global_variable_data[,covariate])
+      Data[,covariate]=as.factor(Data[,covariate])
     else
-      fixed_global_variable_data[,covariate]=as.numeric(fixed_global_variable_data[,covariate])
+      Data[,covariate]=as.numeric(Data[,covariate])
   }
 
   # random slope should be allowed only with a continuous variable
@@ -221,7 +221,8 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
 
   ####### run the formula
-  if(length(ICC)==0 && multiple_levels_for_each_random_effect){
+  if(multiple_levels_for_each_random_effect){
+
 
     # Build formula components
     fixed_formula <- build_fixed_formula(covariate, include_interaction)
@@ -386,8 +387,6 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
 
 
-
-
   slmerFit <- summary(lmerFit)
   # cat("\n")
   # print("__________________________________________________________________Model statistics:")
@@ -395,6 +394,8 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   # cat("\n")
 
   fixed_effects=slmerFit$coefficients[,1]
+
+
 
 
 
@@ -551,6 +552,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
 
   }
+
 
 
 
