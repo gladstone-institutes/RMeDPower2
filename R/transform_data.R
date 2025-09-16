@@ -431,20 +431,6 @@ rosner_test<- function (trait, response_column, alpha, hist_text) {
         if(sum(outliers<median(trait)) >0) cutoff2=max( outliers[which(outliers<median(trait))] )
 
 
-        # ###plot the distribution and point the outlier boundary
-        # hist(trait,breaks=1000, main=paste0("Outliers" ) )
-        #
-        # if(!is.na(cutoff1)) abline(v=cutoff1,col="red")
-        # if(!is.na(cutoff2)) abline(v=cutoff2,col="red")
-        #
-        # if(!is.na(cutoff1)&is.na(cutoff2)){
-        #   mtext(paste0("Cutoff at ",cutoff1 ),cex=1.2)
-        # }else if(!is.na(cutoff2)&is.na(cutoff1)){
-        #   mtext(paste0("Cutoff at ",cutoff2 ),cex=1.2)
-        # }else if(!is.na(cutoff1)&!is.na(cutoff2)){
-        #   mtext(paste0("Cutoff at ",cutoff2, " and ", cutoff1 ),cex=1.2)
-        # }
-
 
 
         ############rosner's test end
@@ -469,96 +455,60 @@ rosner_test<- function (trait, response_column, alpha, hist_text) {
 cooks_test<- function (model, fixed_global_variable_data, experimental_columns, response_column, hist_text) {
 
   n_cols_2_test <- length(experimental_columns)
+  perform_test <- TRUE
   ##influence takes a very long time for testing influential observations higher than the first level
   if("glmerMod" %in% class(model)) {
     if(summary(model)$family == "binomial")
       n_cols_2_test <- 1
+      if("experimental_column1" %in% experimental_columns)
+        experimental_columns = "experimental_column1"
+      else{
+        print("Not enough levels to perform cooks test for experimental_column1 with the assumed binomial distribution")
+        cooks_result <- NULL
+        perform_test <- FALSE
+      }
   }
 
 
 
-  cooks_result=lapply(1:n_cols_2_test,
-                      function(i){
+  if(perform_test) {
+    cooks_result=lapply(1:n_cols_2_test,
+                        function(i){
 
-                        tb=table(fixed_global_variable_data[,"condition_column"], fixed_global_variable_data[,experimental_columns[i]])
-                        tb=tb[rowSums(tb)>0,]
-                        tb[tb>0]=1
-                        condition_counts=rowSums(tb)
+                          tb=table(fixed_global_variable_data[,"condition_column"], fixed_global_variable_data[,experimental_columns[i]])
+                          tb=tb[rowSums(tb)>0,]
+                          tb[tb>0]=1
+                          condition_counts=rowSums(tb)
 
 
-                        if(length(condition_counts)==2 & sum(condition_counts==1)==1){
-                          not2exclude=fixed_global_variable_data[fixed_global_variable_data[,"condition_column"]==names(condition_counts[condition_counts==1]), experimental_columns[i]][1]
-                          not2exclude=as.character(not2exclude)
+                          if(length(condition_counts)==2 & sum(condition_counts==1)==1){
+                            not2exclude=fixed_global_variable_data[fixed_global_variable_data[,"condition_column"]==names(condition_counts[condition_counts==1]), experimental_columns[i]][1]
+                            not2exclude=as.character(not2exclude)
 
-                          cd=NULL
+                            cd=NULL
 
-                          levels=setdiff(fixed_global_variable_data[,experimental_columns[i]],not2exclude)
-                          for(level2test in levels ){
-                            alt.est <- influence.ME::influence(model, group=experimental_columns[i], select=level2test)
-                            cd=rbind(cd, cooks.distance(alt.est))
+                            levels=setdiff(fixed_global_variable_data[,experimental_columns[i]],not2exclude)
+                            for(level2test in levels ){
+                              alt.est <- influence.ME::influence(model, group=experimental_columns[i], select=level2test)
+                              cd=rbind(cd, cooks.distance(alt.est))
+                            }
+                              rownames(cd)=levels
+                              cd
+
+                          }else{
+                            alt.est <- influence.ME::influence(model, group=experimental_columns[i] )
+                            cooks.distance(alt.est)
                           }
-                            rownames(cd)=levels
-                            cd
 
-                        }else{
-                          alt.est <- influence.ME::influence(model, group=experimental_columns[i] )
-                          cooks.distance(alt.est)
+
                         }
+    )
 
 
-                      }
-  )
+    names(cooks_result)=c(paste0("cooks_distance_",experimental_columns[1:n_cols_2_test]) )
 
 
-  # alt.est <- influence.ME::influence(model, obs=TRUE)
-  #
-  #
-  # cooks_result_sample=cooks.distance(alt.est)
-  # cooks_result=c(list(cooks_result_sample), cooks_result)
-  # names(cooks_result)=c("cooks_distance_sample", paste0("cooks_distance_",experimental_columns) )
-  names(cooks_result)=c(paste0("cooks_distance_",experimental_columns[1:n_cols_2_test]) )
-
-  # filtering_targets=cooks_result_sample>4/nrow(fixed_global_variable_data)
-  #
-  #
-  # # conditions=unique(fixed_global_variable_data$condition_column)
-  #
-  # # lapply(conditions, function(conditions_p)
-  # # {
-  #     outliers=fixed_global_variable_data[filtering_targets, "response_column"]
-  #     Data_temp=fixed_global_variable_data[, "response_column"]
-  #     #residual_temp=residuals[Data$condition_column%in%conditions_p]
-  #
-  #     #plot histogram
-  #
-  #     cutoff1=NA
-  #     cutoff2=NA
-  #
-  #     medianV=median(Data_temp)
-  #     if(sum(outliers>medianV) >0) cutoff1=min( outliers[which(outliers>medianV)] )
-  #     if(sum(outliers<medianV) >0) cutoff2=max( outliers[which(outliers<medianV)] )
-  #
-  #
-  #     ###plot the distribution and point the outlier boundary
-  #     hist(Data_temp,
-  #          breaks=1000,
-  #          xlab=response_column,
-  #          main=paste0(hist_text, ": outliers") )
-  #
-  #     if(!is.na(cutoff1)) abline(v=cutoff1,col="red")
-  #     if(!is.na(cutoff2)) abline(v=cutoff2,col="red")
-  #
-  #     if(!is.na(cutoff1)&is.na(cutoff2)){
-  #       mtext(paste0("Cutoff at ",cutoff1 ),cex=1.2)
-  #     }else if(!is.na(cutoff2)&is.na(cutoff1)){
-  #       mtext(paste0("Cutoff at ",cutoff2 ),cex=1.2)
-  #     }else if(!is.na(cutoff1)&!is.na(cutoff2)){
-  #       mtext(paste0("Cutoff at ",cutoff2, " and ", cutoff1 ),cex=1.2)
-  #     }
-  # #   }
-  # # )
-
-
+  }
 
   return(cooks_result)
 
