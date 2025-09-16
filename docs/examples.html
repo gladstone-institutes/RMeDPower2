@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examples - RMeDPower2</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-title"><a href="index.html" style="color: #3498db; text-decoration: none;">RMeDPower2</a></h1>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="tutorial.html">Tutorial</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="https://github.com/gladstone-institutes/RMeDPower2" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero" style="padding: 100px 0 60px;">
+        <div class="container">
+            <h1>Real-World Examples</h1>
+            <p class="subtitle">Biomedical research applications of RMeDPower2</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="section">
+            <h2>1. Cell Assays - ALS iPSC Study</h2>
+            <p>
+                Analysis of iPSC-derived motor neurons from ALS patients and controls. 
+                This example demonstrates hierarchical experimental design with nested factors.
+            </p>
+            
+            <div class="example-card">
+                <h3>Study Design</h3>
+                <p><strong>Hierarchy:</strong> Experiment → Cell Line → Individual Cells<br>
+                <strong>Response:</strong> Soma size of motor neurons<br>
+                <strong>Treatment:</strong> Control vs. sALS patient lines</p>
+            </div>
+
+            <pre><code class="language-r">library(RMeDPower2)
+
+# Load cell assay data
+data <- read.csv("cell_size_data.csv", header = TRUE)
+
+# Define experimental design
+design <- new("RMeDesign",
+    response_column = "cell_size2",
+    condition_column = "classification",  # Control vs sALS
+    experimental_columns = c("experiment", "line"),
+    condition_is_categorical = TRUE,
+    crossed_columns = "line"  # Cell lines appear across experiments
+)
+
+# Normal distribution assumption
+model <- new("ProbabilityModel",
+    error_is_non_normal = FALSE
+)
+
+# Power parameters for experiment scaling
+power_param <- new("PowerParams",
+    target_columns = c("experiment"),
+    power_curve = 1,
+    nsimn = 100,
+    levels = c(1)
+)
+
+# Step 1: Diagnose data
+diagnose_res <- diagnoseDataModel(data, design, model)
+
+# Check for outlier experiments
+print(diagnose_res$cooks_distance_experimental_column1)
+
+# Check for outlier cell lines  
+print(diagnose_res$cooks_distance_experimental_column2)
+
+# Step 2: Use log-transformed data without outliers
+data_updated <- diagnose_res$Data_updated
+design_updated <- design
+design_updated@response_column <- "cell_size2_logTransformed_noOutlier"
+
+# Step 3: Estimate parameters
+estimate_res <- getEstimatesOfInterest(data_updated, design_updated, model)
+print(estimate_res[[1]])
+
+# Step 4: Calculate power for different numbers of experiments
+power_res <- calculatePower(data_updated, design_updated, model, power_param)</code></pre>
+        </section>
+
+        <section class="section">
+            <h2>2. Single-Cell RNA-seq - APOE Study</h2>
+            <p>
+                Analysis of single-nuclei RNA-seq data examining APOE4 effects in Alzheimer's disease mouse models.
+                Demonstrates both categorical and continuous predictors with count data.
+            </p>
+
+            <div class="example-card">
+                <h3>Cell Type Proportions Analysis</h3>
+                <p><strong>Design:</strong> Mouse → Cell counts per cluster<br>
+                <strong>Distribution:</strong> Binomial (proportions)<br>
+                <strong>Comparison:</strong> APOE4-KI vs APOE4-KI-Syn1-Cre</p>
+            </div>
+
+            <pre><code class="language-r"># Cell type proportion analysis
+data <- read.csv("apoe_associated_cell_proportions.csv", header = TRUE)
+
+# Design for binomial model (proportions)
+design <- new("RMeDesign",
+    response_column = "cluster7_count",
+    condition_column = "genotype",
+    experimental_columns = c("animal_model", "sample_id"),
+    total_column = "total_nuclei",  # For binomial offset
+    condition_is_categorical = TRUE
+)
+
+# Binomial distribution for proportions
+model <- new("ProbabilityModel",
+    error_is_non_normal = TRUE,
+    family_p = "binomial"
+)
+
+# Power analysis for number of mice
+power_param <- new("PowerParams",
+    target_columns = c("sample_id"),
+    power_curve = 1,
+    nsimn = 100,
+    levels = c(1)
+)
+
+# Workflow
+diagnose_res <- diagnoseDataModel(data, design, model)
+estimate_res <- getEstimatesOfInterest(data, design, model)
+power_res <- calculatePower(data, design, model, power_param)</code></pre>
+
+            <div class="example-card">
+                <h3>Continuous Predictor: Hippocampus Volume</h3>
+                <p>Testing association between cell proportions and brain volume (continuous predictor)</p>
+            </div>
+
+            <pre><code class="language-r"># Modify design for continuous predictor
+design@condition_column <- "Hippocampus_Vol_mm"
+design@condition_is_categorical <- FALSE
+
+# Same analysis workflow
+diagnose_res <- diagnoseDataModel(data, design, model)
+estimate_res <- getEstimatesOfInterest(data, design, model)
+power_res <- calculatePower(data, design, model, power_param)</code></pre>
+
+            <div class="example-card">
+                <h3>Gene Expression Analysis</h3>
+                <p>Count-based analysis of individual gene expression</p>
+            </div>
+
+            <pre><code class="language-r"># Gene expression counts
+data <- read.csv("raw_counts_Snhg11_gene_cluster_7.csv", header = TRUE)
+
+design <- new("RMeDesign",
+    response_column = "raw_counts",
+    condition_column = "genotype", 
+    experimental_columns = c("animal_model", "sample_id", "cell_id"),
+    total_column = "library_size",  # Sequencing depth offset
+    condition_is_categorical = TRUE
+)
+
+# Negative binomial for count data
+model <- new("ProbabilityModel",
+    error_is_non_normal = TRUE,
+    family_p = "negative_binomial"
+)
+
+# Power analysis with known effect size
+power_param@effect_size <- log(2)  # 2-fold change
+power_res <- calculatePower(data, design, model, power_param)</code></pre>
+        </section>
+
+        <section class="section">
+            <h2>3. Behavioral Assays - Morris Water Maze</h2>
+            <p>
+                Spatial learning assessment in mouse models. Demonstrates repeated measures 
+                with potential log transformation for skewed response times.
+            </p>
+
+            <div class="example-card">
+                <h3>Study Design</h3>
+                <p><strong>Hierarchy:</strong> Mouse → Trial<br>
+                <strong>Response:</strong> Latency to reach platform (seconds)<br>
+                <strong>Treatment:</strong> Disease model vs. Wild-type</p>
+            </div>
+
+            <pre><code class="language-r"># Morris Water Maze data
+data <- read.csv("MWM_data.csv", header = TRUE)
+
+design <- new("RMeDesign",
+    response_column = "latency",
+    condition_column = "genotype",
+    experimental_columns = c("MouseID", "trial"),
+    condition_is_categorical = TRUE
+)
+
+model <- new("ProbabilityModel",
+    error_is_non_normal = FALSE
+)
+
+# Power analysis for number of mice
+power_param <- new("PowerParams",
+    target_columns = c("MouseID"),
+    power_curve = 1,
+    nsimn = 100,
+    levels = c(1)
+)
+
+# Diagnose - likely need log transformation
+diagnose_res <- diagnoseDataModel(data, design, model)
+
+# Use log-transformed data
+data_updated <- diagnose_res$Data_updated
+design_updated <- design
+design_updated@response_column <- "latency_logTransformed"
+
+# Final analysis
+estimate_res <- getEstimatesOfInterest(data_updated, design_updated, model)
+power_res <- calculatePower(data_updated, design_updated, model, power_param)</code></pre>
+        </section>
+
+        <section class="section">
+            <h2>4. Electrophysiology - Patch Clamp</h2>
+            <p>
+                Membrane potential recordings from brain slices. Shows deeply nested experimental design
+                with multiple levels of biological replication.
+            </p>
+
+            <div class="example-card">
+                <h3>Study Design</h3>
+                <p><strong>Hierarchy:</strong> Mouse → Brain Slice → Recorded Cell<br>
+                <strong>Response:</strong> Membrane action potential (mV)<br>
+                <strong>Treatment:</strong> hAPP disease model vs. Wild-type</p>
+            </div>
+
+            <pre><code class="language-r"># Patch clamp data
+data <- read.csv("patch_clamp_data.csv", header = TRUE)
+
+design <- new("RMeDesign",
+    response_column = "membrane_potential",
+    condition_column = "genotype",
+    experimental_columns = c("Mice", "slice_number", "cell_id"),
+    condition_is_categorical = TRUE
+)
+
+model <- new("ProbabilityModel",
+    error_is_non_normal = FALSE
+)
+
+# Test power for different experimental scales
+# Option 1: More mice
+power_param_mice <- new("PowerParams",
+    target_columns = c("Mice"),
+    power_curve = 1,
+    effect_size = 7,  # Expected difference in mV
+    nsimn = 100
+)
+
+# Option 2: More slices per mouse
+power_param_slices <- new("PowerParams",
+    target_columns = c("slice_number"), 
+    power_curve = 1,
+    effect_size = 7,
+    nsimn = 100
+)
+
+# Workflow
+diagnose_res <- diagnoseDataModel(data, design, model)
+estimate_res <- getEstimatesOfInterest(data, design, model)
+
+# Compare power strategies
+power_mice <- calculatePower(data, design, model, power_param_mice)
+power_slices <- calculatePower(data, design, model, power_param_slices)</code></pre>
+        </section>
+
+        <section class="section">
+            <h2>5. Advanced Simulation Scenarios</h2>
+            
+            <div class="example-card">
+                <h3>Multi-level Power Analysis</h3>
+                <p>Testing power across multiple experimental variables simultaneously</p>
+                <pre><code class="language-r"># Test both experiments and cell lines
+power_param <- new("PowerParams",
+    target_columns = c("experiment", "line"),
+    power_curve = 1,
+    levels = c(1, 1),  # Increase both levels and samples
+    nsimn = 100
+)
+
+power_res <- calculatePower(data, design, model, power_param)</code></pre>
+            </div>
+
+            <div class="example-card">
+                <h3>Sample Size vs. Replication Trade-offs</h3>
+                <p>Compare increasing experimental units vs. samples per unit</p>
+                <pre><code class="language-r"># Strategy 1: More experimental units
+power_param1 <- power_param
+power_param1@levels <- c(1)  # level = 1
+
+# Strategy 2: More samples per unit  
+power_param2 <- power_param
+power_param2@levels <- c(0)  # level = 0
+
+# Compare strategies
+power_res1 <- calculatePower(data, design, model, power_param1)
+power_res2 <- calculatePower(data, design, model, power_param2)</code></pre>
+            </div>
+
+            <div class="example-card">
+                <h3>Using ICC When Variance Components Cannot Be Estimated</h3>
+                <p>When pilot data has limited experimental structure</p>
+                <pre><code class="language-r"># Limited pilot data (single experiment, single cell line)
+data_limited <- RMeDPower_data2
+
+# Provide ICC values manually
+power_param@icc <- c(0.8, 0.05, 0.05)  # High, medium, low ICC
+
+power_res <- calculatePower(data_limited, design, model, power_param)</code></pre>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Tips for Success</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🔍 Always Diagnose First</h3>
+                    <p>Model assumptions matter! Use diagnoseDataModel() before power analysis</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📊 Check Residual Plots</h3>
+                    <p>QQ plots and residual plots reveal if transformations are needed</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎯 Remove Outliers Carefully</h3>
+                    <p>Consider both observation-level and group-level outliers</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚖️ Balance Power Strategies</h3>
+                    <p>Compare increasing units vs. samples per unit for cost-effectiveness</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Common Experimental Designs</h2>
+            
+            <table style="width: 100%; border-collapse: collapse; margin: 2rem 0;">
+                <thead>
+                    <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                        <th style="padding: 1rem; text-align: left;">Design Type</th>
+                        <th style="padding: 1rem; text-align: left;">Hierarchy</th>
+                        <th style="padding: 1rem; text-align: left;">Distribution</th>
+                        <th style="padding: 1rem; text-align: left;">Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 1rem;"><strong>Cell Assays</strong></td>
+                        <td style="padding: 1rem;">Experiment → Plate → Cell Line → Cell</td>
+                        <td style="padding: 1rem;">Normal (log-transformed)</td>
+                        <td style="padding: 1rem;">Morphology, viability</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 1rem;"><strong>scRNA-seq</strong></td>
+                        <td style="padding: 1rem;">Animal → Cell Type → Gene</td>
+                        <td style="padding: 1rem;">Negative Binomial</td>
+                        <td style="padding: 1rem;">Gene expression counts</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 1rem;"><strong>Behavior</strong></td>
+                        <td style="padding: 1rem;">Subject → Session → Trial</td>
+                        <td style="padding: 1rem;">Normal/Gamma</td>
+                        <td style="padding: 1rem;">Latency, accuracy</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 1rem;"><strong>Electrophysiology</strong></td>
+                        <td style="padding: 1rem;">Animal → Slice → Cell</td>
+                        <td style="padding: 1rem;">Normal</td>
+                        <td style="padding: 1rem;">Action potentials</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem;"><strong>Proportions</strong></td>
+                        <td style="padding: 1rem;">Subject → Condition</td>
+                        <td style="padding: 1rem;">Binomial</td>
+                        <td style="padding: 1rem;">Cell type frequencies</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Gladstone Institutes. Licensed under MIT License.</p>
+            <p>
+                <a href="https://github.com/gladstone-institutes/RMeDPower2">GitHub</a> |
+                <a href="https://github.com/gladstone-institutes/RMeDPower2/issues">Report Issues</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

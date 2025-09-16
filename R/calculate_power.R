@@ -838,7 +838,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
 
     }
-    return(plots)
+    return()
   }
 
 

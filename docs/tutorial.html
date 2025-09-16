@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial - RMeDPower2</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-title"><a href="index.html" style="color: #3498db; text-decoration: none;">RMeDPower2</a></h1>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="tutorial.html">Tutorial</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="https://github.com/gladstone-institutes/RMeDPower2" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero" style="padding: 100px 0 60px;">
+        <div class="container">
+            <h1>Complete Tutorial</h1>
+            <p class="subtitle">Step-by-step guide to using RMeDPower2</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="section">
+            <h2>5-Step Workflow</h2>
+            <p>RMeDPower2 follows a systematic 5-step workflow for power analysis:</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>1️⃣ Input Data</h3>
+                    <p>Read your experimental data as a data frame with proper column headers</p>
+                </div>
+                <div class="feature-card">
+                    <h3>2️⃣ Specify Parameters</h3>
+                    <p>Define design, model, and power parameters using JSON templates</p>
+                </div>
+                <div class="feature-card">
+                    <h3>3️⃣ Diagnose Data</h3>
+                    <p>Test model assumptions and identify outliers</p>
+                </div>
+                <div class="feature-card">
+                    <h3>4️⃣ Power Analysis</h3>
+                    <p>Run statistical power calculations</p>
+                </div>
+                <div class="feature-card">
+                    <h3>5️⃣ Parameter Estimation</h3>
+                    <p>Estimate and visualize parameters of interest</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Step 1: Input Data</h2>
+            <p>Your data should be structured with rows representing individual observations and columns representing variables that capture both the response and the experimental design hierarchy.</p>
+            
+            <pre><code class="language-r">library(RMeDPower2)
+
+# Load example data
+data(RMeDPower_data1)
+
+# Or read your own data
+# data <- read.csv("your_data.csv", header = TRUE)</code></pre>
+
+            <h3>Data Structure Requirements</h3>
+            <ul class="api-list">
+                <li>Rows: Individual observations/responses</li>
+                <li>Columns: Predictor variables and experimental design variables</li>
+                <li>Headers: Column names are essential for defining S4 objects</li>
+                <li>Factors: Categorical variables should be properly encoded</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Step 2: Specify Design Parameters</h2>
+            
+            <h3>RMeDesign Class</h3>
+            <p>Define your experimental design using the RMeDesign S4 class:</p>
+            
+            <pre><code class="language-r"># Create design object manually
+design <- new("RMeDesign",
+    response_column = "measurement",
+    condition_column = "treatment", 
+    experimental_columns = c("subject", "timepoint"),
+    condition_is_categorical = TRUE,
+    crossed_columns = NULL,
+    outlier_alpha = 0.05
+)
+
+# Or read from JSON template
+design <- readDesign("design_template.json")</code></pre>
+
+            <h3>Key Design Parameters</h3>
+            <div class="example-card">
+                <h4>response_column</h4>
+                <p>Column name containing your response variable</p>
+            </div>
+            
+            <div class="example-card">
+                <h4>condition_column</h4>
+                <p>Column name for your main predictor/treatment variable</p>
+            </div>
+            
+            <div class="example-card">
+                <h4>experimental_columns</h4>
+                <p>Vector of column names defining experimental hierarchy (order matters!)</p>
+            </div>
+            
+            <div class="example-card">
+                <h4>crossed_columns</h4>
+                <p>Subset of experimental_columns representing crossed factors</p>
+            </div>
+
+            <h3>ProbabilityModel Class</h3>
+            <pre><code class="language-r"># Normal distribution (default)
+model <- new("ProbabilityModel",
+    error_is_non_normal = FALSE,
+    family_p = NULL
+)
+
+# Non-normal distributions
+model_poisson <- new("ProbabilityModel",
+    error_is_non_normal = TRUE,
+    family_p = "poisson"
+)
+
+# Or read from JSON
+model <- readProbabilityModel("prob_model.json")</code></pre>
+
+            <h3>PowerParams Class</h3>
+            <pre><code class="language-r"># Define power analysis parameters
+power_param <- new("PowerParams",
+    target_columns = c("subject"),
+    power_curve = 1,
+    nsimn = 1000,
+    levels = c(1),
+    alpha = 0.05,
+    effect_size = NULL
+)
+
+# Or read from JSON
+power_param <- readPowerParams("power_param.json")</code></pre>
+        </section>
+
+        <section class="section">
+            <h2>Step 3: Diagnose Data and Model</h2>
+            <p>Test modeling assumptions, identify outliers, and validate your model:</p>
+            
+            <pre><code class="language-r"># Diagnose data and model assumptions
+diagnose_res <- diagnoseDataModel(data, design, model)
+
+# Check diagnostic plots
+plot(diagnose_res)
+
+# Examine outlier detection results
+print(diagnose_res$cooks_distance_experimental_column1)
+print(diagnose_res$outlier_observations)</code></pre>
+
+            <h3>What the Diagnosis Includes</h3>
+            <ul class="api-list">
+                <li><strong>QQ plots:</strong> Test normality assumptions</li>
+                <li><strong>Residual plots:</strong> Check model fit</li>
+                <li><strong>Outlier detection:</strong> Identify problematic observations</li>
+                <li><strong>Group-level outliers:</strong> Find problematic experimental units</li>
+                <li><strong>Transformations:</strong> Suggest data transformations if needed</li>
+            </ul>
+
+            <div class="example-card">
+                <h3>Iterative Process</h3>
+                <p>You may need to repeat diagnosis after removing outliers or changing model assumptions:</p>
+                <pre><code class="language-r"># Update data and design based on diagnosis
+data_updated <- diagnose_res$Data_updated
+design_updated <- design
+design_updated@response_column <- "response_logTransformed_noOutlier"
+
+# Re-diagnose with updated data
+diagnose_res2 <- diagnoseDataModel(data_updated, design_updated, model)</code></pre>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Step 4: Calculate Statistical Power</h2>
+            <p>Perform power analysis to determine sample sizes needed:</p>
+            
+            <pre><code class="language-r"># Calculate power
+power_res <- calculatePower(data, design, model, power_param)
+
+# View power results
+print(power_res)
+plot(power_res)</code></pre>
+
+            <h3>Power Analysis Options</h3>
+            
+            <div class="example-card">
+                <h4>Power Curves (power_curve = 1)</h4>
+                <p>Test power across a range of sample sizes:</p>
+                <pre><code class="language-r">power_param@power_curve <- 1
+power_param@target_columns <- c("subject")
+power_param@levels <- c(1)  # Increase number of subjects</code></pre>
+            </div>
+            
+            <div class="example-card">
+                <h4>Single Power Calculation (power_curve = 0)</h4>
+                <p>Calculate power for a specific sample size:</p>
+                <pre><code class="language-r">power_param@power_curve <- 0
+power_param@max_size <- c(20)  # Test with 20 subjects</code></pre>
+            </div>
+            
+            <div class="example-card">
+                <h4>Multi-level Analysis</h4>
+                <p>Test power for multiple experimental variables:</p>
+                <pre><code class="language-r">power_param@target_columns <- c("experiment", "subject")
+power_param@levels <- c(1, 1)  # Increase both experiments and subjects</code></pre>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Step 5: Estimate Parameters</h2>
+            <p>Estimate and visualize your parameters of interest:</p>
+            
+            <pre><code class="language-r"># Estimate parameters of interest
+estimate_res <- getEstimatesOfInterest(data, design, model)
+
+# View model summary
+print(estimate_res[[1]])
+
+# Plot association
+plot(estimate_res)</code></pre>
+
+            <h3>What You Get</h3>
+            <ul class="api-list">
+                <li><strong>Model Summary:</strong> Fixed and random effects estimates</li>
+                <li><strong>Effect Sizes:</strong> Magnitude of your treatment effects</li>
+                <li><strong>Confidence Intervals:</strong> Uncertainty around estimates</li>
+                <li><strong>Visualizations:</strong> Plots showing associations</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Advanced Topics</h2>
+            
+            <h3>Simulation Parameters</h3>
+            <div class="example-card">
+                <h4>levels Parameter</h4>
+                <p><strong>levels = 1:</strong> Increase number of experimental units (e.g., more subjects)<br>
+                <strong>levels = 0:</strong> Increase samples per unit (e.g., more observations per subject)</p>
+            </div>
+
+            <h3>ICC Values</h3>
+            <p>When variance components cannot be estimated from your data:</p>
+            <pre><code class="language-r"># Provide ICC values manually
+power_param@icc <- c(0.1, 0.05)  # ICC for each experimental level</code></pre>
+
+            <h3>Effect Size Specification</h3>
+            <pre><code class="language-r"># Use known effect size
+power_param@effect_size <- 0.5
+
+# Or let the package estimate from your data
+power_param@effect_size <- NULL</code></pre>
+        </section>
+
+        <section class="section">
+            <h2>Common Use Cases</h2>
+            
+            <div class="example-card">
+                <h3>Cell Assays</h3>
+                <p>Hierarchical design: experiment → plate → cell line → individual cells</p>
+            </div>
+            
+            <div class="example-card">
+                <h3>Single-cell RNA-seq</h3>
+                <p>Count data with negative binomial distribution and library size offsets</p>
+            </div>
+            
+            <div class="example-card">
+                <h3>Behavioral Studies</h3>
+                <p>Repeated measures: subject → timepoint with potential log transformation</p>
+            </div>
+            
+            <div class="example-card">
+                <h3>Electrophysiology</h3>
+                <p>Nested design: mouse → brain slice → recorded cell</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Gladstone Institutes. Licensed under MIT License.</p>
+            <p>
+                <a href="https://github.com/gladstone-institutes/RMeDPower2">GitHub</a> |
+                <a href="https://github.com/gladstone-institutes/RMeDPower2/issues">Report Issues</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
