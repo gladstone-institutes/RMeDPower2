@@ -816,13 +816,14 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
       if(length(output)==0){
         #plot(pc)
-        plot_data <- do.call("rbind", lapply(pc1$ps, summary))
+        plot_data <- do.call("rbind", lapply(pc$ps, summary))
         plot_data <- plot_data[,-(1:2)]
         ##convert to percentage
         plot_data <- 100*plot_data
         plot_data <- data.frame(levels = pc$nlevels, plot_data)
         plots[[i]] <- ggplot(plot_data, aes(x=levels, y=mean)) +
           geom_point() +
+          geom_line() +
           geom_errorbar(aes(ymin = lower, ymax = upper)) +
           geom_hline(yintercept = 80, lty=2) +
           theme_minimal() +
