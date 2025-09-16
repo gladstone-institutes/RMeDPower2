@@ -464,7 +464,7 @@ cooks_test<- function (model, fixed_global_variable_data, experimental_columns, 
         experimental_columns = "experimental_column1"
       else{
         print("Not enough levels to perform cooks test for experimental_column1 with the assumed binomial distribution")
-        cooks_result <- NULL
+        cooks_result <- NA
         perform_test <- FALSE
       }
   }
