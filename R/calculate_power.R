@@ -798,6 +798,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
 
     plots <- list()
+    captions <- vector(mode = "character")
     ###### power curve simulation
     for(i in 1:length(target_columns)){
 
@@ -828,6 +829,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
           geom_hline(yintercept = 80, lty=2) +
           theme_minimal() +
           theme(plot.title = element_text(size = 12, face = "bold"))
+        captions[i] <- paste0("Statistical power estimates expressed as percentages as a functions of different levels of ", target_columns[i])
       }else{
         png(paste0(output[i],".png"))
         print(plot(pc))
@@ -838,7 +840,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
 
     }
-    return()
+    return(list(plots = plots, captions = captions))
   }
 
 
