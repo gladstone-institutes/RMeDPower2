@@ -88,7 +88,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   if(!( is.null(breaks) | (is.numeric(breaks)&&breaks>0) ) ){ print("breaks must be a positive integer");return(NULL) }
   if(!( is.null(effect_size) | (is.numeric(effect_size)&&effect_size>0) ) ){ print("effect_size a positive integer");return(NULL) }
   if(!is.null(ICC) & error_is_non_normal==TRUE ){ print("ICC-based simulations are not supported when the response is categorical.");return(NULL) }
-  if(length(ICC) != length(experimental_columns)) {print("The ICC vector should be of the same dimension as the number of experimental columns");return(NULL)}
+  if(!is.null(ICC)){if(length(ICC) != length(experimental_columns)) {print("The ICC vector should be of the same dimension as the number of experimental columns");return(NULL)}}
   # Validation for new parameters
   if(!is.na(include_interaction)) {
     if (include_interaction && is.null(covariate)) {
