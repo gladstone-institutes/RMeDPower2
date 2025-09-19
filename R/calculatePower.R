@@ -9,7 +9,7 @@
 #' @param power_param an object of class PowerParams giving the target parameter of interest and the other necessary parameter to perform the power estimation
 #' @param print_plots Whether or not to print the plots, irrespective of this argument ggplot versions of the power curves are returned. TRUE - print the plots, FALSE - do not print the plots
 #'
-#' @return A power curve image or a power calculation result printed in a text fileosner" is chosen, a matrix with updated feature values after transformation will be returned. If "cook" is choose, a list with  a matrix with updated feature values after transformation will be returned,
+#' @return A power curve as a ggplot object or a power calculation result printed in a text file
 #'
 #' @export
 #'

@@ -30,6 +30,8 @@
 \item{alpha}{numeric scalar between 0 and 1 indicating the Type I error associated with the test of outliers}
 
 \item{na.action}{"complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, and response columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.}
+
+\item{covariate_is_categorical}{Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.}
 }
 \value{
 For continuous data, the function returns quantile-quanitle (qq) plots of i) raw residual values ii) log-transformed residual values iii) raw residual values after removing outliers, and iv) log-transformed residual values. For discrete data, it returns a histogram. If "rosner" is chosen, a matrix with updated feature values after transformation will be returned. If "cook" is choose, a list with  a matrix with updated feature values after transformation will be returned,
