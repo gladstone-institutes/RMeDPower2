@@ -285,7 +285,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
       plots <- plots_info[[m]]$plots
       captions <- plots_info[[m]]$captions
       for (i in seq_along(plots)) {
-        print(plots[[i]] + ggtitle(paste(models[m], captions[i]), sep =":") + theme(plot.title = element_textbox_simple()))
+        print(plots[[i]] + ggtitle(paste(models[m], captions[i], sep =":")) + theme(plot.title = element_textbox_simple()))
       }
 
     }
