@@ -4,7 +4,7 @@
 \alias{diagnoseDataModel}
 \title{diagnoseDataModel}
 \usage{
-diagnoseDataModel(data, design, model, print_plots = TRUE)
+diagnoseDataModel(data, design, model)
 }
 \arguments{
 \item{data}{Input data frame with columns having all the necessary information regarding the dependent and independent variables of interest}
@@ -12,8 +12,6 @@ diagnoseDataModel(data, design, model, print_plots = TRUE)
 \item{design}{an object of class RMeDesign with the necessary design information about the data}
 
 \item{model}{an object of class ProbabilityModel giving the error distribution of the data}
-
-\item{print_plots}{Whether or not to print the plots, irrespective of this argument ggplot versions of the different QC figures generated are returned. TRUE - print the plots, FALSE - do not print the plots}
 }
 \value{
 A list with four elements. 1) models: representing the names of the models

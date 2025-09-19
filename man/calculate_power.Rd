@@ -28,8 +28,7 @@ calculate_power(
   alpha = 0.05,
   include_interaction = NA,
   random_slope_variable = NULL,
-  covariate_is_categorical = NA,
-  print_plots = TRUE
+  covariate_is_categorical = NA
 )
 }
 \arguments{
@@ -80,8 +79,6 @@ calculate_power(
 \item{random_slope_variable}{Variable for random slopes (typically "condition_column")}
 
 \item{covariate_is_categorical}{Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.}
-
-\item{print_plots}{Whether or not to print the plots, irrespective of this argument ggplot versions of the power curves are returned. TRUE - print the plots, FALSE - do not print the plots}
 }
 \value{
 A power curve as a ggplot object or a power calculation result printed in a text file

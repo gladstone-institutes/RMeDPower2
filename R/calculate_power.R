@@ -37,7 +37,6 @@
 #' @param include_interaction Whether to include condition * covariate interaction
 #' @param random_slope_variable Variable for random slopes (typically "condition_column")
 #' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
-#' @param print_plots Whether or not to print the plots, irrespective of this argument ggplot versions of the power curves are returned. TRUE - print the plots, FALSE - do not print the plots
 #'
 #'
 #' @return A power curve as a ggplot object or a power calculation result printed in a text file
@@ -61,8 +60,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
                             levels=NULL, max_size=NULL, breaks=NULL, effect_size=NULL, ICC=NULL, na.action="complete", output=NULL, alpha =0.05,
                             include_interaction = NA,
                             random_slope_variable = NULL,
-                            covariate_is_categorical = NA,
-                            print_plots = TRUE){
+                            covariate_is_categorical = NA){
 
 
 
@@ -829,9 +827,14 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
           geom_line() +
           geom_errorbar(aes(ymin = lower, ymax = upper)) +
           geom_hline(yintercept = 80, lty=2) +
-          ylab("Statistical power") +
+          labs(title = "Sample size calculations",
+               subtitle = paste0("Statistical power estimates expressed as percentages as a functions of different levels of ", target_columns[i]),
+               x = paste0("Number of ", target_columns[i]),
+               y = "Statistical power") +
           theme_minimal() +
-          theme(plot.title = element_text(size = 12, face = "bold"))
+          theme(plot.title = element_text(size = 12, face = "bold"))+
+          theme(plot.subtitle  = element_textbox_simple())
+
         captions[i] <- paste0("Statistical power estimates expressed as percentages as a functions of different levels of ", target_columns[i])
       }else{
         png(paste0(output[i],".png"))
@@ -839,8 +842,6 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
         print(mtext(response_column))
         dev.off()
       }
-      if(print_plots)
-        print(plots[[i]] + ggtitle(captions[i]) + theme(plot.title = element_textbox_simple()))
 
 
 

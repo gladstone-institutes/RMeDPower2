@@ -7,7 +7,6 @@
 #' @param design an object of class RMeDesign with the necessary design information about the data
 #' @param model an object of class ProbabilityModel giving the error distribution of the data
 #' @param power_param an object of class PowerParams giving the target parameter of interest and the other necessary parameter to perform the power estimation
-#' @param print_plots Whether or not to print the plots, irrespective of this argument ggplot versions of the power curves are returned. TRUE - print the plots, FALSE - do not print the plots
 #'
 #' @return A power curve as a ggplot object or a power calculation result printed in a text file
 #'
@@ -15,7 +14,7 @@
 #'
 #' @examples result=calculatePower(data=data, design=design, model=model, power_param=power_param)
 
-calculatePower <- function(data, design, model, power_param, print_plots = TRUE) {
+calculatePower <- function(data, design, model, power_param) {
   calculate_power(data = data,
                             condition_column = design@condition_column,
                             experimental_columns = design@experimental_columns,
@@ -39,8 +38,7 @@ calculatePower <- function(data, design, model, power_param, print_plots = TRUE)
                             alpha = power_param@alpha,
                             include_interaction = design@include_interaction,
                             random_slope_variable = design@random_slope_variable,
-                            covariate_is_categorical = design@covariate_is_categorical,
-                            print_plots
+                            covariate_is_categorical = design@covariate_is_categorical
                   )
 
 }

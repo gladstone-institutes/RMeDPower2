@@ -1,6 +1,6 @@
-#' @title transform_data2_covariate
+#' @title RMeDesign-class
 #'
-#' @description This functions makes quantile-quanitle (qq) plots of i) raw residual values ii) log-transformed residual values iii) raw residual values after removing outliers, and iv) log-transformed residual values after removing outliers. To detect outliers, the function uses Rosner's test.
+#' @description Objects of RMeDesign class store information on the relevant repeated measures design for the given data
 #'
 #'
 #' @param data Input data
@@ -8,23 +8,23 @@
 #' @param experimental_columns Name of the variable related to experimental design such as "experiment", "plate", and "cell_line". They should be in order, for example, "experiment" should always come first .
 #' @param response_column Name of the variable observed by performing the experiment. ex) intensity.
 #' @param total_column Set this column only when family_p="binomial" and it is equal to the total number of observations (number of cases plus number of controls) for a given number of cases
+#' @param outlier_alpha numeric scalar between 0 and 1 indicating the Type I error associated with the test of outliers
 #' @param condition_is_categorical Specify whether the condition variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #' @param covariate The name of the covariate to control in the regression model
 #' @param method The method used to detect outliers. "rosner" (default) runs Rosner's test and "cook" runs Cook's distance.
 #' @param crossed_columns Name of experimental variables that may appear repeatedly with the same ID. For example, cell_line C1 may appear in multiple experiments, but plate P1 cannot appear in more than one experiment
 #' @param error_is_non_normal Default: the observed variable is continuous Categorical response variable will be implemented in the future. TRUE: Categorical , FALSE: Continuous (default).
 #' @param family_p The type of distribution family to specify when the response is categorical. If family is "binary" then binary(link="log") is used, if family is "poisson" then poisson(link="logit") is used, if family is "poisson_log" then poisson(link=") log") is used.
-#' @param alpha numeric scalar between 0 and 1 indicating the Type I error associated with the test of outliers
 #' @param na.action "complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, and response columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.
+#' @param include_interaction logical - TRUE or FALSE - Whether to include condition * covariate interaction
+#' @param random_slope_variable Variable for random slopes (typically "condition_column")
 #' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #'
-#' @return For continuous data, the function returns quantile-quanitle (qq) plots of i) raw residual values ii) log-transformed residual values iii) raw residual values after removing outliers, and iv) log-transformed residual values. For discrete data, it returns a histogram. If "rosner" is chosen, a matrix with updated feature values after transformation will be returned. If "cook" is choose, a list with  a matrix with updated feature values after transformation will be returned,
+#' @return an object of class RMeDesign
 #'
 #' @export
 #'
-#' @examples result=transform_data2(data=data, condition_column="classif", experimental_columns=c("experiment","line"), response_column="feature", condition_is_categorical=TRUE, error_is_non_normal=FALSE, alpha=0.05, crossed_columns = "line", method="cook", na.action="complete")
-#' @examples result=transform_data2(data=data, condition_column="classif", experimental_columns=c("experiment","line"), response_column="feature", condition_is_categorical=TRUE, error_is_non_normal=FALSE, alpha=0.05, crossed_columns = "line", method="cook", na.action="complete")
-#' @examples result=transform_data2(data=data, condition_column="classif", experimental_columns=c("experiment","line"), response_column="feature", condition_is_categorical=TRUE, error_is_non_normal=TRUE, family_p="poisson", alpha=0.05, crossed_columns = "line", method="cook", na.action="complete")
+#' @examples design=new("RMeDesign")
 
 setClass("RMeDesign",
          slots = list(
@@ -58,6 +58,19 @@ setClass("RMeDesign",
            covariate_is_categorical = NA
          ))
 
+#' @title ProbabilityModel-class
+#'
+#' @description Objects of ProbabilityModel class store information on the assumed probability distribution for the model
+#'
+#'
+#' @param error_is_non_normal Default: the observed variable is continuous Categorical response variable will be implemented in the future. TRUE: Categorical , FALSE: Continuous (default).
+#' @param family_p The type of distribution family to specify when the response is categorical. If family is "binary" then binary(link="log") is used, if family is "poisson" then poisson(link="logit") is used, if family is "poisson_log" then poisson(link=") log") is used.
+#'
+#' @return an object of class ProbabilityModel
+#'
+#' @export
+#'
+#' @examples model=new("ProbabilityModel")
 
 
 setClass("ProbabilityModel",
@@ -70,6 +83,26 @@ setClass("ProbabilityModel",
            family_p = NULL
          ))
 
+#' @title PowerParams-class
+#'
+#' @description Objects of PowerParams class store information required for sample size estimation for given data
+#'
+#'
+#' @param power_curve 1: Power simulation over a range of sample sizes or levels. 0: Power calculation over a single sample size or a level.
+#' @param nsimn The number of simulations to run. Default=1000
+#' @param target_columns Name of the experimental parameters to use for the power calculation.
+#' @param levels 1: Amplify the number of corresponding target parameter. 0: Amplify the number of samples from the corresponding target parameter, ex) If target_columns = c("experiment","cell_line") and if you want to expand the number of experiment and sample more cells from each cell line, set levels = c(1,0).
+#' @param max_size Maximum levels or sample sizes to test. Default: the current level or the current sample size x 5. ex) If max_levels = c(10,5), it will test upto 10 experiments and 5 cell lines.
+#' @param breaks Levels /sample sizes of the variable to be specified along the power curve. Default: max(1, round( the number of current levels / 5 ))
+#' @param  effect_size If you know the effect size of your condition variable, the effect size can be provided as a parameter. If the effect size is not provided, it will be estimated from your data
+#' @param  alpha Threshold for Type I error
+#' @param  ICC Intra-Class Coefficients (ICC) for each parameter
+#'
+#' @return an object of class ProbabilityModel
+#'
+#' @export
+#'
+#' @examples power_param=new("PowerParams")
 
 setClass("PowerParams",
          slots = list(

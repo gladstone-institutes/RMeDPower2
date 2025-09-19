@@ -19,8 +19,7 @@ transform_data(
   na.action = "complete",
   include_interaction = NA,
   random_slope_variable = NULL,
-  covariate_is_categorical = NA,
-  print_plots = TRUE
+  covariate_is_categorical = NA
 )
 }
 \arguments{
@@ -53,8 +52,6 @@ transform_data(
 \item{random_slope_variable}{Variable for random slopes (typically "condition_column")}
 
 \item{covariate_is_categorical}{Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.}
-
-\item{print_plots}{Whether or not to print the plots, irrespective of this argument ggplot versions of the different QC figures generated are returned. TRUE - print the plots, FALSE - do not print the plots}
 }
 \value{
 A list with four elements. 1) models: representing the names of the models

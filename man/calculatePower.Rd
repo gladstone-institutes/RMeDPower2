@@ -4,7 +4,7 @@
 \alias{calculatePower}
 \title{calculatePower}
 \usage{
-calculatePower(data, design, model, power_param, print_plots = TRUE)
+calculatePower(data, design, model, power_param)
 }
 \arguments{
 \item{data}{Input data frame with columns having all the necessary information regarding the dependent and independent variables of interest}
@@ -14,8 +14,6 @@ calculatePower(data, design, model, power_param, print_plots = TRUE)
 \item{model}{an object of class ProbabilityModel giving the error distribution of the data}
 
 \item{power_param}{an object of class PowerParams giving the target parameter of interest and the other necessary parameter to perform the power estimation}
-
-\item{print_plots}{Whether or not to print the plots, irrespective of this argument ggplot versions of the power curves are returned. TRUE - print the plots, FALSE - do not print the plots}
 }
 \value{
 A power curve as a ggplot object or a power calculation result printed in a text file

@@ -339,6 +339,10 @@ get_residuals <- function(data, condition_column, experimental_columns, response
   }
 
 
+  condition_var <- condition_column
+  response_var <- response_column
+  covariate_var <- covariate
+
   if(condition_is_categorical==TRUE){
 
     if(!is.null(covariate)) {
@@ -346,28 +350,40 @@ get_residuals <- function(data, condition_column, experimental_columns, response
         gp=ggplot2::ggplot(Data_sum, aes(x=condition_column, y=med_residual1, color = covariate)) +
           geom_boxplot(position = position_dodge(width = 0.7), outlier.shape = NA) +
           geom_point(position = position_jitterdodge(jitter.width = 0.1,dodge.width = 0.7)) +
-          ylab("median residual") +
+          labs(title = "Association of interest",
+               subtitle = paste0("Box plot of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column, " and separated by levels of ", covariate),
+               y = paste(response_var, ": median residual"),
+               x = condition_var) +
           theme_bw() +
-          theme(axis.title   = element_text(face  = "bold"))
-        captions = paste0("Box of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column, " and separated by levels of ", covariate)
+          theme(axis.title   = element_text(face  = "bold"))+
+          theme(plot.subtitle  = element_textbox_simple())
+        captions = paste0("Box plot of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column, " and separated by levels of ", covariate)
       }
       else if(class(Data[["covariate"]]) == "numeric") {
         gp=ggplot2::ggplot(Data_sum, aes(x=covariate, y=med_residual1, color = condition_column)) +
-          geom_smooth(method = "loess", se = T) +
+          geom_smooth(method = "lm", se = T) +
           geom_point() +
-          ylab("median residual") +
-          theme_bw() +
-          theme(axis.title   = element_text(face  = "bold"))
-        captions = paste0("Best loess fits of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", covariate, " for each level of ", condition_column)
+          labs(title = "Association of interest",
+               subtitle = paste0("Best linear fits of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", covariate, " for each level of ", condition_column),
+               y = paste(response_var, ": median residual"),
+               x = covariate_var) +
+          theme_minimal() +
+          theme(plot.title = element_text(size = 12, face = "bold")) +
+          theme(plot.subtitle  = element_textbox_simple())
+        captions = paste0("Best linear fits of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", covariate, " for each level of ", condition_column)
 
       }
     }else{
       gp=ggplot2::ggplot(Data_sum, aes(x=condition_column, y=med_residual1)) +
         geom_boxplot(position = position_dodge(width = 0.5), outlier.shape = NA) +
         geom_point() +
-        ylab("median residual") +
-        theme_bw() +
-        theme(axis.title   = element_text(face  = "bold"))
+        labs(title = "Association of interest",
+             subtitle = paste0("Boxplot of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column),
+             y = paste(response_var, ": median residual"),
+             x = condition_var) +
+        theme_minimal() +
+        theme(plot.title = element_text(size = 12, face = "bold")) +
+        theme(plot.subtitle  = element_textbox_simple())
       captions = paste0("Boxplot of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column)
 
     }
@@ -381,8 +397,13 @@ get_residuals <- function(data, condition_column, experimental_columns, response
     gp <- ggplot2::ggplot(Data, aes(x=condition_column, y=residual, color=experimental_column1)) +
       geom_point() +
       geom_smooth(method = "loess", se = T) +
-      theme_bw() +
-      theme(axis.title   = element_text(face  = "bold"))
+      labs(title = "Association of interest",
+           subtitle = paste0("Best loess fits of the residuals across all observations separated for each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column),
+           y = paste(response_var, ": residual"),
+           x = condition_var) +
+      theme_minimal() +
+      theme(plot.title = element_text(size = 12, face = "bold")) +
+      theme(plot.subtitle  = element_textbox_simple())
 
     captions = paste0("Best loess fits of the residuals across all observations separated for each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column)
 
@@ -391,7 +412,7 @@ get_residuals <- function(data, condition_column, experimental_columns, response
   }
 
   if(print_plots)
-    print(gp + ggtitle(captions) + theme(plot.title = element_textbox_simple()))
+    print(gp)
 
   return(list(Data = Data, plots = gp, captions = captions))
 }

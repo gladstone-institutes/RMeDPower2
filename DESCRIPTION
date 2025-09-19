@@ -18,13 +18,13 @@ Depends:
     simr,
     magrittr,
     ggplot2,
-    ggtext
+    ggtext,
+    quantreg
 biocViews:
 Imports: 
     tidyr,
     lmerTest,
     DHARMa,
-    quantreg,
     influence.ME,
     magick,
     EnvStats,

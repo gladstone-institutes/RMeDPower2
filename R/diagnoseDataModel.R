@@ -6,7 +6,6 @@
 #' @param data Input data frame with columns having all the necessary information regarding the dependent and independent variables of interest
 #' @param design an object of class RMeDesign with the necessary design information about the data
 #' @param model an object of class ProbabilityModel giving the error distribution of the data
-#' @param print_plots Whether or not to print the plots, irrespective of this argument ggplot versions of the different QC figures generated are returned. TRUE - print the plots, FALSE - do not print the plots
 
 #' @return A list with four elements. 1) models: representing the names of the models
 #' evaluated based on differnt modifications of the response column.
@@ -29,7 +28,7 @@
 #'
 #' @examples result=diagnoseDataModel(data=data, design=design, model=model)
 
-diagnoseDataModel <- function(data, design, model, print_plots = TRUE) {
+diagnoseDataModel <- function(data, design, model) {
   transform_data(data,
                   condition_column = design@condition_column,
                   experimental_columns = design@experimental_columns,
@@ -44,8 +43,7 @@ diagnoseDataModel <- function(data, design, model, print_plots = TRUE) {
                   na.action=design@na_action,
                  include_interaction = design@include_interaction,
                  random_slope_variable = design@random_slope_variable,
-                 covariate_is_categorical = design@covariate_is_categorical,
-                 print_plots
+                 covariate_is_categorical = design@covariate_is_categorical
                  )
 
 }
