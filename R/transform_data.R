@@ -18,7 +18,6 @@
 #' @param include_interaction logical - TRUE or FALSE - Whether to include condition * covariate interaction
 #' @param random_slope_variable Variable for random slopes (typically "condition_column")
 #' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
-#' @param print_plots Whether or not to print the plots, irrespective of this argument ggplot versions of the different QC figures generated are returned. TRUE - print the plots, FALSE - do not print the plots
 #'
 #' @return A list with four elements. 1) models: representing the names of the models
 #' evaluated based on differnt modifications of the response column.
@@ -44,7 +43,7 @@
 #' @examples result=transform_data2(data=data, condition_column="classif", experimental_columns=c("experiment","line"), response_column="feature", condition_is_categorical=TRUE, error_is_non_normal=TRUE, family_p="poisson", alpha=0.05, crossed_columns = "line", method="cook", na.action="complete")
 
 transform_data<-function(data, condition_column, experimental_columns, response_column, total_column=NULL, condition_is_categorical=TRUE, covariate=NULL,
-                         crossed_columns = NULL, error_is_non_normal=FALSE, family_p=NULL, alpha=0.05, na.action="complete", include_interaction = NA, random_slope_variable = NULL, covariate_is_categorical = NA, print_plots = TRUE){
+                         crossed_columns = NULL, error_is_non_normal=FALSE, family_p=NULL, alpha=0.05, na.action="complete", include_interaction = NA, random_slope_variable = NULL, covariate_is_categorical = NA){
 
 
 
@@ -280,16 +279,6 @@ transform_data<-function(data, condition_column, experimental_columns, response_
   result=list(Data_updated, cooks_result, plots_info, models)
   names(result)=c("Data_updated", "cooks_result", "plots_info", "models")
 
-  if(print_plots) {
-    for(m in 1:length(models)) {
-      plots <- plots_info[[m]]$plots
-      captions <- plots_info[[m]]$captions
-      for (i in seq_along(plots)) {
-        plot(plots[[i]] + ggtitle(paste(models[m], captions[i], sep =":")) + theme(plot.title = element_textbox_simple()))
-      }
-
-    }
-  }
   return(result)
 }
 
@@ -315,12 +304,13 @@ generate_qc_plots <-  function(lms,
     plots[[plot_index+1]] <- ggplot(model_data, aes(sample = model_residuals)) +
       stat_qq() +
       stat_qq_line(color = "red") +
-      labs(title = "Q-Q Plot: Residuals",
-           subtitle = paste0("Check normality of residuals",description_suffix),
+      labs(title = paste0("Q-Q Plot: Residuals", description_suffix),
+           subtitle = paste0("Check normality of residuals", ". Expectation is that the black points lie on or close to the solid red diaganol line"),
            x = "Theoretical Quantiles",
            y = "Sample Quantiles") +
       theme_minimal() +
-      theme(plot.title = element_text(size = 12, face = "bold"))
+      theme(plot.title = element_text(size = 12, face = "bold")) +
+      theme(plot.subtitle  = element_textbox_simple())
 
     names(plots)[plot_index+1] <- "residuals_QQ"
 
@@ -334,27 +324,30 @@ generate_qc_plots <-  function(lms,
       geom_smooth(method = "loess", se = TRUE, color = "red") +
       geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +
       labs(title = paste0("Residuals vs Fitted Values ", description_suffix),
-           subtitle = "Check for linearity",
+           subtitle = paste0("Check for linearity", ". Expectation is that the best fit solid red line is horizontal or close to being horizontal"),
            x = "Fitted Values",
            y = "Residuals") +
       theme_minimal() +
-      theme(plot.title = element_text(size = 12, face = "bold"))
+      theme(plot.title = element_text(size = 12, face = "bold"))+
+      theme(plot.subtitle  = element_textbox_simple())
 
     names(plots)[plot_index+2] <- "residuals_vs_fitted"
-    captions[plot_index+2] <- paste0("Check for linearity ", description_suffix, ". Expectation is that the best fit solid line is horizontal or close to being horizontal")
+    captions[plot_index+2] <- paste0("Check for linearity ", description_suffix, ". Expectation is that the best fit solid red line is horizontal or close to being horizontal")
 
     # 1b. Scale-Location Plot (Square root of standardized residuals vs fitted)
     plots[[plot_index+3]] <- ggplot(model_data, aes(x = fitted, y = sqrt_abs_residuals)) +
       geom_point(alpha = 0.6, size = 2) +
       geom_smooth(method = "loess", se = TRUE, color = "red") +
       labs(title = paste0("Scale-Location Plot ", description_suffix),
-           subtitle = "Check for homoscedasticity",
+           subtitle = paste0("Check for homoscedasticity", ". Expectation is that the best fit solid red line is horizontal or close to being so"),
            x = "Fitted Values",
            y = "√|Standardized Residuals|") +
       theme_minimal() +
-      theme(plot.title = element_text(size = 12, face = "bold"))
+      theme(plot.title = element_text(size = 12, face = "bold"))+
+      theme(plot.subtitle  = element_textbox_simple())
+
     names(plots)[plot_index+3] <- "residuals_homoscedasticity"
-    captions[plot_index+3] <- paste0("Check for homoscedasticity ",description_suffix, ". Expectation is that the best fit solid line is horizontal or close to being so")
+    captions[plot_index+3] <- paste0("Check for homoscedasticity ",description_suffix, ". Expectation is that the best fit solid red line is horizontal or close to being so")
     plot_index <- plot_index + 3
 
   }else{
@@ -363,11 +356,11 @@ generate_qc_plots <-  function(lms,
     # plot(simulationOutput)
     # DHARMa::plotResiduals(simulationOutput, form =  lms[[2]]$condition_column)
 
-    plots[[plot_index + 1]] <- ggplot_QQunif(simulationOutput)
+    plots[[plot_index + 1]] <- ggplot_QQunif(simulationOutput, description_suffix = description_suffix)
     names(plots)[plot_index+1] <- "residuals_QQ"
     captions[plot_index + 1] <- paste0("Q-Q Plot for Uniform Distribution", ". Expectation is that the black points lie on or close to the solid red diaganol line")
 
-    plots[[plot_index + 2]] <- ggplot_residuals_vs_predictor(simulationOutput)
+    plots[[plot_index + 2]] <- ggplot_residuals_vs_predictor(simulationOutput, description_suffix = description_suffix)
     names(plots)[plot_index+2] <- "residuals_vs_predicted"
     captions[plot_index + 2] <- paste0("Residuals vs Predicted", ". Expectation is that the best fit blue lines at the three quartiles- 0.25, 0.50 and 0.75 - are close to the dashed horizontal lines at their respective quartiles")
 
@@ -386,12 +379,13 @@ generate_qc_plots <-  function(lms,
       plots[[plot_index+1]] <- ggplot(model_data, aes(sample = model_residuals)) +
         stat_qq() +
         stat_qq_line(color = "red") +
-        labs(title = paste0("Q-Q Plot: Random effects for ", names(random_effects)[c], "_", colnames(random_effects[[c]][j]), ": ", exp_factor),
-             subtitle = paste0("Check normality of random effects ", description_suffix),
+        labs(title = paste0("Q-Q Plot: Random effects for ", exp_factor),
+             subtitle = paste0(description_suffix, ": Check normality of random effects for ", names(random_effects)[c], "_", colnames(random_effects[[c]][j]), " ", ": ", exp_factor, ". Expectation is that the black points lie on or close to the solid red diaganol line"),
              x = "Theoretical Quantiles",
              y = "Sample Quantiles") +
         theme_minimal() +
-        theme(plot.title = element_text(size = 12, face = "bold"))
+        theme(plot.title = element_text(size = 12, face = "bold"))+
+        theme(plot.subtitle  = element_textbox_simple())
 
       names(plots)[plot_index+1] <- paste0("random_effects_QQ_",temp_count)
       captions[plot_index+1] <- paste0("Check normality of random effects for ", names(random_effects)[c], "_", colnames(random_effects[[c]][j]), " ", description_suffix, ": ", exp_factor, ". Expectation is that the black points lie on or close to the solid red diaganol line")
@@ -406,12 +400,13 @@ generate_qc_plots <-  function(lms,
     residuals_df <- data.frame(residual)
     plots[[plot_index+1]] <- ggplot(residuals_df, aes(x=residual)) +
       geom_histogram() +
-      labs(title = paste0("Histogram of Residuals Values"),
-           subtitle = "Check for outliers",
+      labs(title = "Histogram of Residuals Values",
+           subtitle = "Histogram of residuals values. Red vertical lines (if present) are the location of the cutoffs to identify the outliers. No red vertical lines implies that the residual values that were estimated to be infinite were identified as outliers",
            x = "Residuals") +
-
       theme_minimal() +
-      theme(plot.title = element_text(size = 12, face = "bold"))
+      theme(plot.title = element_text(size = 12, face = "bold"))+
+      theme(plot.subtitle  = element_textbox_simple())
+
     if(!is.na(cutoffs[1])){
       plots[[plot_index+1]] <- plots[[plot_index+1]] + geom_vline(xintercept = cutoffs[1], color = "red")
     }
@@ -560,7 +555,8 @@ ggplot_QQunif <- function(dharma_obj,
                           title = "Q-Q Plot vs. Uniform Distribution",
                           test_uniformity = FALSE,
                           test_dispersion = FALSE,
-                          test_outliers = FALSE) {
+                          test_outliers = FALSE,
+                          description_suffix = "") {
 
   residuals <- dharma_obj$scaledResiduals
   n <- length(residuals)
@@ -579,12 +575,14 @@ ggplot_QQunif <- function(dharma_obj,
   p <- ggplot(qq_data, aes(x = theoretical, y = observed)) +
     geom_point(alpha = 0.6, size = 1.5) +
     geom_abline(intercept = 0, slope = 1, color = "red",  linewidth = 1) +
-    labs(title = title,
+    labs(title = paste(title, description_suffix),
+         subtitle = paste0("Q-Q Plot for Uniform Distribution", ". Expectation is that the black points lie on or close to the solid red diaganol line"),
          x = "Expected (Uniform)",
          y = "Observed Residuals") +
     theme_minimal() +
     theme(plot.title = element_text(size = 12, face = "bold")) +
-    coord_cartesian(xlim = c(0, 1), ylim = c(0, 1))
+    coord_cartesian(xlim = c(0, 1), ylim = c(0, 1)) +
+    theme(plot.subtitle  = element_textbox_simple())
 
   # Add test results as subtitle if requested
   test_results <- character()
@@ -618,7 +616,8 @@ ggplot_residuals_vs_predictor <- function(dharma_obj,
                                           predictor_name = "predictions",   #or "predictions"
                                           condition_is_categorical = TRUE,
                                           rank = TRUE,
-                                          quantreg = TRUE) {
+                                          quantreg = TRUE,
+                                          description_suffix = "") {
 
   plot_data <- extract_dharma_data(dharma_obj)
   if(predictor_name == "predictions")
@@ -652,25 +651,32 @@ ggplot_residuals_vs_predictor <- function(dharma_obj,
       quantiles <- c(0.25, 0.5, 0.75)
       for (q in quantiles) {
         p <- p + geom_smooth(formula = y ~ poly(x,2), method = "rq", method.args = list(tau = q),
-                             se = FALSE, color = "blue", linewidth = 0.8, alpha = 0.7)
+                             se = FALSE, color = "red", linewidth = 0.8, alpha = 0.7)
       }
       # Add expected horizontal lines
       for (q in quantiles) {
         p <- p + geom_hline(yintercept = q, linetype = "dashed",
                             color = "black", alpha = 0.6)
       }
+
+      p <- p + labs(title = paste("DHARMa Residuals vs", predictor_name, description_suffix),
+             subtitle = paste0("Residuals vs Predicted", ". Expectation is that the best fit red lines at the three quartiles- 0.25, 0.50 and 0.75 - are close to the dashed horizontal lines at their respective quartiles"),
+             x = x_label,
+             y = "DHARMa Residuals")
     } else {
-      p <- p + geom_smooth(method = "gam", se = TRUE, color = "blue", alpha = 0.7) +
-        geom_hline(yintercept = 0.5, linetype = "dashed", color = "black", alpha = 0.6)
+      p <- p + geom_smooth(method = "lm", se = TRUE, color = "red", alpha = 0.7) +
+        geom_hline(yintercept = 0.5, linetype = "dashed", color = "black", alpha = 0.6) +
+        labs(title = paste("DHARMa Residuals vs", predictor_name, description_suffix),
+             subtitle = paste0("Residuals vs Predicted", ". Expectation is that the best fit solid red line is horizontal or close to being so"),
+             x = x_label,
+             y = "DHARMa Residuals")
   }
 }
   p <- p +
-    labs(title = paste("DHARMa Residuals vs", predictor_name),
-         x = x_label,
-         y = "DHARMa Residuals") +
     theme_minimal() +
     theme(plot.title = element_text(size = 12, face = "bold")) +
-    ylim(0, 1)
+    ylim(0, 1) +
+    theme(plot.subtitle  = element_textbox_simple())
 
   return(p)
 }

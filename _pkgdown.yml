@@ -1,0 +1,93 @@
+url: https://gladstone-institutes.github.io/RMeDPower2/
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#3498db"
+    secondary: "#95a5a6"
+
+home:
+  title: RMeDPower2
+  description: Statistical Power Analysis for Repeated Measures Experiments
+  
+navbar:
+  title: RMeDPower2
+  type: default
+  left:
+    - text: Home
+      href: index.html
+    - text: Reference
+      href: reference/
+    - text: Articles
+      menu:
+        - text: Getting Started
+          href: articles/getting-started.html
+        - text: Tutorial
+          href: articles/Tutorial.html
+        - text: Class Configuration Guide
+          href: articles/RMeDPower2_Class_Configuration_Guide.html
+    - text: News
+      href: news/
+  right:
+    - icon: fab fa-github
+      href: https://github.com/gladstone-institutes/RMeDPower2
+      aria-label: GitHub
+
+reference:
+  - title: Main Functions
+    desc: Core functions for power analysis
+    contents:
+      - calculatePower
+      - diagnoseDataModel
+      - getEstimatesOfInterest
+      - transform_data
+  - title: S4 Classes
+    desc: Class definitions for experimental design
+    contents:
+      - RMeDesign-class
+      - ProbabilityModel-class
+      - PowerParams-class
+  - title: Helper Functions
+    desc: Utility functions for analysis
+    contents:
+      - get_model_and_data
+      - get_residuals
+      - calculate_power
+      - calculate_lmer_estimates
+      - readDesign
+      - readPowerParams
+      - readProbabilityModel
+  - title: Plotting Functions
+    desc: Visualization and quality control
+    contents:
+      - plotQC
+
+articles:
+  - title: Getting Started
+    navbar: ~
+    contents:
+      - getting-started
+  - title: Tutorial
+    navbar: ~
+    contents:
+      - Tutorial
+  - title: Configuration Guide
+    navbar: ~
+    contents:
+      - RMeDPower2_Class_Configuration_Guide
+
+authors:
+  Min-Gyoung Shin:
+    href: https://gladstone.org/
+  Reuben Thomas:
+    href: https://gladstone.org/
+
+footer:
+  structure:
+    left: developed_by
+    right: built_with
+  components:
+    developed_by: |
+      Developed by [Min-Gyoung Shin](https://gladstone.org/), [Reuben Thomas](https://gladstone.org/).
+    built_with: |
+      Built with [pkgdown](https://pkgdown.r-lib.org/)
