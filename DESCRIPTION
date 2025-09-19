@@ -28,7 +28,9 @@ Imports:
     magick,
     EnvStats,
     jsonlite,
-    methods
+    methods,
+    ggplot2,
+    ggtext
 Suggests:
     knitr,
     rmarkdown,

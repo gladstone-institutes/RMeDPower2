@@ -37,6 +37,7 @@
 #' @param include_interaction Whether to include condition * covariate interaction
 #' @param random_slope_variable Variable for random slopes (typically "condition_column")
 #' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
+#' @param print_plots Whether or not to print the plots, irrespective of this argument ggplot versions of the power curves are returned. TRUE - print the plots, FALSE - do not print the plots
 #'
 #'
 #' @return A power curve image or a power calculation result printed in a text file
@@ -58,9 +59,10 @@
 calculate_power <- function(data, condition_column, experimental_columns, response_column, total_column = NULL, target_columns, power_curve, condition_is_categorical, covariate=NA,
                             crossed_columns = NULL, error_is_non_normal=FALSE, nsimn=1000, family_p=NULL,
                             levels=NULL, max_size=NULL, breaks=NULL, effect_size=NULL, ICC=NULL, na.action="complete", output=NULL, alpha =0.05,
-                            include_interaction = FALSE,
+                            include_interaction = NA,
                             random_slope_variable = NULL,
-                            covariate_is_categorical = TRUE){
+                            covariate_is_categorical = NA,
+                            print_plots = TRUE){
 
 
 
@@ -827,12 +829,13 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
           geom_line() +
           geom_errorbar(aes(ymin = lower, ymax = upper)) +
           geom_hline(yintercept = 80, lty=2) +
+          ylab("Statistical power")
           theme_minimal() +
           theme(plot.title = element_text(size = 12, face = "bold"))
         captions[i] <- paste0("Statistical power estimates expressed as percentages as a functions of different levels of ", target_columns[i])
       }else{
         png(paste0(output[i],".png"))
-        print(plot(pc))
+        print(plots[[i]] + ggtitle(captions[i]) + theme(plot.title = element_textbox_simple()))
         print(mtext(response_column))
         dev.off()
       }

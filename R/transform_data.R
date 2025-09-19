@@ -16,11 +16,26 @@
 #' @param family_p The type of distribution family to specify when the response is categorical. If family is "binary" then binary(link="log") is used, if family is "poisson" then poisson(link="logit") is used, if family is "poisson_log" then poisson(link=") log") is used.
 #' @param alpha numeric scalar between 0 and 1 indicating the Type I error associated with the test of outliers
 #' @param na.action "complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, and response columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.
-#' @param include_interaction Whether to include condition * covariate interaction
+#' @param include_interaction logical - TRUE or FALSE - Whether to include condition * covariate interaction
 #' @param random_slope_variable Variable for random slopes (typically "condition_column")
 #' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
-#'
-#' @return For continuous data, the function returns quantile-quanitle (qq) plots of i) raw residual values ii) log-transformed residual values iii) raw residual values after removing outliers, and iv) log-transformed residual values. For discrete data, it returns a histogram. If "rosner" is chosen, a matrix with updated feature values after transformation will be returned. If "cook" is choose, a list with  a matrix with updated feature values after transformation will be returned,
+#' @param print_plots Whether or not to print the plots, irrespective of this argument ggplot versions of the different QC figures generated are returned. TRUE - print the plots, FALSE - do not print the plots
+#' @return A list with four elements. 1) models: representing the names of the models
+#' evaluated based on differnt modifications of the response column.
+#' The models would include one called natural_scale,
+#' another model called natural_scale_wo_outliers if outliers had beeen identified,
+#' another model called log_scale if the respose column is continuous
+#' and the model on the log-transformed values of the responses are what was evaluated
+#' and finally log_scale_wo_outliers model if there were outliers identified in the log_scale model.
+#' 2) Data_updated representing the updated data frame with additional columns for the modified response column corresponding to each of the models evaluated.
+#' 3) cooks_result: cooks distance of each of the experimental columns for each of the models evaluated.
+#' For models based on the binomial probability distribution, cooks distance is only
+#' reported for the first experimental column on account the increased computation time
+#' for evaluating this metric for the other experimental columns.
+#' 4) plots_info: is a list with two elements plots and captions. plots is a named list and captions is a character vector,
+#' both of the same length as the number of models evaluated. Each element of the plots list is yet another
+#' list of QC/diagnostic plots related to the corresponding model fit, while the captions is a vector of captions for each of the
+#' QC plots output
 #'
 #' @export
 #'
@@ -29,7 +44,7 @@
 #' @examples result=transform_data2(data=data, condition_column="classif", experimental_columns=c("experiment","line"), response_column="feature", condition_is_categorical=TRUE, error_is_non_normal=TRUE, family_p="poisson", alpha=0.05, crossed_columns = "line", method="cook", na.action="complete")
 
 transform_data<-function(data, condition_column, experimental_columns, response_column, total_column=NULL, condition_is_categorical=TRUE, covariate=NULL,
-                         crossed_columns = NULL, error_is_non_normal=FALSE, family_p=NULL, alpha=0.05, na.action="complete", include_interaction = NA, random_slope_variable = NULL, covariate_is_categorical = NA){
+                         crossed_columns = NULL, error_is_non_normal=FALSE, family_p=NULL, alpha=0.05, na.action="complete", include_interaction = NA, random_slope_variable = NULL, covariate_is_categorical = NA, print_plots = TRUE){
 
 
 
@@ -264,6 +279,17 @@ transform_data<-function(data, condition_column, experimental_columns, response_
   }
   result=list(Data_updated, cooks_result, plots_info, models)
   names(result)=c("Data_updated", "cooks_result", "plots_info", "models")
+
+  if(print_plots) {
+    for(m in 1:length(models)) {
+      plots <- plots_info[[m]]$plots
+      captions <- plots_info[[m]]$captions
+      for (i in seq_along(plots)) {
+        print(plots[[i]] + ggtitle(paste(models[m], captions[i]), sep =":") + theme(plot.title = element_textbox_simple()))
+      }
+
+    }
+  }
   return(result)
 }
 

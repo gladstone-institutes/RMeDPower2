@@ -6,14 +6,15 @@
 #' @param data Input data frame with columns having all the necessary information regarding the dependent and independent variables of interest
 #' @param design an object of class RMeDesign with the necessary design information about the data
 #' @param model an object of class ProbabilityModel giving the error distribution of the data
-#'
+#' @param print_plots Whether or not to print the plots, irrespective of this argument ggplot versions of the different QC figures generated are returned. TRUE - print the plots, FALSE - do not print the plots
+
 #' @return For continuous data, the function returns quantile-quanitle (qq) plots of i) raw residual values ii) log-transformed residual values iii) raw residual values after removing outliers, and iv) log-transformed residual values. For discrete data, it returns a histogram. If "rosner" is chosen, a matrix with updated feature values after transformation will be returned. If "cook" is choose, a list with  a matrix with updated feature values after transformation will be returned,
 #'
 #' @export
 #'
 #' @examples result=diagnoseDataModel(data=data, design=design, model=model)
 
-diagnoseDataModel <- function(data, design, model) {
+diagnoseDataModel <- function(data, design, model, print_plots = TRUE) {
   transform_data(data,
                   condition_column = design@condition_column,
                   experimental_columns = design@experimental_columns,
@@ -28,7 +29,8 @@ diagnoseDataModel <- function(data, design, model) {
                   na.action=design@na_action,
                  include_interaction = design@include_interaction,
                  random_slope_variable = design@random_slope_variable,
-                 covariate_is_categorical = design@covariate_is_categorical
+                 covariate_is_categorical = design@covariate_is_categorical,
+                 print_plots
                  )
 
 }

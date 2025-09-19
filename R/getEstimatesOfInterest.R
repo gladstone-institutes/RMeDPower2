@@ -6,14 +6,17 @@
 #' @param data Input data frame with columns having all the necessary information regarding the dependent and independent variables of interest
 #' @param design an object of class RMeDesign with the necessary design information about the data
 #' @param model an object of class ProbabilityModel giving the error distribution of the data
+#' @param print_plots Whether or not to print the plots, irrespective of this argument ggplot versions of evaluated association between the response_column and the condition_column. TRUE - print the plot, FALSE - do not print the plot
 #'
-#' @return an object of class summary.merMod and a data frame with the residuals for each observation that can be used to generate other visualizations
+#' @return a list with two elements - 1. an object of class summary.merMod and
+#' 2. the output from the get_residuals functions. This output consists of a list
+#' with 3 elements. 1. The updated input data with an additional column with the model residuals of the individual observations. 2. A plot representing the purported association between the response column and the condition column. 3. The corresponding caption for this figure.
 #'
 #' @export
 #'
 #' @examples result=diagnoseDataModel(data=data, design=design, model=model)
 
-getEstimatesOfInterest <- function(data, design, model) {
+getEstimatesOfInterest <- function(data, design, model,print_plots=TRUE) {
 
   ##assign input arguments
   condition_column = design@condition_column
@@ -44,7 +47,7 @@ getEstimatesOfInterest <- function(data, design, model) {
                                                  crossed_columns, error_is_non_normal, family_p, na.action, include_interaction, random_slope_variable, covariate_is_categorical)
   ##visualize estimates
   res[[2]] <- get_residuals(data, condition_column, experimental_columns, response_column, condition_is_categorical, covariate,
-                                                crossed_columns, total_column, error_is_non_normal, family_p, na.action, include_interaction, random_slope_variable, covariate_is_categorical)
+                                                crossed_columns, total_column, error_is_non_normal, family_p, na.action, include_interaction, random_slope_variable, covariate_is_categorical, print_plots)
 
   return(res)
 

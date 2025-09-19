@@ -22,7 +22,9 @@
 #' @param include_interaction Whether to include condition * covariate interaction
 #' @param random_slope_variable Variable for random slopes (typically "condition_column")
 #' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
-#' @return The adjusted residual values for the experimental variables will be returned along with the original input data. A boxplot of residual values and a plot of 95% confidence interval mean residual values adjusted for the experimental variables will be returned.
+#' @param print_plots Whether or not to print the plots, irrespective of this argument ggplot versions of evaluated association between the response_column and the condition_column. TRUE - print the plot, FALSE - do not print the plot
+#'
+#' @return A list with 3 elements. 1. The updated input data with an additional column with the model residuals of the individual observations. 2. A plot representing the purported association between the response column and the condition column. 3. The corresponding caption for this figure.
 #'
 #' @export
 #'
@@ -37,7 +39,7 @@
 
 
 get_residuals <- function(data, condition_column, experimental_columns, response_column,  condition_is_categorical, covariate=NULL,
-                          crossed_columns=NULL, total_column=FALSE, error_is_non_normal=FALSE, family_p=NULL, na.action="complete", include_interaction=FALSE, random_slope_variable=NULL, covariate_is_categorical = TRUE){
+                          crossed_columns=NULL, total_column=FALSE, error_is_non_normal=FALSE, family_p=NULL, na.action="complete", include_interaction=FALSE, random_slope_variable=NULL, covariate_is_categorical = TRUE, print_plots = TRUE){
 
 
 
@@ -347,6 +349,7 @@ get_residuals <- function(data, condition_column, experimental_columns, response
           ylab("median residual") +
           theme_bw() +
           theme(axis.title   = element_text(face  = "bold"))
+        captions = paste0("Box of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column, " and separated by levels of ", covariate)
       }
       else if(class(Data[["covariate"]]) == "numeric") {
         gp=ggplot2::ggplot(Data_sum, aes(x=covariate, y=med_residual1, color = condition_column)) +
@@ -355,6 +358,7 @@ get_residuals <- function(data, condition_column, experimental_columns, response
           ylab("median residual") +
           theme_bw() +
           theme(axis.title   = element_text(face  = "bold"))
+        captions = paste0("Best loess fits of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", covariate, " for each level of ", condition_column)
 
       }
     }else{
@@ -364,25 +368,30 @@ get_residuals <- function(data, condition_column, experimental_columns, response
         ylab("median residual") +
         theme_bw() +
         theme(axis.title   = element_text(face  = "bold"))
+      captions = paste0("Box of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column)
+
     }
 
-    print(gp)
   }else{
 
 
     # plot(Data[,"condition_column"], Data[,"residual"], xlab=condition_column, ylab=paste0(response_column, " Residual Value"), main=NULL)
     # abline(lm( as.formula( paste0( "residual ~  condition_column") ), data=Data),col='blue')
 
-    p <- ggplot2::ggplot(Data, aes(x=condition_column, y=residual, color=experimental_column1)) +
+    gp <- ggplot2::ggplot(Data, aes(x=condition_column, y=residual, color=experimental_column1)) +
       geom_point() +
-      geom_smooth(method = "lm", se = FALSE) +
-      theme_bw()
-    print(p)
+      geom_smooth(method = "loess", se = T) +
+      theme_bw() +
+      theme(axis.title   = element_text(face  = "bold"))
 
+    captions = paste0("Best loess fits of the residuals across all observations separated for each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column)
 
 
 
   }
 
-  return(Data)
+  if(print_plots)
+    print(gp + ggtitle(captions) + theme(plot.title = element_textbox_simple()))
+
+  return(list(Data = Data, plots = gp, captions = captions))
 }
