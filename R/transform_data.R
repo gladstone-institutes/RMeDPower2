@@ -10,7 +10,6 @@
 #' @param total_column Set this column only when family_p="binomial" and it is equal to the total number of observations (number of cases plus number of controls) for a given number of cases
 #' @param condition_is_categorical Specify whether the condition variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #' @param covariate The name of the covariate to control in the regression model
-#' @param method The method used to detect outliers. "rosner" (default) runs Rosner's test and "cook" runs Cook's distance.
 #' @param crossed_columns Name of experimental variables that may appear repeatedly with the same ID. For example, cell_line C1 may appear in multiple experiments, but plate P1 cannot appear in more than one experiment
 #' @param error_is_non_normal Default: the observed variable is continuous Categorical response variable will be implemented in the future. TRUE: Categorical , FALSE: Continuous (default).
 #' @param family_p The type of distribution family to specify when the response is categorical. If family is "binary" then binary(link="log") is used, if family is "poisson" then poisson(link="logit") is used, if family is "poisson_log" then poisson(link=") log") is used.
@@ -20,6 +19,7 @@
 #' @param random_slope_variable Variable for random slopes (typically "condition_column")
 #' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #' @param print_plots Whether or not to print the plots, irrespective of this argument ggplot versions of the different QC figures generated are returned. TRUE - print the plots, FALSE - do not print the plots
+#'
 #' @return A list with four elements. 1) models: representing the names of the models
 #' evaluated based on differnt modifications of the response column.
 #' The models would include one called natural_scale,
@@ -611,124 +611,6 @@ ggplot_QQunif <- function(dharma_obj,
   return(p)
 }
 
-# ==============================================================================
-# 2. GGPLOT VERSION OF plotResiduals()
-# ==============================================================================
-
-ggplot_residuals <- function(dharma_obj,
-                             form = NULL,
-                             rank = TRUE,
-                             quantreg = NULL,
-                             title = "Residuals vs Predicted",
-                             quantiles = c(0.25, 0.5, 0.75),
-                             smooth_scatter = FALSE) {
-
-  # Extract data
-  plot_data <- extract_dharma_data(dharma_obj)
-
-  # Determine predictor variable
-  if (is.null(form)) {
-    x_var <- ifelse(rank, "rank_predicted", "predicted")
-    x_label <- ifelse(rank, "Predicted (Rank Transformed)", "Predicted")
-  } else {
-    # If form is provided, use it (this would need additional handling for custom predictors)
-    x_var <- ifelse(rank, "rank_predicted", "predicted")
-    x_label <- ifelse(rank, "Predicted (Rank Transformed)", "Predicted")
-  }
-
-  # Determine if quantile regression should be used
-  if (is.null(quantreg)) {
-    quantreg <- nrow(plot_data) < 2000
-  }
-
-  # Base plot
-  if (smooth_scatter && nrow(plot_data) > 10000) {
-    # Use density-based scatter plot for large datasets
-    p <- ggplot(plot_data, aes_string(x = x_var, y = "residuals")) +
-      geom_hex(bins = 30, alpha = 0.7) +
-      scale_fill_gradient(low = "lightblue", high = "darkblue")
-  } else {
-    # Regular scatter plot
-    p <- ggplot(plot_data, aes_string(x = x_var, y = "residuals")) +
-      geom_point(aes(color = outliers), alpha = 0.6, size = 1.5) +
-      scale_color_manual(values = c("FALSE" = "black", "TRUE" = "red"),
-                         guide = "none")
-  }
-
-  # Add quantile regression lines or smooth spline
-  if (quantreg) {
-    # Add quantile regression lines
-    for (q in quantiles) {
-      p <- p + geom_smooth(method = "rq", method.args = list(tau = q),
-                           se = FALSE, color = "blue", linewidth = 0.8, alpha = 0.7)
-    }
-    # Add theoretical expectation lines (should be horizontal at quantile values)
-    for (q in quantiles) {
-      p <- p + geom_hline(yintercept = q, linetype = "dashed",
-                          color = "black", alpha = 0.6)
-    }
-  } else {
-    # Add smooth spline around mean
-    p <- p + geom_smooth(method = "gam", se = TRUE, color = "blue", alpha = 0.7)
-    # Add horizontal line at 0.5 (expected mean for uniform distribution)
-    p <- p + geom_hline(yintercept = 0.5, linetype = "dashed",
-                        color = "black", alpha = 0.6)
-  }
-
-  p <- p +
-    labs(title = title,
-         x = x_label,
-         y = "DHARMa Residuals",
-         subtitle = ifelse(quantreg,
-                           paste("Blue lines = quantile regression (", paste(quantiles, collapse = ", "), "), Black dashed = expected"),
-                           "Blue line = GAM smooth, Black dashed = expected (0.5)")) +
-    theme_minimal() +
-    theme(plot.title = element_text(size = 12, face = "bold")) +
-    ylim(0, 1)
-
-  # Perform and display tests
-  if (quantreg) {
-    tryCatch({
-      quant_test <- DHARMa::testQuantiles(dharma_obj, plot = FALSE)
-      p <- p + labs(caption = paste("Quantile test p-value:", round(quant_test$p.value, 4)))
-    }, error = function(e) {
-      # If quantile test fails, just continue without it
-    })
-  }
-
-  return(p)
-}
-
-# ==============================================================================
-# 3. GGPLOT VERSION OF DHARMa HISTOGRAM
-# ==============================================================================
-
-ggplot_dharma_hist <- function(dharma_obj,
-                               title = "Distribution of DHARMa Residuals",
-                               bins = 20) {
-
-  residuals <- dharma_obj$scaledResiduals
-
-  # Create histogram with theoretical uniform distribution overlay
-  p <- ggplot(data.frame(residuals = residuals), aes(x = residuals)) +
-    geom_histogram(aes(y = ..density..), bins = bins,
-                   fill = "lightblue", color = "black", alpha = 0.7) +
-    # Add theoretical uniform distribution line
-    geom_hline(yintercept = 1, color = "red", linetype = "dashed", linewidth = 1) +
-    labs(title = title,
-         subtitle = "Red dashed line = theoretical uniform distribution (density = 1)",
-         x = "DHARMa Residuals",
-         y = "Density") +
-    theme_minimal() +
-    theme(plot.title = element_text(size = 12, face = "bold")) +
-    xlim(0, 1)
-
-  # Add test result
-  unif_test <- DHARMa::testUniformity(dharma_obj, plot = FALSE)
-  p <- p + labs(caption = paste("Uniformity test p-value:", round(unif_test$p.value, 4)))
-
-  return(p)
-}
 
 # Plot residuals against custom predictor with DHARMa-style formatting
 ggplot_residuals_vs_predictor <- function(dharma_obj,
@@ -856,225 +738,347 @@ checkDots <- function(name, default, ...) {
   }
 }
 
-plotResiduals_ggplot <- function(simulationOutput, form = NULL, quantreg = NULL, rank = TRUE,
-                                 asFactor = NULL, smoothScatter = NULL, quantiles = c(0.25, 0.5, 0.75),
-                                 absoluteDeviation = FALSE, ...) {
 
-  # Handle additional arguments
-  dots <- list(...)
 
-  # Set up axis labels
-  yAxis <- ifelse(absoluteDeviation == TRUE, "Residual spread [2*abs(res - 0.5)]", "DHARMa residual")
-  ylab <- checkDots("ylab", yAxis, ...)
-  xlab <- checkDots("xlab", ifelse(is.null(form), "Model predictions",
-                                   gsub(".*[$]", "", deparse(substitute(form)))), ...)
 
-  if (rank == TRUE) {
-    xlab <- paste(xlab, "(rank transformed)")
-  }
+# # ==============================================================================
+# # 2. GGPLOT VERSION OF plotResiduals()
+# # ==============================================================================
+#
+# ggplot_residuals <- function(dharma_obj,
+#                              form = NULL,
+#                              rank = TRUE,
+#                              quantreg = NULL,
+#                              title = "Residuals vs Predicted",
+#                              quantiles = c(0.25, 0.5, 0.75),
+#                              smooth_scatter = FALSE) {
+#
+#   # Extract data
+#   plot_data <- extract_dharma_data(dharma_obj)
+#
+#   # Determine predictor variable
+#   if (is.null(form)) {
+#     x_var <- ifelse(rank, "rank_predicted", "predicted")
+#     x_label <- ifelse(rank, "Predicted (Rank Transformed)", "Predicted")
+#   } else {
+#     # If form is provided, use it (this would need additional handling for custom predictors)
+#     x_var <- ifelse(rank, "rank_predicted", "predicted")
+#     x_label <- ifelse(rank, "Predicted (Rank Transformed)", "Predicted")
+#   }
+#
+#   # Determine if quantile regression should be used
+#   if (is.null(quantreg)) {
+#     quantreg <- nrow(plot_data) < 2000
+#   }
+#
+#   # Base plot
+#   if (smooth_scatter && nrow(plot_data) > 10000) {
+#     # Use density-based scatter plot for large datasets
+#     p <- ggplot(plot_data, aes_string(x = x_var, y = "residuals")) +
+#       geom_hex(bins = 30, alpha = 0.7) +
+#       scale_fill_gradient(low = "lightblue", high = "darkblue")
+#   } else {
+#     # Regular scatter plot
+#     p <- ggplot(plot_data, aes_string(x = x_var, y = "residuals")) +
+#       geom_point(aes(color = outliers), alpha = 0.6, size = 1.5) +
+#       scale_color_manual(values = c("FALSE" = "black", "TRUE" = "red"),
+#                          guide = "none")
+#   }
+#
+#   # Add quantile regression lines or smooth spline
+#   if (quantreg) {
+#     # Add quantile regression lines
+#     for (q in quantiles) {
+#       p <- p + geom_smooth(method = "rq", method.args = list(tau = q),
+#                            se = FALSE, color = "blue", linewidth = 0.8, alpha = 0.7)
+#     }
+#     # Add theoretical expectation lines (should be horizontal at quantile values)
+#     for (q in quantiles) {
+#       p <- p + geom_hline(yintercept = q, linetype = "dashed",
+#                           color = "black", alpha = 0.6)
+#     }
+#   } else {
+#     # Add smooth spline around mean
+#     p <- p + geom_smooth(method = "gam", se = TRUE, color = "blue", alpha = 0.7)
+#     # Add horizontal line at 0.5 (expected mean for uniform distribution)
+#     p <- p + geom_hline(yintercept = 0.5, linetype = "dashed",
+#                         color = "black", alpha = 0.6)
+#   }
+#
+#   p <- p +
+#     labs(title = title,
+#          x = x_label,
+#          y = "DHARMa Residuals",
+#          subtitle = ifelse(quantreg,
+#                            paste("Blue lines = quantile regression (", paste(quantiles, collapse = ", "), "), Black dashed = expected"),
+#                            "Blue line = GAM smooth, Black dashed = expected (0.5)")) +
+#     theme_minimal() +
+#     theme(plot.title = element_text(size = 12, face = "bold")) +
+#     ylim(0, 1)
+#
+#   # Perform and display tests
+#   if (quantreg) {
+#     tryCatch({
+#       quant_test <- DHARMa::testQuantiles(dharma_obj, plot = FALSE)
+#       p <- p + labs(caption = paste("Quantile test p-value:", round(quant_test$p.value, 4)))
+#     }, error = function(e) {
+#       # If quantile test fails, just continue without it
+#     })
+#   }
+#
+#   return(p)
+# }
 
-  # Ensure DHARMa object and extract residuals
-  simulationOutput <- ensureDHARMa(simulationOutput, convert = TRUE)
-  res <- simulationOutput$scaledResiduals
+# # ==============================================================================
+# # 3. GGPLOT VERSION OF DHARMa HISTOGRAM
+# # ==============================================================================
+#
+# ggplot_dharma_hist <- function(dharma_obj,
+#                                title = "Distribution of DHARMa Residuals",
+#                                bins = 20) {
+#
+#   residuals <- dharma_obj$scaledResiduals
+#
+#   # Create histogram with theoretical uniform distribution overlay
+#   p <- ggplot(data.frame(residuals = residuals), aes(x = residuals)) +
+#     geom_histogram(aes(y = ..density..), bins = bins,
+#                    fill = "lightblue", color = "black", alpha = 0.7) +
+#     # Add theoretical uniform distribution line
+#     geom_hline(yintercept = 1, color = "red", linetype = "dashed", linewidth = 1) +
+#     labs(title = title,
+#          subtitle = "Red dashed line = theoretical uniform distribution (density = 1)",
+#          x = "DHARMa Residuals",
+#          y = "Density") +
+#     theme_minimal() +
+#     theme(plot.title = element_text(size = 12, face = "bold")) +
+#     xlim(0, 1)
+#
+#   # Add test result
+#   unif_test <- DHARMa::testUniformity(dharma_obj, plot = FALSE)
+#   p <- p + labs(caption = paste("Uniformity test p-value:", round(unif_test$p.value, 4)))
+#
+#   return(p)
+# }
 
-  if (absoluteDeviation == TRUE) {
-    res <- 2 * abs(res - 0.5)
-  }
-
-  # Check form argument
-  if (inherits(form, "DHARMa")) {
-    stop("DHARMa::plotResiduals > argument form cannot be of class DHARMa. Note that the syntax of plotResiduals has changed since DHARMa 0.3.0. See ?plotResiduals.")
-  }
-
-  # Get predictor values
-  pred <- ensurePredictor(simulationOutput, form)
-
-  # Handle continuous predictors
-  if (!is.factor(pred)) {
-    if (rank == TRUE) {
-      pred <- rank(pred, ties.method = "average")
-      pred <- pred / max(pred)
-    }
-
-    nuniq <- length(unique(pred))
-    ndata <- length(pred)
-
-    if (is.null(asFactor)) {
-      asFactor <- (nuniq == 1) | (nuniq < 10 & ndata/nuniq > 10)
-    }
-
-    if (asFactor) {
-      pred <- factor(pred)
-    }
-  }
-
-  # Set quantreg default
-  if (is.null(quantreg)) {
-    quantreg <- ifelse(length(res) > 2000, FALSE, TRUE)
-  }
-
-  # Set smoothScatter default
-  switchScatter <- 10000
-  if (is.null(smoothScatter)) {
-    smoothScatter <- ifelse(length(res) > switchScatter, TRUE, FALSE)
-  }
-
-  # Create data frame for plotting
-  plot_data <- data.frame(
-    predictor = pred,
-    residuals = res,
-    is_extreme = (res == 0 | res == 1)
-  )
-
-  # Set up main title
-  main_title <- ifelse("main" %in% names(dots), dots$main,
-                       ifelse(is.null(form), paste(yAxis, "vs. predicted"),
-                              paste(yAxis, "Residual vs. predictor")))
-
-  # Create the base plot
-  if (is.factor(pred)) {
-    # Categorical predictor - boxplot style
-    p <- ggplot(plot_data, aes(x = predictor, y = residuals)) +
-      geom_boxplot(alpha = 0.7, outlier.shape = NA) +
-      geom_jitter(aes(color = is_extreme), width = 0.2, alpha = 0.6) +
-      scale_color_manual(values = c("FALSE" = "black", "TRUE" = "red"), guide = "none") +
-      scale_y_continuous(limits = c(0, 1), breaks = c(0, quantiles, 1)) +
-      labs(x = xlab, y = ylab, title = main_title) +
-      theme_minimal() +
-      theme(
-        panel.grid.minor = element_blank(),
-        plot.title = element_text(size = 10)
-      )
-
-    # Add quantile lines
-    for (q in quantiles) {
-      p <- p + geom_hline(yintercept = q, linetype = "dashed", alpha = 0.5)
-    }
-
-    # Note: testCategorical would need to be implemented separately
-    # For now, we'll just return NULL as the original function does for continuous predictors
-    out <- NULL
-
-  } else {
-    # Continuous predictor
-    alpha_val <- max(0.1, 1 - 3 * length(res) / switchScatter)
-
-    if (smoothScatter == TRUE) {
-      # Use density-based coloring for many points
-      p <- ggplot(plot_data, aes(x = predictor, y = residuals)) +
-        stat_density_2d_filled(alpha = 0.6, show.legend = FALSE) +
-        scale_fill_grey(start = 1, end = 0.3) +
-        geom_point(data = subset(plot_data, is_extreme),
-                   aes(color = is_extreme), size = 0.5) +
-        scale_color_manual(values = c("TRUE" = "red"), guide = "none") +
-        scale_y_continuous(limits = c(0, 1), breaks = c(0, quantiles, 1)) +
-        labs(x = xlab, y = ylab, title = main_title) +
-        theme_minimal() +
-        theme(
-          panel.grid.minor = element_blank(),
-          plot.title = element_text(size = 10)
-        )
-    } else {
-      # Regular scatter plot
-      p <- ggplot(plot_data, aes(x = predictor, y = residuals)) +
-        geom_point(aes(color = is_extreme, shape = is_extreme),
-                   alpha = alpha_val, size = 1) +
-        scale_color_manual(values = c("FALSE" = "black", "TRUE" = "red"), guide = "none") +
-        scale_shape_manual(values = c("FALSE" = 16, "TRUE" = 8), guide = "none") +
-        scale_y_continuous(limits = c(0, 1), breaks = c(0, quantiles, 1)) +
-        labs(x = xlab, y = ylab, title = main_title) +
-        theme_minimal() +
-        theme(
-          panel.grid.minor = element_blank(),
-          plot.title = element_text(size = 10)
-        )
-    }
-
-    # Add quantile lines and smoothers
-    for (q in quantiles) {
-      p <- p + geom_hline(yintercept = q, linetype = "dashed", alpha = 0.5)
-    }
-
-    out <- NULL
-
-    if (quantreg == FALSE) {
-      # Add smooth spline and median line
-      p <- p +
-        geom_smooth(method = "loess", se = FALSE, color = "red", linewidth = 1) +
-        geom_hline(yintercept = 0.5, color = "red", linewidth = 1)
-
-    } else {
-      # Perform quantile regression tests
-      # Note: This would require the testQuantiles function from DHARMa
-      # For now, we'll create a placeholder that assumes no significant deviations
-      out <- list(
-        p.value = 0.5,  # placeholder
-        pvals = rep(0.5, length(quantiles)),  # placeholder
-        predictions = data.frame(
-          pred = seq(min(pred), max(pred), length.out = 50)
-        )
-      )
-      # Add placeholder quantile predictions
-      for (i in 1:length(quantiles)) {
-        out$predictions[, 2*i] <- quantiles[i]  # quantile line
-        out$predictions[, 2*i + 1] <- 0.05      # confidence interval width
-      }
-
-      if (is.na(out$p.value)) {
-        main_title <- paste(main_title, "Some quantile regressions failed", sep = "\n")
-        title_color <- "red"
-      } else {
-        if (any(out$pvals < 0.05, na.rm = TRUE)) {
-          main_title <- paste(main_title, "Quantile deviations detected (red curves)", sep = "\n")
-          if (out$p.value <= 0.05) {
-            main_title <- paste(main_title, "Combined adjusted quantile test significant", sep = "\n")
-          } else {
-            main_title <- paste(main_title, "Combined adjusted quantile test n.s.", sep = "\n")
-          }
-          title_color <- "red"
-        } else {
-          main_title <- paste(main_title, "No significant problems detected", sep = "\n")
-          title_color <- "black"
-        }
-      }
-
-      # Update plot with new title
-      p <- p + labs(title = main_title) +
-        theme(plot.title = element_text(color = title_color, size = 9))
-
-      # Add quantile regression lines and confidence bands
-      for (i in 1:length(quantiles)) {
-        line_color <- ifelse(out$pvals[i] <= 0.05 & !is.na(out$pvals[i]), "red", "black")
-        fill_color <- ifelse(out$pvals[i] <= 0.05 & !is.na(out$pvals[i]),
-                             alpha("red", 0.25), alpha("black", 0.125))
-
-        # Create ribbon data for confidence bands
-        ribbon_data <- data.frame(
-          x = out$predictions$pred,
-          y = out$predictions[, 2*i],
-          ymin = out$predictions[, 2*i] - out$predictions[, 2*i + 1],
-          ymax = out$predictions[, 2*i] + out$predictions[, 2*i + 1]
-        )
-
-        p <- p +
-          geom_ribbon(data = ribbon_data,
-                      aes(x = x, ymin = ymin, ymax = ymax),
-                      fill = fill_color, alpha = 0.5, inherit.aes = FALSE) +
-          geom_line(data = ribbon_data,
-                    aes(x = x, y = y),
-                    color = line_color, linewidth = 1, inherit.aes = FALSE)
-      }
-    }
-  }
-
-  # Apply x-axis limits if rank transformation was used
-  if (rank == TRUE && !is.factor(pred)) {
-    xlim <- ifelse("xlim" %in% names(dots), list(dots$xlim), list(c(0, 1)))[[1]]
-    p <- p + coord_cartesian(xlim = xlim)
-  }
-
-  # Return the plot and any test results
-  print(p)
-  invisible(out)
-}
-
+# plotResiduals_ggplot <- function(simulationOutput, form = NULL, quantreg = NULL, rank = TRUE,
+#                                  asFactor = NULL, smoothScatter = NULL, quantiles = c(0.25, 0.5, 0.75),
+#                                  absoluteDeviation = FALSE, ...) {
+#
+#   # Handle additional arguments
+#   dots <- list(...)
+#
+#   # Set up axis labels
+#   yAxis <- ifelse(absoluteDeviation == TRUE, "Residual spread [2*abs(res - 0.5)]", "DHARMa residual")
+#   ylab <- checkDots("ylab", yAxis, ...)
+#   xlab <- checkDots("xlab", ifelse(is.null(form), "Model predictions",
+#                                    gsub(".*[$]", "", deparse(substitute(form)))), ...)
+#
+#   if (rank == TRUE) {
+#     xlab <- paste(xlab, "(rank transformed)")
+#   }
+#
+#   # Ensure DHARMa object and extract residuals
+#   simulationOutput <- ensureDHARMa(simulationOutput, convert = TRUE)
+#   res <- simulationOutput$scaledResiduals
+#
+#   if (absoluteDeviation == TRUE) {
+#     res <- 2 * abs(res - 0.5)
+#   }
+#
+#   # Check form argument
+#   if (inherits(form, "DHARMa")) {
+#     stop("DHARMa::plotResiduals > argument form cannot be of class DHARMa. Note that the syntax of plotResiduals has changed since DHARMa 0.3.0. See ?plotResiduals.")
+#   }
+#
+#   # Get predictor values
+#   pred <- ensurePredictor(simulationOutput, form)
+#
+#   # Handle continuous predictors
+#   if (!is.factor(pred)) {
+#     if (rank == TRUE) {
+#       pred <- rank(pred, ties.method = "average")
+#       pred <- pred / max(pred)
+#     }
+#
+#     nuniq <- length(unique(pred))
+#     ndata <- length(pred)
+#
+#     if (is.null(asFactor)) {
+#       asFactor <- (nuniq == 1) | (nuniq < 10 & ndata/nuniq > 10)
+#     }
+#
+#     if (asFactor) {
+#       pred <- factor(pred)
+#     }
+#   }
+#
+#   # Set quantreg default
+#   if (is.null(quantreg)) {
+#     quantreg <- ifelse(length(res) > 2000, FALSE, TRUE)
+#   }
+#
+#   # Set smoothScatter default
+#   switchScatter <- 10000
+#   if (is.null(smoothScatter)) {
+#     smoothScatter <- ifelse(length(res) > switchScatter, TRUE, FALSE)
+#   }
+#
+#   # Create data frame for plotting
+#   plot_data <- data.frame(
+#     predictor = pred,
+#     residuals = res,
+#     is_extreme = (res == 0 | res == 1)
+#   )
+#
+#   # Set up main title
+#   main_title <- ifelse("main" %in% names(dots), dots$main,
+#                        ifelse(is.null(form), paste(yAxis, "vs. predicted"),
+#                               paste(yAxis, "Residual vs. predictor")))
+#
+#   # Create the base plot
+#   if (is.factor(pred)) {
+#     # Categorical predictor - boxplot style
+#     p <- ggplot(plot_data, aes(x = predictor, y = residuals)) +
+#       geom_boxplot(alpha = 0.7, outlier.shape = NA) +
+#       geom_jitter(aes(color = is_extreme), width = 0.2, alpha = 0.6) +
+#       scale_color_manual(values = c("FALSE" = "black", "TRUE" = "red"), guide = "none") +
+#       scale_y_continuous(limits = c(0, 1), breaks = c(0, quantiles, 1)) +
+#       labs(x = xlab, y = ylab, title = main_title) +
+#       theme_minimal() +
+#       theme(
+#         panel.grid.minor = element_blank(),
+#         plot.title = element_text(size = 10)
+#       )
+#
+#     # Add quantile lines
+#     for (q in quantiles) {
+#       p <- p + geom_hline(yintercept = q, linetype = "dashed", alpha = 0.5)
+#     }
+#
+#     # Note: testCategorical would need to be implemented separately
+#     # For now, we'll just return NULL as the original function does for continuous predictors
+#     out <- NULL
+#
+#   } else {
+#     # Continuous predictor
+#     alpha_val <- max(0.1, 1 - 3 * length(res) / switchScatter)
+#
+#     if (smoothScatter == TRUE) {
+#       # Use density-based coloring for many points
+#       p <- ggplot(plot_data, aes(x = predictor, y = residuals)) +
+#         stat_density_2d_filled(alpha = 0.6, show.legend = FALSE) +
+#         scale_fill_grey(start = 1, end = 0.3) +
+#         geom_point(data = subset(plot_data, is_extreme),
+#                    aes(color = is_extreme), size = 0.5) +
+#         scale_color_manual(values = c("TRUE" = "red"), guide = "none") +
+#         scale_y_continuous(limits = c(0, 1), breaks = c(0, quantiles, 1)) +
+#         labs(x = xlab, y = ylab, title = main_title) +
+#         theme_minimal() +
+#         theme(
+#           panel.grid.minor = element_blank(),
+#           plot.title = element_text(size = 10)
+#         )
+#     } else {
+#       # Regular scatter plot
+#       p <- ggplot(plot_data, aes(x = predictor, y = residuals)) +
+#         geom_point(aes(color = is_extreme, shape = is_extreme),
+#                    alpha = alpha_val, size = 1) +
+#         scale_color_manual(values = c("FALSE" = "black", "TRUE" = "red"), guide = "none") +
+#         scale_shape_manual(values = c("FALSE" = 16, "TRUE" = 8), guide = "none") +
+#         scale_y_continuous(limits = c(0, 1), breaks = c(0, quantiles, 1)) +
+#         labs(x = xlab, y = ylab, title = main_title) +
+#         theme_minimal() +
+#         theme(
+#           panel.grid.minor = element_blank(),
+#           plot.title = element_text(size = 10)
+#         )
+#     }
+#
+#     # Add quantile lines and smoothers
+#     for (q in quantiles) {
+#       p <- p + geom_hline(yintercept = q, linetype = "dashed", alpha = 0.5)
+#     }
+#
+#     out <- NULL
+#
+#     if (quantreg == FALSE) {
+#       # Add smooth spline and median line
+#       p <- p +
+#         geom_smooth(method = "loess", se = FALSE, color = "red", linewidth = 1) +
+#         geom_hline(yintercept = 0.5, color = "red", linewidth = 1)
+#
+#     } else {
+#       # Perform quantile regression tests
+#       # Note: This would require the testQuantiles function from DHARMa
+#       # For now, we'll create a placeholder that assumes no significant deviations
+#       out <- list(
+#         p.value = 0.5,  # placeholder
+#         pvals = rep(0.5, length(quantiles)),  # placeholder
+#         predictions = data.frame(
+#           pred = seq(min(pred), max(pred), length.out = 50)
+#         )
+#       )
+#       # Add placeholder quantile predictions
+#       for (i in 1:length(quantiles)) {
+#         out$predictions[, 2*i] <- quantiles[i]  # quantile line
+#         out$predictions[, 2*i + 1] <- 0.05      # confidence interval width
+#       }
+#
+#       if (is.na(out$p.value)) {
+#         main_title <- paste(main_title, "Some quantile regressions failed", sep = "\n")
+#         title_color <- "red"
+#       } else {
+#         if (any(out$pvals < 0.05, na.rm = TRUE)) {
+#           main_title <- paste(main_title, "Quantile deviations detected (red curves)", sep = "\n")
+#           if (out$p.value <= 0.05) {
+#             main_title <- paste(main_title, "Combined adjusted quantile test significant", sep = "\n")
+#           } else {
+#             main_title <- paste(main_title, "Combined adjusted quantile test n.s.", sep = "\n")
+#           }
+#           title_color <- "red"
+#         } else {
+#           main_title <- paste(main_title, "No significant problems detected", sep = "\n")
+#           title_color <- "black"
+#         }
+#       }
+#
+#       # Update plot with new title
+#       p <- p + labs(title = main_title) +
+#         theme(plot.title = element_text(color = title_color, size = 9))
+#
+#       # Add quantile regression lines and confidence bands
+#       for (i in 1:length(quantiles)) {
+#         line_color <- ifelse(out$pvals[i] <= 0.05 & !is.na(out$pvals[i]), "red", "black")
+#         fill_color <- ifelse(out$pvals[i] <= 0.05 & !is.na(out$pvals[i]),
+#                              alpha("red", 0.25), alpha("black", 0.125))
+#
+#         # Create ribbon data for confidence bands
+#         ribbon_data <- data.frame(
+#           x = out$predictions$pred,
+#           y = out$predictions[, 2*i],
+#           ymin = out$predictions[, 2*i] - out$predictions[, 2*i + 1],
+#           ymax = out$predictions[, 2*i] + out$predictions[, 2*i + 1]
+#         )
+#
+#         p <- p +
+#           geom_ribbon(data = ribbon_data,
+#                       aes(x = x, ymin = ymin, ymax = ymax),
+#                       fill = fill_color, alpha = 0.5, inherit.aes = FALSE) +
+#           geom_line(data = ribbon_data,
+#                     aes(x = x, y = y),
+#                     color = line_color, linewidth = 1, inherit.aes = FALSE)
+#       }
+#     }
+#   }
+#
+#   # Apply x-axis limits if rank transformation was used
+#   if (rank == TRUE && !is.factor(pred)) {
+#     xlim <- ifelse("xlim" %in% names(dots), list(dots$xlim), list(c(0, 1)))[[1]]
+#     p <- p + coord_cartesian(xlim = xlim)
+#   }
+#
+#   # Return the plot and any test results
+#   print(p)
+#   invisible(out)
+# }
+#

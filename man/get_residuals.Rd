@@ -17,7 +17,9 @@ get_residuals(
   family_p = NULL,
   na.action = "complete",
   include_interaction = FALSE,
-  random_slope_variable = NULL
+  random_slope_variable = NULL,
+  covariate_is_categorical = TRUE,
+  print_plots = TRUE
 )
 }
 \arguments{
@@ -46,9 +48,13 @@ get_residuals(
 \item{include_interaction}{Whether to include condition * covariate interaction}
 
 \item{random_slope_variable}{Variable for random slopes (typically "condition_column")}
+
+\item{covariate_is_categorical}{Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.}
+
+\item{print_plots}{Whether or not to print the plots, irrespective of this argument ggplot versions of evaluated association between the response_column and the condition_column. TRUE - print the plot, FALSE - do not print the plot}
 }
 \value{
-The adjusted residual values for the experimental variables will be returned along with the original input data. A boxplot of residual values and a plot of 95% confidence interval mean residual values adjusted for the experimental variables will be returned.
+A list with 3 elements. 1. The updated input data with an additional column with the model residuals of the individual observations. 2. A plot representing the purported association between the response column and the condition column. 3. The corresponding caption for this figure.
 }
 \description{
 This function retrieve residual values from an lmerFit summary object and plot residual values by condition_column

@@ -14,7 +14,7 @@ calculate_power(
   power_curve,
   condition_is_categorical,
   covariate = NA,
-  crossed_columns = NA,
+  crossed_columns = NULL,
   error_is_non_normal = FALSE,
   nsimn = 1000,
   family_p = NULL,
@@ -26,8 +26,10 @@ calculate_power(
   na.action = "complete",
   output = NULL,
   alpha = 0.05,
-  include_interaction = FALSE,
-  random_slope_variable = NULL
+  include_interaction = NA,
+  random_slope_variable = NULL,
+  covariate_is_categorical = NA,
+  print_plots = TRUE
 )
 }
 \arguments{
@@ -76,9 +78,13 @@ calculate_power(
 \item{include_interaction}{Whether to include condition * covariate interaction}
 
 \item{random_slope_variable}{Variable for random slopes (typically "condition_column")}
+
+\item{covariate_is_categorical}{Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.}
+
+\item{print_plots}{Whether or not to print the plots, irrespective of this argument ggplot versions of the power curves are returned. TRUE - print the plots, FALSE - do not print the plots}
 }
 \value{
-A power curve image or a power calculation result printed in a text file
+A power curve as a ggplot object or a power calculation result printed in a text file
 }
 \description{
 This function uses simulation to perform power analysis. It is designed to explore the power of biological experiments and to suggest an optimal number of experimental variables with reasonable power. The backbone of the function is based on simr package, which fits a fixed effect or mixed effect model based on the observed data and simulates response variables. Users can test the power of different combinations of experimental variables and parameters.

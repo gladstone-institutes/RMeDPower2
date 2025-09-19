@@ -18,7 +18,7 @@ calculatePower(data, design, model, power_param, print_plots = TRUE)
 \item{print_plots}{Whether or not to print the plots, irrespective of this argument ggplot versions of the power curves are returned. TRUE - print the plots, FALSE - do not print the plots}
 }
 \value{
-A power curve image or a power calculation result printed in a text fileosner" is chosen, a matrix with updated feature values after transformation will be returned. If "cook" is choose, a list with  a matrix with updated feature values after transformation will be returned,
+A power curve as a ggplot object or a power calculation result printed in a text file
 }
 \description{
 This functions makes statistical power estimates given the data, the underlying design for it and the assumed probability model of the error distribution

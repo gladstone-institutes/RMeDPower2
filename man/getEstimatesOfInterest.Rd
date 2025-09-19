@@ -4,7 +4,7 @@
 \alias{getEstimatesOfInterest}
 \title{getEstimatesOfInterest}
 \usage{
-getEstimatesOfInterest(data, design, model)
+getEstimatesOfInterest(data, design, model, print_plots = TRUE)
 }
 \arguments{
 \item{data}{Input data frame with columns having all the necessary information regarding the dependent and independent variables of interest}
@@ -12,9 +12,13 @@ getEstimatesOfInterest(data, design, model)
 \item{design}{an object of class RMeDesign with the necessary design information about the data}
 
 \item{model}{an object of class ProbabilityModel giving the error distribution of the data}
+
+\item{print_plots}{Whether or not to print the plots, irrespective of this argument ggplot versions of evaluated association between the response_column and the condition_column. TRUE - print the plot, FALSE - do not print the plot}
 }
 \value{
-an object of class summary.merMod and a data frame with the residuals for each observation that can be used to generate other visualizations
+a list with two elements - 1. an object of class summary.merMod and
+2. the output from the get_residuals functions. This output consists of a list
+with 3 elements. 1. The updated input data with an additional column with the model residuals of the individual observations. 2. A plot representing the purported association between the response column and the condition column. 3. The corresponding caption for this figure.
 }
 \description{
 This function performs the estimations of interest and also visualizes the resulting association

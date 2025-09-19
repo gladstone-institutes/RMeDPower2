@@ -4,7 +4,7 @@
 \alias{diagnoseDataModel}
 \title{diagnoseDataModel}
 \usage{
-diagnoseDataModel(data, design, model)
+diagnoseDataModel(data, design, model, print_plots = TRUE)
 }
 \arguments{
 \item{data}{Input data frame with columns having all the necessary information regarding the dependent and independent variables of interest}
@@ -12,12 +12,29 @@ diagnoseDataModel(data, design, model)
 \item{design}{an object of class RMeDesign with the necessary design information about the data}
 
 \item{model}{an object of class ProbabilityModel giving the error distribution of the data}
+
+\item{print_plots}{Whether or not to print the plots, irrespective of this argument ggplot versions of the different QC figures generated are returned. TRUE - print the plots, FALSE - do not print the plots}
 }
 \value{
-For continuous data, the function returns quantile-quanitle (qq) plots of i) raw residual values ii) log-transformed residual values iii) raw residual values after removing outliers, and iv) log-transformed residual values. For discrete data, it returns a histogram. If "rosner" is chosen, a matrix with updated feature values after transformation will be returned. If "cook" is choose, a list with  a matrix with updated feature values after transformation will be returned,
+A list with four elements. 1) models: representing the names of the models
+evaluated based on differnt modifications of the response column.
+The models would include one called natural_scale,
+another model called natural_scale_wo_outliers if outliers had beeen identified,
+another model called log_scale if the respose column is continuous
+and the model on the log-transformed values of the responses are what was evaluated
+and finally log_scale_wo_outliers model if there were outliers identified in the log_scale model.
+2) Data_updated representing the updated data frame with additional columns for the modified response column corresponding to each of the models evaluated.
+3) cooks_result: cooks distance of each of the experimental columns for each of the models evaluated.
+For models based on the binomial probability distribution, cooks distance is only
+reported for the first experimental column on account the increased computation time
+for evaluating this metric for the other experimental columns.
+4) plots_info: is a list with two elements plots and captions. plots is a named list and captions is a character vector,
+both of the same length as the number of models evaluated. Each element of the plots list is yet another
+list of QC/diagnostic plots related to the corresponding model fit, while the captions is a vector of captions for each of the
+QC plots output
 }
 \description{
-This functions makes quantile-quanitle (qq) plots of i) raw residual values ii) log-transformed residual values iii) raw residual values after removing outliers, and iv) log-transformed residual values after removing outliers. To detect outliers, the function uses Rosner's test.
+This function can be used to generate diagnostic QC plots for given model assumptions related to the input data, identify potential outlier observations and/or outlier experimental units
 }
 \examples{
 result=diagnoseDataModel(data=data, design=design, model=model)

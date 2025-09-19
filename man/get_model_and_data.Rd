@@ -17,7 +17,8 @@ get_model_and_data(
   family_p = NULL,
   na.action = "complete",
   include_interaction = FALSE,
-  random_slope_variable = NULL
+  random_slope_variable = NULL,
+  covariate_is_categorical = TRUE
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ get_model_and_data(
 \item{include_interaction}{Whether to include condition * covariate interaction}
 
 \item{random_slope_variable}{Variable for random slopes (typically "condition_column")}
+
+\item{covariate_is_categorical}{Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.}
 }
 \value{
 A list of the linear mixed model result, original data, experimental column names, and residual values

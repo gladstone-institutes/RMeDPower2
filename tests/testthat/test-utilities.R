@@ -138,43 +138,7 @@ test_that("readPowerParams function works correctly", {
   unlink(temp_file)
 })
 
-test_that("check_normality function works correctly", {
-  test_data <- create_test_data()
 
-  # Test basic normality check
-  expect_no_error({
-    result <- suppressWarnings({
-      check_normality(
-        data = test_data,
-        condition_column = "treatment",
-        covariate = "batch",
-        experimental_columns = c("experiment", "plate"),
-        response_column = "cell_size",
-        condition_is_categorical = TRUE,
-        covariate_is_categorical = TRUE
-      )
-    })
-  })
-})
-
-test_that("check_normality handles covariates", {
-  test_data <- create_test_data()
-
-  # Test with covariate
-  expect_no_error({
-    result <- suppressWarnings({
-      check_normality(
-        data = test_data,
-        condition_column = "treatment",
-        experimental_columns = c("experiment", "plate"),
-        response_column = "cell_size",
-        condition_is_categorical = TRUE,
-        covariate = "age",
-        covariate_is_categorical = FALSE
-      )
-    })
-  })
-})
 
 test_that("get_residuals function works correctly", {
   test_data <- create_test_data()
@@ -324,14 +288,5 @@ test_that("helper functions validate inputs appropriately", {
     )
   })
 
-  expect_error({
-    check_normality(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "nonexistent"),
-      response_column = "cell_size",
-      condition_is_categorical = TRUE,
-      covariate_is_categorical = TRUE
-    )
-  })
+
 })

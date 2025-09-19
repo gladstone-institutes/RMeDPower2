@@ -17,7 +17,8 @@ calculate_lmer_estimates(
   family_p = NULL,
   na.action = "complete",
   include_interaction = FALSE,
-  random_slope_variable = NULL
+  random_slope_variable = NULL,
+  covariate_is_categorical = TRUE
 )
 }
 \arguments{
@@ -46,12 +47,14 @@ calculate_lmer_estimates(
 \item{include_interaction}{Whether to include condition * covariate interaction}
 
 \item{random_slope_variable}{Variable for random slopes (typically "condition_column")}
+
+\item{covariate_is_categorical}{Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.}
 }
 \value{
 A linear mixed model result
 }
 \description{
-This function performs a linear mixed model analysis using lmer.
+This function performs a (generalized) linear mixed model analysis using (g)lmer.
 
 Note: The current version does not accept categorical response variables, sample size parameters smaller than the observed samples size
 }
