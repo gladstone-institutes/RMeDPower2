@@ -829,7 +829,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
           geom_line() +
           geom_errorbar(aes(ymin = lower, ymax = upper)) +
           geom_hline(yintercept = 80, lty=2) +
-          ylab("Statistical power")
+          ylab("Statistical power") +
           theme_minimal() +
           theme(plot.title = element_text(size = 12, face = "bold"))
         captions[i] <- paste0("Statistical power estimates expressed as percentages as a functions of different levels of ", target_columns[i])
@@ -839,6 +839,8 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
         print(mtext(response_column))
         dev.off()
       }
+      if(print_plots)
+        print(plots[[i]] + ggtitle(captions[i]) + theme(plot.title = element_textbox_simple()))
 
 
 

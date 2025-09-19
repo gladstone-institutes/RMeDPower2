@@ -368,7 +368,7 @@ get_residuals <- function(data, condition_column, experimental_columns, response
         ylab("median residual") +
         theme_bw() +
         theme(axis.title   = element_text(face  = "bold"))
-      captions = paste0("Box of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column)
+      captions = paste0("Boxplot of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column)
 
     }
 

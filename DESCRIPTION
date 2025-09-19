@@ -17,7 +17,8 @@ Depends:
     dplyr,
     simr,
     magrittr,
-    ggplot2
+    ggplot2,
+    ggtext
 biocViews:
 Imports: 
     tidyr,
@@ -28,9 +29,7 @@ Imports:
     magick,
     EnvStats,
     jsonlite,
-    methods,
-    ggplot2,
-    ggtext
+    methods
 Suggests:
     knitr,
     rmarkdown,
