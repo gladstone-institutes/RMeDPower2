@@ -3,8 +3,9 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   getting-started: getting-started.html
+  RMeDPower2_Class_Configuration_Guide: RMeDPower2_Class_Configuration_Guide.html
   Tutorial: Tutorial.html
-last_built: 2025-09-19T23:07Z
+last_built: 2025-09-19T23:33Z
 urls:
   reference: https://gladstone-institutes.github.io/RMeDPower2/reference
   article: https://gladstone-institutes.github.io/RMeDPower2/articles

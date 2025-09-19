@@ -396,16 +396,16 @@ get_residuals <- function(data, condition_column, experimental_columns, response
 
     gp <- ggplot2::ggplot(Data, aes(x=condition_column, y=residual, color=experimental_column1)) +
       geom_point() +
-      geom_smooth(method = "loess", se = T) +
+      geom_smooth(method = "lm", se = T) +
       labs(title = "Association of interest",
-           subtitle = paste0("Best loess fits of the residuals across all observations separated for each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column),
+           subtitle = paste0("Best linear fits of the residuals across all observations separated for each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column),
            y = paste(response_var, ": residual"),
            x = condition_var) +
       theme_minimal() +
       theme(plot.title = element_text(size = 12, face = "bold")) +
       theme(plot.subtitle  = element_textbox_simple())
 
-    captions = paste0("Best loess fits of the residuals across all observations separated for each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column)
+    captions = paste0("Best linear fits of the residuals across all observations separated for each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column)
 
 
 

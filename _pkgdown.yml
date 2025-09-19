@@ -3,8 +3,7 @@ url: https://gladstone-institutes.github.io/RMeDPower2/
 template:
   bootstrap: 5
   bslib:
-    primary: "#3498db"
-    secondary: "#95a5a6"
+    bootswatch: flatly
 
 home:
   title: RMeDPower2
@@ -14,8 +13,9 @@ navbar:
   title: RMeDPower2
   type: default
   left:
-    - text: Home
+    - icon: fas fa-home
       href: index.html
+      aria-label: Home
     - text: Reference
       href: reference/
     - text: Articles
