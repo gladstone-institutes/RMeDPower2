@@ -1,0 +1,682 @@
+---
+title: "RMeDPower2 Class Configuration Guide"
+author: "RMeDPower2 Package"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    number_sections: true
+  pdf_document:
+    toc: true
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, warning = FALSE, message = FALSE)
+```
+
+# Overview
+
+RMeDPower2 uses three S4 class objects to structure experimental designs and power analysis parameters. This guide provides decision criteria for configuring each class based on your experimental setup.
+
+The three core classes are:
+
+- **RMeDesign**: Defines your experimental structure and statistical model specifications
+- **ProbabilityModel**: Specifies the statistical distribution of your response variable  
+- **PowerParams**: Configures power analysis parameters
+
+---
+
+# RMeDesign Class
+
+The `RMeDesign` class defines your experimental structure and statistical model specifications.
+
+## Required Parameters
+
+### `response_column`
+**What it is:** Name of your outcome/dependent variable column  
+**How to choose:** This should be the quantitative measure you're analyzing
+
+```{r response_column_examples}
+# Examples:
+response_column = "cell_size"        # Cell morphology study
+response_column = "expression_level" # Gene expression analysis
+response_column = "reaction_time"    # Behavioral study
+```
+
+### `condition_column` 
+**What it is:** Your main predictor/treatment variable  
+**How to choose:** The primary experimental factor you want to test
+
+```{r condition_column_examples}
+# Examples:
+condition_column = "treatment"       # Drug vs control
+condition_column = "genotype"       # Wild-type vs mutant
+condition_column = "time_point"     # Longitudinal measurements
+```
+
+### `condition_is_categorical`
+**Decision criteria:**
+
+- `TRUE`: Treatment groups, genotypes, categorical time points
+- `FALSE`: Continuous measurements like dose, age, time as numeric
+
+### `experimental_columns`
+**What it is:** Hierarchical grouping variables (most general to most specific)  
+**How to order:** Always list from highest to lowest level
+
+```{r experimental_columns_examples}
+# Examples:
+experimental_columns = c("experiment", "plate", "well")     # Lab hierarchy
+experimental_columns = c("batch", "animal", "sample")       # Animal study
+experimental_columns = c("study_site", "participant")       # Clinical trial
+```
+
+## Optional Parameters
+
+### `covariate`
+**When to include:** You have a confounding variable to control for
+
+```{r covariate_examples}
+covariate = "age"           # Control for age effects
+covariate = "batch_date"    # Control for batch effects
+covariate = "baseline"      # Control for pre-treatment values
+```
+
+### `covariate_is_categorical`
+**Decision criteria:**
+
+- `TRUE`: Gender, batch labels, categorical age groups
+- `FALSE`: Continuous age, baseline measurements, numeric scores
+
+### `crossed_columns`
+**When to use:** Some experimental units appear in multiple higher-level groups  
+**Example:** Same cell line used across multiple experiments
+
+```{r crossed_columns_example}
+experimental_columns = c("experiment", "cell_line")
+crossed_columns = "cell_line"  # Cell lines repeat across experiments
+```
+
+### `include_interaction`
+**When to use:** You expect the covariate effect varies by condition
+
+**Examples:**
+- Drug effect varies by age
+- Treatment response differs by genotype  
+- Time effects depend on intervention group
+
+### `random_slope_variable`
+**When to use:** You expect the effect varies across experimental units
+
+**Options:**
+- `"condition_column"`: Treatment effects vary across subjects/units
+- `"covariate"`: Covariate effects vary across experimental levels
+
+---
+
+# ProbabilityModel Class
+
+Defines the statistical distribution of your response variable.
+
+## `error_is_non_normal`
+**Decision criteria:**
+
+- `FALSE`: Continuous, approximately normal data (heights, measurements, expression levels)
+- `TRUE`: Count data, proportions, or clearly non-normal distributions
+
+## `family_p` (when `error_is_non_normal = TRUE`)
+
+### `"poisson"`
+- **Use for:** Count data (number of cells, events, mutations)
+- **Characteristics:** Non-negative integers, variance ≈ mean
+- **Example:** Number of colonies per plate
+
+### `"binomial"` 
+- **Use for:** Proportions or binary outcomes
+- **Requires:** `total_column` specifying denominator
+- **Example:** Number of positive cells out of total counted
+
+### `"negative_binomial"`
+- **Use for:** Overdispersed count data 
+- **When:** Count data where variance > mean
+- **Example:** RNA-seq read counts
+
+### `"Gamma"`
+- **Use for:** Positive continuous data with right skew
+- **Example:** Reaction times, concentrations
+
+---
+
+# PowerParams Class
+
+Configures power analysis parameters.
+
+## Core Parameters
+
+### `target_columns`
+**What it is:** Which experimental factors to vary in power analysis  
+**How to choose:** The bottleneck factor(s) in your design
+
+```{r target_columns_examples}
+target_columns = "experiment"     # Want more experimental replicates
+target_columns = "animal"         # Need more animals per group
+target_columns = c("experiment", "animal")  # Optimize both levels
+```
+
+### `levels`
+**Decision criteria for each target column:**
+
+- `1`: Increase number of groups/levels (more experiments, more animals)
+- `0`: Increase sample size within existing groups (more samples per animal)
+
+### `power_curve`
+- `1`: Generate power curves showing power vs. sample size
+- `0`: Calculate power for specific sample size
+
+## Sample Size Parameters
+
+### `max_size`
+**Default:** Current size × 5  
+**When to specify:** You have budget/feasibility constraints
+
+```{r max_size_example}
+max_size = c(10, 50)  # Max 10 experiments, 50 animals per group
+```
+
+### `nsimn`
+**Default:** 1000 simulations  
+**When to change:**
+
+- Increase for more precision (slower)
+- Decrease for faster exploratory analysis
+
+## Effect Size Specification
+
+### `effect_size`
+**When to specify:** You know the biologically meaningful effect size  
+**How to determine:**
+
+- From pilot studies
+- From literature
+- From biological significance criteria
+
+### `ICC` (Intra-Class Correlation)
+**When to use:** You have prior knowledge of experimental variability  
+**How to specify:** Vector matching `experimental_columns` order
+
+---
+
+# Complete Configuration Examples
+
+## Example 1: Cell Culture Experiment
+
+```{r cell_culture_example}
+library(RMeDPower2)
+
+# Design: Test drug effect on cell size across experiments and plates
+design <- new("RMeDesign",
+  response_column = "cell_area",
+  condition_column = "treatment",           # "control" vs "drug"
+  condition_is_categorical = TRUE,
+  experimental_columns = c("experiment", "plate"),
+  crossed_columns = NULL,                   # Plates are nested in experiments
+  covariate = "passage_number",
+  covariate_is_categorical = FALSE,         # Continuous variable
+  include_interaction = FALSE
+)
+
+model <- new("ProbabilityModel",
+  error_is_non_normal = FALSE              # Cell area is approximately normal
+)
+
+power_params <- new("PowerParams",
+  target_columns = "experiment",           # Want to know how many experiments needed
+  levels = 1,                             # Add more experiments (not more plates per experiment)
+  power_curve = 1,                        # Generate power curve
+  nsimn = 1000,
+  alpha = 0.05
+)
+
+# Run power analysis
+# result <- calculatePower(data = your_data, design = design, 
+#                          model = model, power_param = power_params)
+```
+
+## Example 2: RNA-seq Count Data
+
+```{r rnaseq_example}
+# Design: Compare gene expression between genotypes with batch effects
+design <- new("RMeDesign",
+  response_column = "read_count",
+  condition_column = "genotype",
+  condition_is_categorical = TRUE,
+  experimental_columns = c("batch", "animal"),
+  total_column = "total_reads",            # For normalization
+  covariate = NULL
+)
+
+model <- new("ProbabilityModel",
+  error_is_non_normal = TRUE,
+  family_p = "negative_binomial"           # Overdispersed count data
+)
+
+power_params <- new("PowerParams",
+  target_columns = "animal",
+  levels = 1,                             # Add more animals
+  power_curve = 1,
+  alpha = 0.05
+)
+
+# Run power analysis
+# result <- calculatePower(data = your_data, design = design, 
+#                          model = model, power_param = power_params)
+```
+
+## Example 3: Behavioral Study with Continuous Predictor
+
+```{r behavioral_example}
+# Design: Test dose-response relationship in reaction time study
+design <- new("RMeDesign",
+  response_column = "reaction_time",
+  condition_column = "dose",               # Continuous dose levels
+  condition_is_categorical = FALSE,
+  experimental_columns = c("session", "subject"),
+  covariate = "age",
+  covariate_is_categorical = FALSE,
+  include_interaction = TRUE,              # Dose effect may vary by age
+  random_slope_variable = "condition_column" # Dose effects vary by subject
+)
+
+model <- new("ProbabilityModel",
+  error_is_non_normal = TRUE,
+  family_p = "Gamma"                      # Reaction times are right-skewed
+)
+
+power_params <- new("PowerParams",
+  target_columns = "subject",
+  levels = 1,
+  power_curve = 1,
+  effect_size = 0.5                       # Known meaningful effect size
+)
+
+# Run power analysis
+# result <- calculatePower(data = your_data, design = design, 
+#                          model = model, power_param = power_params)
+```
+
+## Example 4: Clinical Trial with Categorical Covariate
+
+```{r clinical_example}
+# Design: Multi-site clinical trial with gender as covariate
+design <- new("RMeDesign",
+  response_column = "symptom_score",
+  condition_column = "treatment_group",
+  condition_is_categorical = TRUE,
+  experimental_columns = c("site", "participant"),
+  covariate = "gender",
+  covariate_is_categorical = TRUE,         # Categorical covariate
+  include_interaction = TRUE,              # Treatment effect may differ by gender
+  crossed_columns = NULL
+)
+
+model <- new("ProbabilityModel",
+  error_is_non_normal = FALSE              # Symptom scores approximately normal
+)
+
+power_params <- new("PowerParams",
+  target_columns = c("site", "participant"),
+  levels = c(1, 1),                       # Optimize both sites and participants
+  power_curve = 1,
+  nsimn = 500,                            # Reduce for faster computation
+  alpha = 0.05
+)
+
+# Run power analysis
+# result <- calculatePower(data = your_data, design = design, 
+#                          model = model, power_param = power_params)
+```
+
+---
+
+# Decision Flowchart
+
+## Step 1: Data Structure
+1. **What's your outcome variable?** → `response_column`
+2. **What's your main comparison?** → `condition_column`
+3. **What are your grouping levels?** → `experimental_columns`
+
+## Step 2: Statistical Considerations
+1. **Is your outcome normally distributed?** → `error_is_non_normal`
+2. **Do you have covariates to control for?** → `covariate`, `include_interaction`
+3. **Do effects vary across groups?** → `random_slope_variable`
+4. **Is your covariate categorical or continuous?** → `covariate_is_categorical`
+
+## Step 3: Power Analysis Goals
+1. **What's your limiting factor?** → `target_columns`
+2. **Do you want more groups or bigger groups?** → `levels`
+3. **What's your budget constraint?** → `max_size`
+
+---
+
+# Tips for Success
+
+## Data Preparation
+- Ensure column names match exactly what you specify in the design objects
+- Check that categorical variables are properly coded
+- Verify hierarchical structure is correctly represented
+
+## Model Selection
+- Use diagnostic plots to verify distributional assumptions
+- Consider the `diagnoseDataModel()` function to check model appropriateness
+- Start with simpler models before adding interactions
+
+## Power Analysis Strategy
+- Begin with smaller `nsimn` values for exploratory analysis
+- Focus on one `target_column` at a time initially
+- Use pilot data or literature to inform effect size estimates
+
+## Troubleshooting
+- If power analysis fails, check that your design matches your data structure
+- Ensure sufficient data for the complexity of your model
+- Verify that crossed vs. nested experimental factors are correctly specified
+
+---
+
+# Additional Resources
+
+## Package Functions
+- `calculatePower()`: Main function for power analysis
+- `diagnoseDataModel()`: Check model assumptions and identify outliers
+- `get_model_and_data()`: Fit models and examine results
+- `check_normality()`: Assess normality of residuals
+
+## Input Templates
+The package includes JSON templates in the `input_templates/` directory:
+- `design_template.json`: Template for RMeDesign parameters
+- `power_param_template.json`: Template for PowerParams parameters  
+- `stat_model_template.json`: Template for ProbabilityModel parameters
+
+## Example Data
+Use the built-in example datasets (`RMeDPower_data1` through `RMeDPower_data7`) to practice with different experimental designs and learn the package functionality.
+
+```{r load_example_data, eval=TRUE}
+# Load and examine example data
+library(RMeDPower2)
+data(RMeDPower_data1)
+head(RMeDPower_data1)
+str(RMeDPower_data1)
+```
+
+This framework ensures your class objects accurately represent your experimental design and analysis goals, leading to meaningful and reliable power analysis results.
+
+---
+
+# Interactive Configuration with Shiny App
+
+## Overview
+
+The RMeDPower2 package includes an interactive Shiny web application that guides users through the process of creating JSON configuration files for the three S4 classes. This app provides a user-friendly interface with data-driven suggestions and real-time validation.
+
+## Getting Started with the Shiny App
+
+### Installation and Setup
+
+```{r shiny_setup, eval=FALSE}
+# Navigate to the Shiny app directory
+setwd("path/to/RMeDPower2/shiny_config_app")
+
+# Install required packages
+source("install_packages.R")
+
+# Or install manually:
+install.packages(c("shiny", "shinydashboard", "DT", "jsonlite"))
+```
+
+### Running the App
+
+Two versions are available:
+
+```{r run_shiny_app, eval=FALSE}
+# Simple version (recommended for beginners)
+shiny::runApp("app_simple.R")
+
+# Full version (enhanced dashboard interface)
+shiny::runApp("app.R")
+```
+
+## App Workflow
+
+### Step 1: Data Upload
+
+1. **Upload your data file** (CSV or RDS format)
+2. **Review the enhanced data preview** showing:
+   - Each column on a separate line with data type
+   - Sample values from the first 5 rows
+   - Dataset dimensions summary
+
+```
+Data Preview (first 5 rows):
+==================================================
+
+response             (numeric): 1.234, 2.567, 3.891, 4.123, 5.456
+condition            (character): A, B, A, B, A
+experiment           (numeric): 1, 1, 2, 2, 3
+plate                (numeric): 1, 2, 1, 2, 1
+batch                (character): batch1, batch1, batch2, batch2, batch3
+
+Dataset: 5 rows × 6 columns
+```
+
+### Step 2: RMeDesign Configuration
+
+The app automatically populates column choices from your uploaded data:
+
+#### Required Parameters
+- **Response Column**: Select your outcome/dependent variable
+- **Condition Column**: Choose your main predictor/treatment variable  
+- **Condition Type**: Specify if categorical or continuous
+- **Experimental Hierarchy**: Select grouping variables (highest to lowest level)
+
+#### Optional Parameters
+- **Covariate**: Add confounding variables to control for
+- **Crossed Columns**: Specify variables that repeat across hierarchy levels
+- **Total Column**: For binomial data, specify the denominator column
+- **Random Slope Variable**: Allow effects to vary across experimental units
+
+#### Smart Defaults
+If parameters aren't specified, the app provides sensible defaults:
+- First column → response_column
+- Second column → condition_column  
+- Remaining columns → experimental_columns
+- Categorical conditions (most common case)
+- No interactions initially
+
+### Step 3: ProbabilityModel Configuration
+
+#### Distribution Selection
+- **Normal Distribution**: For continuous, approximately normal data
+- **Non-Normal Distribution**: For counts, proportions, or skewed data
+
+#### Family Selection (for non-normal data)
+When non-normal is selected, a dropdown appears with options:
+
+- **Poisson**: Count data where variance ≈ mean
+  - Example: Number of colonies, events, mutations
+- **Negative Binomial**: Overdispersed count data (variance > mean)
+  - Example: RNA-seq read counts
+- **Binomial**: Proportions or binary outcomes
+  - Example: Number of positive cells out of total counted
+  - **Requires**: total_column in RMeDesign
+- **Gamma**: Positive continuous data with right skew
+  - Example: Reaction times, concentrations
+
+#### Automatic Parameter Assignment
+The app intelligently handles the `family_p` parameter:
+- Normal distribution → `family_p = NULL`
+- Non-normal selected but no family chosen → `family_p = "poisson"` (default)
+- Specific family selected → `family_p = selected_family`
+
+### Step 4: PowerParams Configuration
+
+#### Core Parameters
+- **Target Columns**: Which experimental factors to vary in power analysis
+- **Levels**: For each target column (1 = more groups, 0 = bigger groups)
+- **Analysis Type**: Power curve vs. single calculation
+- **Significance Level**: Type I error rate (default: 0.05)
+
+#### Simulation Parameters
+- **Number of Simulations**: Balance between precision and speed (default: 1000)
+- **Maximum Sample Size**: Budget/feasibility constraints
+- **Effect Size**: Known biologically meaningful effect size
+- **ICC Values**: Intra-class correlation for experimental hierarchy
+
+### Step 5: Generate JSON Files
+
+#### Enhanced Directory Selection
+- **Browse Directory**: Interactive file browser with:
+  - Quick shortcuts (Desktop, Documents, Downloads)
+  - Directory navigation and folder creation
+  - OS-specific file manager integration
+- **Current Directory**: Use R's working directory
+- **Custom Path**: Enter any valid directory path
+
+#### Filename Customization
+- **Optional Prefix**: Add custom prefix to all generated files
+- **Real-time Preview**: See example filenames before download
+- **Date Stamping**: Automatic date suffixes for version control
+
+#### Dual File Saving
+Files are saved to both:
+1. Browser's download folder (standard download)
+2. Your specified custom directory
+
+#### Download Options
+- **Individual Files**: Download each JSON file separately
+- **Complete Package**: Download all three files in a ZIP archive
+
+## Using Generated JSON Files
+
+Once generated, use the JSON files with RMeDPower2 functions:
+
+```{r use_json_files, eval=FALSE}
+library(RMeDPower2)
+
+# Load configurations from JSON files
+design <- readDesign("RMeDesign_config_2024-01-15.json")
+model <- readProbabilityModel("ProbabilityModel_config_2024-01-15.json") 
+power_params <- readPowerParams("PowerParams_config_2024-01-15.json")
+
+# Run power analysis
+result <- calculatePower(data = your_data, 
+                        design = design,
+                        model = model, 
+                        power_param = power_params)
+```
+
+## App Features and Benefits
+
+### Data-Driven Configuration
+- Column names automatically populated from uploaded data
+- Data type detection for appropriate parameter suggestions
+- Sample value preview for validation
+
+### Interactive Validation
+- Real-time parameter checking
+- Built-in help text and examples
+- Visual feedback for required vs. optional parameters
+
+### Smart Defaults
+- Sensible default values for all parameters
+- Minimal configuration required for basic analyses
+- Progressive disclosure of advanced options
+
+### Enhanced User Experience
+- Step-by-step guidance through complex configuration
+- Distribution selection guidelines with examples
+- Filename organization with custom prefixes
+
+### Reproducible Workflows
+- JSON files provide complete analysis documentation
+- Version control through date stamping
+- Easy sharing and collaboration
+
+## Common Shiny App Workflows
+
+### Workflow 1: Quick Start with Defaults
+1. Upload data
+2. Select response and condition columns
+3. Accept default settings
+4. Generate JSON files
+
+This creates valid configurations using smart defaults, perfect for initial exploration.
+
+### Workflow 2: Detailed Configuration
+1. Upload data and review structure
+2. Configure all RMeDesign parameters based on experimental structure
+3. Select appropriate distribution based on data type
+4. Customize power analysis parameters for specific goals
+5. Set up organized file output with custom prefixes
+
+### Workflow 3: Multiple Analyses
+1. Configure base design and model
+2. Create multiple PowerParams configurations for different scenarios:
+   - Different target columns
+   - Various effect sizes
+   - Different simulation parameters
+3. Use filename prefixes to organize related analyses
+
+## Troubleshooting the Shiny App
+
+### Common Issues
+- **App won't start**: Ensure all packages installed with `source("install_packages.R")`
+- **Data won't load**: Check file format (CSV/RDS) and permissions
+- **Distribution dropdown hidden**: Fixed in v1.1 - dropdown appears when "Non-normal" selected
+- **JSON validation errors**: Verify all required fields completed
+
+### Best Practices
+- Start with smaller datasets for faster loading
+- Use data preview to verify column structure before configuration
+- Test configurations with example data before large datasets
+- Keep JSON files organized by project/experiment
+- Use descriptive filename prefixes for easy identification
+
+### Getting Help
+- Built-in help text provides guidance for each parameter
+- Distribution selection guide with biological examples
+- Example configurations generated automatically
+- Comprehensive error messages and notifications
+
+## Advanced Features
+
+### File Organization
+The app supports systematic file organization:
+- Custom directory selection with browsing
+- Filename prefixes for project organization
+- Date stamping for version control
+- Batch download of all configurations
+
+### Integration with Package Workflow
+The Shiny app seamlessly integrates with the standard RMeDPower2 workflow:
+
+```{r shiny_integration_workflow, eval=FALSE}
+# 1. Create configurations with Shiny app
+# 2. Load and verify configurations
+design <- readDesign("my_study_RMeDesign_config_2024-01-15.json")
+model <- readProbabilityModel("my_study_ProbabilityModel_config_2024-01-15.json")
+power_params <- readPowerParams("my_study_PowerParams_config_2024-01-15.json")
+
+# 3. Validate with diagnostic functions
+diagnose_result <- diagnoseDataModel(data = your_data, design = design, model = model)
+
+# 4. Run power analysis
+power_result <- calculatePower(data = your_data, design = design, 
+                               model = model, power_param = power_params)
+
+# 5. Interpret and iterate as needed
+```
+
+This interactive approach makes RMeDPower2 accessible to users of all experience levels while maintaining the flexibility and power of the underlying statistical framework.
