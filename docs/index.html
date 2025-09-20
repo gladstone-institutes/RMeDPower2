@@ -69,18 +69,18 @@
 </h2>
 <p>RMeDPower2 supports a wide range of biomedical research applications across different experimental domains:</p>
 <div class="float">
-<img src="application_domains.png" style="width:100.0%" alt="Application Domains"><div class="figcaption">Application Domains</div>
+<img src="application_domains.png" style="width:100.0%" alt="Application Domains"><div class="figcaption"><strong>Application domains</strong></div>
 </div>
-<p><em>RMeDPower2 can be applied to various biomedical research contexts including cell assays, single-cell RNA-seq, behavioral studies, and electrophysiology experiments. Each domain involves hierarchical experimental designs with nested or crossed factors.</em></p>
+<p><em>RMeDPower2 can be applied to various biomedical research contexts including cell assays, single-cell RNA-seq, behavioral studies, and electrophysiology experiments. Each domain involves repeated measure experimental designs with nested or crossed factors.</em></p>
 </div>
 <div class="section level2">
 <h2 id="package-structure">Package Structure<a class="anchor" aria-label="anchor" href="#package-structure"></a>
 </h2>
 <p>The package is organized around three core S4 classes that define the experimental framework:</p>
 <div class="float">
-<img src="package_structure.png" style="width:100.0%" alt="Package Structure"><div class="figcaption">Package Structure</div>
+<img src="package_structure.png" style="width:100.0%" alt="Package Structure"><div class="figcaption"><strong>Package Structure</strong></div>
 </div>
-<p><em>The RMeDPower2 package structure showing the three main S4 classes (RMeDesign, ProbabilityModel, PowerParams) and their integration with key R packages for comprehensive power analysis in repeated measures experiments.</em></p>
+<p><em>The RMeDPower2 package structure showing the three main S4 classes (RMeDesign, ProbabilityModel, PowerParams) and their three key functionalities of performing 1. quality control checks for model assumptions, identification of outliers, 2. perform sample-size calculations and 3. to derive and visualize estimates of interest in repeated measures experiments. The functionality is adapted from multiple available R packages</em></p>
 <div class="section level3">
 <h3 id="core-components">Core Components<a class="anchor" aria-label="anchor" href="#core-components"></a>
 </h3>
@@ -108,6 +108,8 @@
 <strong>Model Validation</strong>: Comprehensive assumption testing and diagnostic visualizations</li>
 <li>
 <strong>Flexible Distributions</strong>: Support for normal, binomial, Poisson, and negative binomial distributions</li>
+<li>
+<strong>Derive estimates of interest</strong>: Derive and visualize estimates of interest</li>
 </ul>
 </div>
 </div>
@@ -153,7 +155,9 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>The package maintainer <br><small class="roles"> Maintainer </small>   </li>
+<a href="mailto:reuben.thomas@gladstone.ucsf.edu">Reuben Thomas</a> <br><small class="roles"> Author, maintainer </small>   </li>
+<li>Min-Gyoung Shin <br><small class="roles"> Author </small>   </li>
+<li>Julia Kaye <br><small class="roles"> Author </small>   </li>
 </ul>
 </div>
 

@@ -412,3 +412,271 @@ str(RMeDPower_data1)
 ```
 
 This framework ensures your class objects accurately represent your experimental design and analysis goals, leading to meaningful and reliable power analysis results.
+
+---
+
+# Interactive Configuration with Shiny App
+
+## Overview
+
+The RMeDPower2 package includes an interactive Shiny web application that guides users through the process of creating JSON configuration files for the three S4 classes. This app provides a user-friendly interface with data-driven suggestions and real-time validation.
+
+## Getting Started with the Shiny App
+
+### Installation and Setup
+
+```{r shiny_setup, eval=FALSE}
+# Navigate to the Shiny app directory
+setwd("path/to/RMeDPower2/shiny_config_app")
+
+# Install required packages
+source("install_packages.R")
+
+# Or install manually:
+install.packages(c("shiny", "shinydashboard", "DT", "jsonlite"))
+```
+
+### Running the App
+
+Two versions are available:
+
+```{r run_shiny_app, eval=FALSE}
+# Simple version (recommended for beginners)
+shiny::runApp("app_simple.R")
+
+# Full version (enhanced dashboard interface)
+shiny::runApp("app.R")
+```
+
+## App Workflow
+
+### Step 1: Data Upload
+
+1. **Upload your data file** (CSV or RDS format)
+2. **Review the enhanced data preview** showing:
+   - Each column on a separate line with data type
+   - Sample values from the first 5 rows
+   - Dataset dimensions summary
+
+```
+Data Preview (first 5 rows):
+==================================================
+
+response             (numeric): 1.234, 2.567, 3.891, 4.123, 5.456
+condition            (character): A, B, A, B, A
+experiment           (numeric): 1, 1, 2, 2, 3
+plate                (numeric): 1, 2, 1, 2, 1
+batch                (character): batch1, batch1, batch2, batch2, batch3
+
+Dataset: 5 rows × 6 columns
+```
+
+### Step 2: RMeDesign Configuration
+
+The app automatically populates column choices from your uploaded data:
+
+#### Required Parameters
+- **Response Column**: Select your outcome/dependent variable
+- **Condition Column**: Choose your main predictor/treatment variable  
+- **Condition Type**: Specify if categorical or continuous
+- **Experimental Hierarchy**: Select grouping variables (highest to lowest level)
+
+#### Optional Parameters
+- **Covariate**: Add confounding variables to control for
+- **Crossed Columns**: Specify variables that repeat across hierarchy levels
+- **Total Column**: For binomial data, specify the denominator column
+- **Random Slope Variable**: Allow effects to vary across experimental units
+
+#### Smart Defaults
+If parameters aren't specified, the app provides sensible defaults:
+- First column → response_column
+- Second column → condition_column  
+- Remaining columns → experimental_columns
+- Categorical conditions (most common case)
+- No interactions initially
+
+### Step 3: ProbabilityModel Configuration
+
+#### Distribution Selection
+- **Normal Distribution**: For continuous, approximately normal data
+- **Non-Normal Distribution**: For counts, proportions, or skewed data
+
+#### Family Selection (for non-normal data)
+When non-normal is selected, a dropdown appears with options:
+
+- **Poisson**: Count data where variance ≈ mean
+  - Example: Number of colonies, events, mutations
+- **Negative Binomial**: Overdispersed count data (variance > mean)
+  - Example: RNA-seq read counts
+- **Binomial**: Proportions or binary outcomes
+  - Example: Number of positive cells out of total counted
+  - **Requires**: total_column in RMeDesign
+- **Gamma**: Positive continuous data with right skew
+  - Example: Reaction times, concentrations
+
+#### Automatic Parameter Assignment
+The app intelligently handles the `family_p` parameter:
+- Normal distribution → `family_p = NULL`
+- Non-normal selected but no family chosen → `family_p = "poisson"` (default)
+- Specific family selected → `family_p = selected_family`
+
+### Step 4: PowerParams Configuration
+
+#### Core Parameters
+- **Target Columns**: Which experimental factors to vary in power analysis
+- **Levels**: For each target column (1 = more groups, 0 = bigger groups)
+- **Analysis Type**: Power curve vs. single calculation
+- **Significance Level**: Type I error rate (default: 0.05)
+
+#### Simulation Parameters
+- **Number of Simulations**: Balance between precision and speed (default: 1000)
+- **Maximum Sample Size**: Budget/feasibility constraints
+- **Effect Size**: Known biologically meaningful effect size
+- **ICC Values**: Intra-class correlation for experimental hierarchy
+
+### Step 5: Generate JSON Files
+
+#### Enhanced Directory Selection
+- **Browse Directory**: Interactive file browser with:
+  - Quick shortcuts (Desktop, Documents, Downloads)
+  - Directory navigation and folder creation
+  - OS-specific file manager integration
+- **Current Directory**: Use R's working directory
+- **Custom Path**: Enter any valid directory path
+
+#### Filename Customization
+- **Optional Prefix**: Add custom prefix to all generated files
+- **Real-time Preview**: See example filenames before download
+- **Date Stamping**: Automatic date suffixes for version control
+
+#### Dual File Saving
+Files are saved to both:
+1. Browser's download folder (standard download)
+2. Your specified custom directory
+
+#### Download Options
+- **Individual Files**: Download each JSON file separately
+- **Complete Package**: Download all three files in a ZIP archive
+
+## Using Generated JSON Files
+
+Once generated, use the JSON files with RMeDPower2 functions:
+
+```{r use_json_files, eval=FALSE}
+library(RMeDPower2)
+
+# Load configurations from JSON files
+design <- readDesign("RMeDesign_config_2024-01-15.json")
+model <- readProbabilityModel("ProbabilityModel_config_2024-01-15.json") 
+power_params <- readPowerParams("PowerParams_config_2024-01-15.json")
+
+# Run power analysis
+result <- calculatePower(data = your_data, 
+                        design = design,
+                        model = model, 
+                        power_param = power_params)
+```
+
+## App Features and Benefits
+
+### Data-Driven Configuration
+- Column names automatically populated from uploaded data
+- Data type detection for appropriate parameter suggestions
+- Sample value preview for validation
+
+### Interactive Validation
+- Real-time parameter checking
+- Built-in help text and examples
+- Visual feedback for required vs. optional parameters
+
+### Smart Defaults
+- Sensible default values for all parameters
+- Minimal configuration required for basic analyses
+- Progressive disclosure of advanced options
+
+### Enhanced User Experience
+- Step-by-step guidance through complex configuration
+- Distribution selection guidelines with examples
+- Filename organization with custom prefixes
+
+### Reproducible Workflows
+- JSON files provide complete analysis documentation
+- Version control through date stamping
+- Easy sharing and collaboration
+
+## Common Shiny App Workflows
+
+### Workflow 1: Quick Start with Defaults
+1. Upload data
+2. Select response and condition columns
+3. Accept default settings
+4. Generate JSON files
+
+This creates valid configurations using smart defaults, perfect for initial exploration.
+
+### Workflow 2: Detailed Configuration
+1. Upload data and review structure
+2. Configure all RMeDesign parameters based on experimental structure
+3. Select appropriate distribution based on data type
+4. Customize power analysis parameters for specific goals
+5. Set up organized file output with custom prefixes
+
+### Workflow 3: Multiple Analyses
+1. Configure base design and model
+2. Create multiple PowerParams configurations for different scenarios:
+   - Different target columns
+   - Various effect sizes
+   - Different simulation parameters
+3. Use filename prefixes to organize related analyses
+
+## Troubleshooting the Shiny App
+
+### Common Issues
+- **App won't start**: Ensure all packages installed with `source("install_packages.R")`
+- **Data won't load**: Check file format (CSV/RDS) and permissions
+- **Distribution dropdown hidden**: Fixed in v1.1 - dropdown appears when "Non-normal" selected
+- **JSON validation errors**: Verify all required fields completed
+
+### Best Practices
+- Start with smaller datasets for faster loading
+- Use data preview to verify column structure before configuration
+- Test configurations with example data before large datasets
+- Keep JSON files organized by project/experiment
+- Use descriptive filename prefixes for easy identification
+
+### Getting Help
+- Built-in help text provides guidance for each parameter
+- Distribution selection guide with biological examples
+- Example configurations generated automatically
+- Comprehensive error messages and notifications
+
+## Advanced Features
+
+### File Organization
+The app supports systematic file organization:
+- Custom directory selection with browsing
+- Filename prefixes for project organization
+- Date stamping for version control
+- Batch download of all configurations
+
+### Integration with Package Workflow
+The Shiny app seamlessly integrates with the standard RMeDPower2 workflow:
+
+```{r shiny_integration_workflow, eval=FALSE}
+# 1. Create configurations with Shiny app
+# 2. Load and verify configurations
+design <- readDesign("my_study_RMeDesign_config_2024-01-15.json")
+model <- readProbabilityModel("my_study_ProbabilityModel_config_2024-01-15.json")
+power_params <- readPowerParams("my_study_PowerParams_config_2024-01-15.json")
+
+# 3. Validate with diagnostic functions
+diagnose_result <- diagnoseDataModel(data = your_data, design = design, model = model)
+
+# 4. Run power analysis
+power_result <- calculatePower(data = your_data, design = design, 
+                               model = model, power_param = power_params)
+
+# 5. Interpret and iterate as needed
+```
+
+This interactive approach makes RMeDPower2 accessible to users of all experience levels while maintaining the flexibility and power of the underlying statistical framework.

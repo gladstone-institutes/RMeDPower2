@@ -261,4 +261,20 @@ The app handles distribution family assignment intelligently:
   
 - **v1.1**: Fixed conditional panel for distribution family selection - dropdown now properly appears when non-normal distribution is selected
 
-For more information about RMeDPower2, see the [package documentation](../docs/index.html) and [configuration guide](../vignettes/RMeDPower2_Class_Configuration_Guide.Rmd).
+## Complete Documentation
+
+For comprehensive guidance on using the Shiny app and RMeDPower2 package, see:
+
+- **[RMeDPower2 Class Configuration Guide](../vignettes/RMeDPower2_Class_Configuration_Guide.Rmd)** - Now includes a complete section on the Shiny app with:
+  - Detailed step-by-step workflows
+  - Parameter selection guidance
+  - Distribution selection examples
+  - File organization strategies
+  - Integration with package functions
+  - Troubleshooting and best practices
+
+- **[Package Documentation](../docs/index.html)** - Full API documentation and examples
+
+- **[Example Data](../data/)** - Built-in datasets for practice and learning
+
+The configuration guide provides the most comprehensive resource for understanding both the Shiny app interface and the underlying RMeDPower2 concepts, making it easy to create effective power analysis configurations for your research.
