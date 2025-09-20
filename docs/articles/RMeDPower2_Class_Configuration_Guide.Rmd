@@ -113,7 +113,7 @@ crossed_columns = "cell_line"  # Cell lines repeat across experiments
 **When to use:** You expect the effect varies across experimental units
 
 **Options:**
-- `"condition_column"`: Treatment effects vary across subjects/units
+- `"condition_column"`: Treatment effects vary across subjects/units. E.g., different slopes over time across subjects
 - `"covariate"`: Covariate effects vary across experimental levels
 
 ---
@@ -388,12 +388,6 @@ power_params <- new("PowerParams",
 
 # Additional Resources
 
-## Package Functions
-- `calculatePower()`: Main function for power analysis
-- `diagnoseDataModel()`: Check model assumptions and identify outliers
-- `get_model_and_data()`: Fit models and examine results
-- `check_normality()`: Assess normality of residuals
-
 ## Input Templates
 The package includes JSON templates in the `input_templates/` directory:
 - `design_template.json`: Template for RMeDesign parameters
@@ -424,6 +418,7 @@ The RMeDPower2 package includes an interactive Shiny web application that guides
 ## Getting Started with the Shiny App
 
 ### Installation and Setup
+First you need to download the [shiny_config_app](https://www.dropbox.com/scl/fo/10xsn67w7z9yjbil9n51f/AGTc0sm-B8yR-bKTQH2dGvc?rlkey=hivk09ntlqfm56ozz62bg46f6&dl=1) folder
 
 ```{r shiny_setup, eval=FALSE}
 # Navigate to the Shiny app directory
