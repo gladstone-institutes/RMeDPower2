@@ -21,7 +21,7 @@ library(RMeDPower2)
 
 RMeDPower2 supports a wide range of biomedical research applications across different experimental domains:
 
-![Application Domains](man/figures/application_domains.png){width=100%}
+![Application Domains](application_domains.png){width=100%}
 
 *RMeDPower2 can be applied to various biomedical research contexts including cell assays, single-cell RNA-seq, behavioral studies, and electrophysiology experiments. Each domain involves hierarchical experimental designs with nested or crossed factors.*
 
@@ -29,7 +29,7 @@ RMeDPower2 supports a wide range of biomedical research applications across diff
 
 The package is organized around three core S4 classes that define the experimental framework:
 
-![Package Structure](man/figures/package_structure.png){width=100%}
+![Package Structure](package_structure.png){width=100%}
 
 *The RMeDPower2 package structure showing the three main S4 classes (RMeDesign, ProbabilityModel, PowerParams) and their integration with key R packages for comprehensive power analysis in repeated measures experiments.*
 
