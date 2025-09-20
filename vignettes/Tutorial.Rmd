@@ -1,7 +1,7 @@
 ---
 title: '*RMeDPower2*: helping design and analyses of data from repeated measures experiments'
 author:
-- name: "Reuben Thomas"
+- name: "Min-Gyoung Shin"
   affiliation: Gladstone Institutes
   email: mingyoung.shin@gladstone.ucsf.edu
 - name: Reuben Thomas

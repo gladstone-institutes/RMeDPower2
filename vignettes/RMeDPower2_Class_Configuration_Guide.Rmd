@@ -113,7 +113,7 @@ crossed_columns = "cell_line"  # Cell lines repeat across experiments
 **When to use:** You expect the effect varies across experimental units
 
 **Options:**
-- `"condition_column"`: Treatment effects vary across subjects/units
+- `"condition_column"`: Treatment effects vary across subjects/units. E.g., different slopes over time across subjects
 - `"covariate"`: Covariate effects vary across experimental levels
 
 ---
