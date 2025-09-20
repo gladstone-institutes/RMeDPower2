@@ -46,18 +46,84 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="rmedpower">RMeDPower<a class="anchor" aria-label="anchor" href="#rmedpower"></a>
+<div class="page-header"><h1 id="rmedpower2">RMeDPower2<a class="anchor" aria-label="anchor" href="#rmedpower2"></a>
 </h1></div>
-<div class="float">
-<img src="https://user-images.githubusercontent.com/18338399/186777298-189fb773-d89b-4557-85c4-b22546f566e5.png" alt="image"><div class="figcaption">image</div>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>Biomedical research very often involves data generated from repeated measures experiments. RMeDPower2 is an R package that provides complete functionality to analyse data coming from repeated measures experiments, i.e., where one has repeated measures from the same biological/independent units or samples.</p>
+<p>RMeDPower2 helps test the modeling assumptions one makes, identify outlier observations, outlier units at different levels of the design, estimates statistical power or perform sample size calculations, estimate parameters of interest and also to visualize the association being tested. The functionality is limited to testing associations of one predictor (continuous or categorical, e.g., disease status or brain pathology) along with one another covariate (e.g., gender status) in the context of hierarchical or crossed experimental designs.</p>
+<p>RMeDPower2 defines the experimental design for the data, probability model of the data generating distribution and necessary parameters required for sample size calculation using convenient S4 class objects. It uses these objects in one framework that brings together the functionality implemented in multiple R packages - lme4 (implementation of linear mixed effects models), influence.ME (identification of outlier units), EnvStats (identification of outlier observations), DHARMa (testing of modeling assumptions for non-normal distributions), simr (sample-size calculations) and tidyverse (data manipulation and visualization).</p>
 </div>
 <div class="section level2">
-<h2 id="how-to-install">How to install<a class="anchor" aria-label="anchor" href="#how-to-install"></a>
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'gladstone-institutes/RMeDPower2'</span>, build_vignettes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">RMeDPower2</span><span class="op">)</span></span></code></pre>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">RMeDPower2</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="application-domains">Application Domains<a class="anchor" aria-label="anchor" href="#application-domains"></a>
+</h2>
+<p>RMeDPower2 supports a wide range of biomedical research applications across different experimental domains:</p>
+<div class="float">
+<img src="images/application_domains.png" style="width:100.0%" alt="Application Domains"><div class="figcaption">Application Domains</div>
+</div>
+<p><em>RMeDPower2 can be applied to various biomedical research contexts including cell assays, single-cell RNA-seq, behavioral studies, and electrophysiology experiments. Each domain involves hierarchical experimental designs with nested or crossed factors.</em></p>
+</div>
+<div class="section level2">
+<h2 id="package-structure">Package Structure<a class="anchor" aria-label="anchor" href="#package-structure"></a>
+</h2>
+<p>The package is organized around three core S4 classes that define the experimental framework:</p>
+<div class="float">
+<img src="images/package_structure.png" style="width:100.0%" alt="Package Structure"><div class="figcaption">Package Structure</div>
+</div>
+<p><em>The RMeDPower2 package structure showing the three main S4 classes (RMeDesign, ProbabilityModel, PowerParams) and their integration with key R packages for comprehensive power analysis in repeated measures experiments.</em></p>
+<div class="section level3">
+<h3 id="core-components">Core Components<a class="anchor" aria-label="anchor" href="#core-components"></a>
+</h3>
+<ul>
+<li>
+<strong>RMeDesign</strong>: Defines experimental design including response variables, conditions, experimental hierarchy, covariates, and interaction terms</li>
+<li>
+<strong>ProbabilityModel</strong>: Specifies error distribution assumptions (normal vs non-normal, distribution families)<br>
+</li>
+<li>
+<strong>PowerParams</strong>: Contains parameters for power analysis including target variables, effect sizes, simulation parameters</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="key-features">Key Features<a class="anchor" aria-label="anchor" href="#key-features"></a>
+</h3>
+<ul>
+<li>
+<strong>Experimental Design Support</strong>: Handles nested and crossed experimental designs with multiple hierarchy levels</li>
+<li>
+<strong>Power Analysis</strong>: Simulation-based power calculations using advanced mixed-effects modeling</li>
+<li>
+<strong>Outlier Detection</strong>: Two-level outlier identification at observation and group levels</li>
+<li>
+<strong>Model Validation</strong>: Comprehensive assumption testing and diagnostic visualizations</li>
+<li>
+<strong>Flexible Distributions</strong>: Support for normal, binomial, Poisson, and negative binomial distributions</li>
+</ul>
+</div>
+</div>
+<div class="section level2">
+<h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
+<ul>
+<li>
+<a href="articles/getting-started.html">Quick Start Guide</a> - Learn the basics of RMeDPower2</li>
+<li>
+<a href="articles/Tutorial.html">Complete Tutorial</a> - Comprehensive tutorial with real-world examples</li>
+<li>
+<a href="articles/RMeDPower2_Class_Configuration_Guide.html">Configuration Guide</a> - Guide for choosing parameters for different classes</li>
+<li>
+<a href="reference/index.html">Function Reference</a> - Complete documentation for all functions</li>
+</ul>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
