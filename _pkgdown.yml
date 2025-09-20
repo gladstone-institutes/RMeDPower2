@@ -2,53 +2,23 @@ url: https://gladstone-institutes.github.io/RMeDPower2/
 
 template:
   bootstrap: 5
-  bslib:
-    bootswatch: flatly
-
-home:
-  title: RMeDPower2
-  description: Statistical Power Analysis for Repeated Measures Experiments
-  
-navbar:
-  title: RMeDPower2
-  type: default
-  left:
-    - icon: fas fa-home
-      href: index.html
-      aria-label: Home
-    - text: Reference
-      href: reference/
-    - text: Articles
-      menu:
-        - text: Getting Started
-          href: articles/getting-started.html
-        - text: Tutorial
-          href: articles/Tutorial.html
-        - text: Class Configuration Guide
-          href: articles/RMeDPower2_Class_Configuration_Guide.html
-    - text: News
-      href: news/
-  right:
-    - icon: fab fa-github
-      href: https://github.com/gladstone-institutes/RMeDPower2
-      aria-label: GitHub
+  bootswatch: flatly
 
 reference:
-  - title: Main Functions
-    desc: Core functions for power analysis
+  - title: "Main Functions"
+    desc: "Core functions for power analysis"
     contents:
       - calculatePower
       - diagnoseDataModel
       - getEstimatesOfInterest
-      - transform_data
-  - title: S4 Classes
-    desc: Class definitions for experimental design
+  - title: "S4 Classes"
+    desc: "Class definitions for experimental design"
     contents:
       - RMeDesign-class
       - ProbabilityModel-class
       - PowerParams-class
-  - title: Helper Functions
-    desc: Utility functions for analysis
+  - title: "Helper Functions"
+    desc: "Utility functions for analysis"
     contents:
       - get_model_and_data
       - get_residuals
@@ -57,37 +27,68 @@ reference:
       - readDesign
       - readPowerParams
       - readProbabilityModel
-  - title: Plotting Functions
-    desc: Visualization and quality control
-    contents:
-      - plotQC
+      - transform_data
 
 articles:
-  - title: Getting Started
-    navbar: ~
+  getting-started:
+    title: "Getting Started"
+    desc: "Learn how to use RMeDPower2 for power analysis"
     contents:
-      - getting-started
-  - title: Tutorial
-    navbar: ~
+      - "getting-started"
+  tutorial:
+    title: "Tutorial"
+    desc: "Complete tutorial with real-world examples"
     contents:
-      - Tutorial
-  - title: Configuration Guide
-    navbar: ~
+      - "Tutorial"
+  configuration:
+    title: "Configuration Guide"
+    desc: "Guide for choosing parameters for different classes"
     contents:
-      - RMeDPower2_Class_Configuration_Guide
+      - "RMeDPower2_Class_Configuration_Guide"
+
+navbar:
+  structure:
+    left: [getting-started, tutorial, reference, news]
+    right: [github]
+  components:
+    getting-started:
+      text: Quick Start Guide
+      href: articles/getting-started.html
+    tutorial:
+      text: Tutorial
+      href: articles/Tutorial.html
+    reference:
+      text: Reference
+      href: reference/index.html
+    news:
+      text: News
+      href: news/index.html
+    github:
+      icon: fa-github fa-lg
+      href: https://github.com/gladstone-institutes/RMeDPower2
+      aria-label: GitHub
+
+home:
+  title: RMeDPower2
+  description: Statistical Power Analysis for Repeated Measures Experiments
+  links:
+  - text: "Get started"
+    href: articles/getting-started.html
+  - text: "Tutorial"
+    href: articles/Tutorial.html
+  - text: "Configuration Guide"
+    href: articles/RMeDPower2_Class_Configuration_Guide.html
 
 authors:
-  Min-Gyoung Shin:
+  "Min-Gyoung Shin":
     href: https://gladstone.org/
-  Reuben Thomas:
+  "Reuben Thomas":
     href: https://gladstone.org/
 
 footer:
   structure:
-    left: developed_by
-    right: built_with
+    left: [developed_by]
+    right: [built_with]
   components:
-    developed_by: |
-      Developed by [Min-Gyoung Shin](https://gladstone.org/), [Reuben Thomas](https://gladstone.org/).
-    built_with: |
-      Built with [pkgdown](https://pkgdown.r-lib.org/)
+    developed_by: "Developed by Min-Gyoung Shin and Reuben Thomas."
+    built_with: "Site built with pkgdown 2.1.0."

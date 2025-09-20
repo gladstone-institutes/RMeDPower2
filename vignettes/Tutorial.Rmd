@@ -9,7 +9,7 @@ author:
   email: reuben.thomas@gladstone.ucsf.edu
 package: RMeDPower
 output:
-  word_document
+  html_document
 abstract: "Biomedical research very often involves data generated from repeated measures
   experiments. RMeDPower2 is an R package that provides complete functionality to
   analyse data coming from repeated measures experiments, i.e., where one has repeated
@@ -32,6 +32,10 @@ abstract: "Biomedical research very often involves data generated from repeated 
   and visualization).\n"
 vignette: "%\\VignetteIndexEntry{Vignette Title}\n%\\VignetteEngine{knitr::rmarkdown}\n%\\VignetteEncoding{UTF-8}\n"
 ---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+options(warn = -1)
+```
 
 # Getting started
 ```{r echo=FALSE}
@@ -724,7 +728,7 @@ We see normality assumption is better met with the log-transformed model (Figure
 
 The code also outputs Cook's distance measures for each cohort and mouse that is intended to capture how influential each of these were in determining the final parameter estimates in the LMM model.
 
-```{r}
+```{r eval=FALSE}
 ##see which experimental columns correspond to which variable
 print(design@experimental_columns)
 ## for each experimental column
