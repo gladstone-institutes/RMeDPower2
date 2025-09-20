@@ -438,13 +438,8 @@ install.packages(c("shiny", "shinydashboard", "DT", "jsonlite"))
 
 ### Running the App
 
-Two versions are available:
-
 ```{r run_shiny_app, eval=FALSE}
-# Simple version (recommended for beginners)
-shiny::runApp("app_simple.R")
-
-# Full version (enhanced dashboard interface)
+# Run the RMeDPower2 Configuration App
 shiny::runApp("app.R")
 ```
 

@@ -2,7 +2,7 @@
 library(shiny)
 library(jsonlite)
 
-function(input, output, session) {
+server <- function(input, output, session) {
   
   # Reactive value to store uploaded data
   values <- reactiveValues(

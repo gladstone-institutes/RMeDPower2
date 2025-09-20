@@ -3,7 +3,7 @@ library(shiny)
 library(shinydashboard)
 library(DT)
 
-dashboardPage(
+ui <- dashboardPage(
   dashboardHeader(title = "RMeDPower2 Configuration Generator"),
   
   dashboardSidebar(

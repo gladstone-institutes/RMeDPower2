@@ -40,26 +40,14 @@ source("install_packages.R")
 Or install manually:
 
 ```r
-# For simple version (basic UI)
-install.packages(c("shiny", "jsonlite"))
-
-# For full version (dashboard UI)  
+# Install required packages
 install.packages(c("shiny", "shinydashboard", "DT", "jsonlite"))
 ```
 
 ### Running the App
 
-Two versions are available:
-
-**Simple Version (recommended):**
-```r
-# Uses basic shiny interface, fewer dependencies
-shiny::runApp("app_simple.R")
-```
-
-**Full Version (enhanced UI):**
 ```r  
-# Uses dashboard interface, requires additional packages
+# Run the RMeDPower2 Configuration Generator
 shiny::runApp("app.R")
 ```
 
@@ -147,19 +135,11 @@ result <- calculatePower(data = your_data,
 
 ```
 shiny_config_app/
-├── app.R                    # Full version (dashboard UI)
-├── app_simple.R             # Simple version (basic UI)
-├── ui.R                     # Dashboard UI definition
-├── ui_simple.R              # Simple UI definition  
-├── server.R                 # Server logic (shared)
-├── install_packages.R           # Package installation script
-├── test_json_generation.R       # JSON generation test
-├── test_distribution_selection.R # Distribution selection test
-├── test_directory_browsing.R        # Enhanced directory browsing test
-├── test_default_values.R            # Default values and family_p assignment test
-├── test_distribution_selection_fix.R # Distribution selection visibility fix test
-├── test_conditional_panel_fix.R     # Conditional panel visibility fix verification
-└── README.md                        # This file
+├── app.R                    # Main application launcher
+├── ui.R                     # User interface definition
+├── server.R                 # Server logic and functionality
+├── install_packages.R       # Package installation script
+└── README.md                # This file
 ```
 
 ## Enhanced Directory Selection
@@ -191,7 +171,7 @@ The app automatically provides sensible defaults for all parameters, allowing us
 - **na_action**: `"complete"` (complete case analysis)
 - **covariate**: `""` (no covariate by default)
 - **covariate_is_categorical**: `false` (continuous covariates more common)
-- **include_interaction**: `false` (simpler models preferred initially)
+- **include_interaction**: `false` (simple models preferred initially)
 - **crossed_columns**: `null` (nested designs more common)
 - **total_column**: `""` (not needed unless binomial data)
 
