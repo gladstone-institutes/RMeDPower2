@@ -53,7 +53,7 @@
 </h2>
 <p>Biomedical research very often involves data generated from repeated measures experiments. RMeDPower2 is an R package that provides complete functionality to analyse data coming from repeated measures experiments, i.e., where one has repeated measures from the same biological/independent units or samples.</p>
 <p>RMeDPower2 helps test the modeling assumptions one makes, identify outlier observations, outlier units at different levels of the design, estimates statistical power or perform sample size calculations, estimate parameters of interest and also to visualize the association being tested. The functionality is limited to testing associations of one predictor (continuous or categorical, e.g., disease status or brain pathology) along with one another covariate (e.g., gender status) in the context of hierarchical or crossed experimental designs.</p>
-<p>RMeDPower2 defines the experimental design for the data, probability model of the data generating distribution and necessary parameters required for sample size calculation using convenient S4 class objects. It uses these objects in one framework that brings together the functionality implemented in multiple R packages - <a href="https://cran.r-project.org/web/packages/lme4/index.html" target="_blank">lme4</a> (implementation of linear mixed effects models), <a href="https://cran.r-project.org/web/packages/influence.ME/index.html" target="_blank">influence.ME</a> (identification of outlier units), <a href="https://cran.r-project.org/web/packages/EnvStats/index.html" target="_blank">EnvStats</a> EnvStats (identification of outlier observations), <a href="https://cran.r-project.org/web/packages/DHARMa/index.html" target="_blank">DHARMa</a> (testing of modeling assumptions for non-normal distributions), <a href="https://cran.r-project.org/web/packages/simr/index.html" target="_blank">simr</a>  (sample-size calculations) and <a href="https://cran.r-project.org/web/packages/tidyverse/index.html" target="_blank">tidyverse</a> (data manipulation and visualization).</p>
+<p>RMeDPower2 defines the experimental design for the data, probability model of the data generating distribution and necessary parameters required for sample size calculation using convenient S4 class objects. It uses these objects in one framework that brings together the functionality implemented in multiple R packages - lme4 (implementation of linear mixed effects models), influence.ME (identification of outlier units), EnvStats (identification of outlier observations), DHARMa (testing of modeling assumptions for non-normal distributions), simr (sample-size calculations) and tidyverse (data manipulation and visualization).</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -69,18 +69,18 @@
 </h2>
 <p>RMeDPower2 supports a wide range of biomedical research applications across different experimental domains:</p>
 <div class="float">
-<img src="application_domains.png" style="width:100.0%" alt="Application Domains"><div class="figcaption"><strong>Application domains</strong></div>
+<img src="application_domains.png" style="width:100.0%" alt="Application Domains"><div class="figcaption">Application Domains</div>
 </div>
-<p><em>RMeDPower2 can be applied to various biomedical research contexts including cell assays, single-cell RNA-seq, behavioral studies, and electrophysiology experiments. Each domain involves repeated measure experimental designs with nested or crossed factors.</em></p>
+<p><em>RMeDPower2 can be applied to various biomedical research contexts including cell assays, single-cell RNA-seq, behavioral studies, and electrophysiology experiments. Each domain involves hierarchical experimental designs with nested or crossed factors.</em></p>
 </div>
 <div class="section level2">
 <h2 id="package-structure">Package Structure<a class="anchor" aria-label="anchor" href="#package-structure"></a>
 </h2>
 <p>The package is organized around three core S4 classes that define the experimental framework:</p>
 <div class="float">
-<img src="package_structure.png" style="width:100.0%" alt="Package Structure"><div class="figcaption"><strong>Package Structure</strong></div>
+<img src="package_structure.png" style="width:100.0%" alt="Package Structure"><div class="figcaption">Package Structure</div>
 </div>
-<p><em>The RMeDPower2 package structure showing the three main S4 classes (RMeDesign, ProbabilityModel, PowerParams) and their three key functionalities of performing 1. quality control checks for model assumptions, identification of outliers, 2. perform sample-size calculations and 3. to derive and visualize estimates of interest in repeated measures experiments. The functionality is adapted from multiple available R packages</em></p>
+<p><em>The RMeDPower2 package structure showing the three main S4 classes (RMeDesign, ProbabilityModel, PowerParams) and their integration with key R packages for comprehensive power analysis in repeated measures experiments.</em></p>
 <div class="section level3">
 <h3 id="core-components">Core Components<a class="anchor" aria-label="anchor" href="#core-components"></a>
 </h3>
@@ -108,8 +108,6 @@
 <strong>Model Validation</strong>: Comprehensive assumption testing and diagnostic visualizations</li>
 <li>
 <strong>Flexible Distributions</strong>: Support for normal, binomial, Poisson, and negative binomial distributions</li>
-<li>
-<strong>Derive estimates of interest</strong>: Derive and visualize estimates of interest</li>
 </ul>
 </div>
 </div>
@@ -155,9 +153,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<a href="mailto:reuben.thomas@gladstone.ucsf.edu">Reuben Thomas</a> <br><small class="roles"> Author, maintainer </small>   </li>
-<li>Min-Gyoung Shin <br><small class="roles"> Author </small>   </li>
-<li>Julia Kaye <br><small class="roles"> Author </small>   </li>
+<li>The package maintainer <br><small class="roles"> Maintainer </small>   </li>
 </ul>
 </div>
 
