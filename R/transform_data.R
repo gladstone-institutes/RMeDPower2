@@ -277,19 +277,22 @@ transform_data<-function(data, condition_column, experimental_columns, response_
 
   }
 
-  cooks_plots <- generate_cooks_results_plots(cooks_result, names(plots_info), experimental_columns)
+  cooks_plots_plus_outliers <- generate_cooks_results_plots(cooks_result, names(plots_info), experimental_columns)
 
-  result=list(models, plots_info, cooks_plots, cooks_result, Data_updated )
-  names(result)=c("models", "diagnostic_plots", "cooks_plots", "cooks_result", "Data_updated")
+  result=list(models, plots_info, cooks_plots_plus_outliers$cooks_plots, cooks_plots_plus_outliers$inferred_outliers, cooks_result, Data_updated )
+  names(result)=c("models", "diagnostic_plots", "cooks_plots", "inferred_outlier_groups","cooks_result", "Data_updated")
 
   return(result)
 }
 
 generate_cooks_results_plots <- function(cooks_result, models, experimental_columns) {
   cooks_plots <- list()
+  inferred_outliers <- list()
   for(i in 1:length(models)) {
     cooks_plots[[i]] <- list()
+    inferred_outliers <- list()
     names(cooks_plots)[i] <- models[i]
+    names(inferred_outliers)[i] <- models[i]
     for(j in 1:length(experimental_columns)){
       plot_title <- paste0("Cooks distance estimates for model ", models[i], " and experimental factor = ", experimental_columns[j])
       temp_data <- data.frame(cooks_distance = cooks_result[[i]][[j]])
@@ -306,11 +309,11 @@ generate_cooks_results_plots <- function(cooks_result, models, experimental_colu
         labs(subtitle = paste0("Outliers are: ", paste(outliers, collapse = ","), " determined by the 4/n threshold as indicated by the vertical dashed line")) +
         theme(plot.title  = element_textbox_simple()) +
         theme(plot.subtitle  = element_textbox_simple())
-
+      inferred_outliers[[i]][[j]] <- outliers
      }
   }
 
-  return(cooks_plots)
+  return(list(cooks_plots=cooks_plots, inferred_outliers=inferred_outliers))
 }
 
 generate_qc_plots <-  function(lms,
