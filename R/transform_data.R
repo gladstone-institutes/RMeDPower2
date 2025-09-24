@@ -290,7 +290,7 @@ generate_cooks_results_plots <- function(cooks_result, models, experimental_colu
   inferred_outliers <- list()
   for(i in 1:length(models)) {
     cooks_plots[[i]] <- list()
-    inferred_outliers <- list()
+    inferred_outliers[[i]] <- list()
     names(cooks_plots)[i] <- models[i]
     names(inferred_outliers)[i] <- models[i]
     for(j in 1:length(experimental_columns)){
