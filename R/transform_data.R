@@ -276,12 +276,42 @@ transform_data<-function(data, condition_column, experimental_columns, response_
 
 
   }
-  result=list(Data_updated, cooks_result, plots_info, models)
-  names(result)=c("Data_updated", "cooks_result", "plots_info", "models")
+
+  cooks_plots <- generate_cooks_results_plots(cooks_result, models, experimental_columns)
+
+  result=list(models, plots_info, cooks_plots, cooks_result, Data_updated )
+  names(result)=c("models", "diagnostic_plots", "cooks_plots", "cooks_result", "Data_updated")
 
   return(result)
 }
 
+generate_cooks_results_plots <- function(cooks_result, models, experimental_columns) {
+  cooks_plots <- list()
+  for(i in 1:length(models)) {
+    cooks_plots[[i]] <- list()
+    names(cooks_plots)[i] <- models[i]
+    for(j in 1:length(experimental_columns)){
+      plot_title <- paste0("Cooks distance estimates for model ", models[i], " and experimental factor = ", experimental_columns[j])
+      temp_data <- data.frame(cooks_distance = cooks_result[[i]][[j]])
+      temp_data %<>% tibble::rownames_to_column("exp.factor")
+      outliers <- temp_data %>% filter(cooks_distance > 4/nrow(.)) %>% .$exp.factor
+      if(length(outliers) == 0)
+        outliers <- "none"
+      cooks_plots[[i]][[j]] <- ggplot(temp_data, aes(y=exp.factor, x=cooks_distance)) +
+        geom_col() +
+        theme_minimal() +
+        geom_vline(xintercept = 4/nrow(temp_data), lty=2) +
+        theme(axis.text.y = element_text(size = 3)) +
+        ggtitle(plot_title) +
+        labs(subtitle = paste0("Outliers are: ", paste(outliers, collapse = ","))) +
+        theme(plot.title  = element_textbox_simple()) +
+        theme(plot.subtitle  = element_textbox_simple())
+
+     }
+  }
+
+  return(cooks_plots)
+}
 
 generate_qc_plots <-  function(lms,
                                error_is_non_normal,
