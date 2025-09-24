@@ -310,6 +310,7 @@ generate_cooks_results_plots <- function(cooks_result, models, experimental_colu
         theme(plot.title  = element_textbox_simple()) +
         theme(plot.subtitle  = element_textbox_simple())
       inferred_outliers[[i]][[j]] <- outliers
+      names(inferred_outliers[[i]])[j] <- experimental_columns[j]
      }
   }
 
