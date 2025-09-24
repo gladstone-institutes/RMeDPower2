@@ -277,7 +277,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
 
   }
 
-  cooks_plots <- generate_cooks_results_plots(cooks_result, models, experimental_columns)
+  cooks_plots <- generate_cooks_results_plots(cooks_result, names(plots_info), experimental_columns)
 
   result=list(models, plots_info, cooks_plots, cooks_result, Data_updated )
   names(result)=c("models", "diagnostic_plots", "cooks_plots", "cooks_result", "Data_updated")
