@@ -66,10 +66,11 @@ and finally log_scale_wo_outliers model if there were outliers identified in the
 For models based on the binomial probability distribution, cooks distance is only
 reported for the first experimental column on account the increased computation time
 for evaluating this metric for the other experimental columns.
-4) plots_info: is a list with two elements plots and captions. plots is a named list and captions is a character vector,
+4) diagnostic_plots: is a list with two elements plots and captions. plots is a named list and captions is a character vector,
 both of the same length as the number of models evaluated. Each element of the plots list is yet another
 list of QC/diagnostic plots related to the corresponding model fit, while the captions is a vector of captions for each of the
 QC plots output
+5) cooks_plots: is a list of plots is named list of the same length as the number of models evaluated. Each element of the cooks_plot is another list of bar plots of cooks distance plots for each of the experimental columns. The title of the plot indicate the model and experimental factor while the subtitle indicates the identified outliers if any using the 4/n threshold
 }
 \description{
 This function can be used to generate diagnostic QC plots for given model assumptions related to the input data, identify potential outlier observations and/or outlier experimental units

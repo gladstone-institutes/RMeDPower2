@@ -21,11 +21,11 @@ readDesign <- function(jsonfile) {
   design@condition_is_categorical = design_data$condition_is_categorical
   design@experimental_columns = design_data$experimental_columns
   if("crossed_columns" %in% names(design_data) && !is.null(design_data$crossed_columns)) design@crossed_columns = design_data$crossed_columns
-  if("total_column" %in% names(design_data) && !is.null(design_data$total_column)) design@total_column = design_data$total_column
-  if("covariate" %in% names(design_data) && !is.null(design_data$covariate)) design@covariate = design_data$covariate
+  if("total_column" %in% names(design_data) && !is.null(design_data$total_column) && design_data$total_column != "") design@total_column = design_data$total_column
+  if("covariate" %in% names(design_data) && !is.null(design_data$covariate) && design_data$covariate != "") design@covariate = design_data$covariate
   if("covariate_is_categorical" %in% names(design_data)) design@covariate_is_categorical = design_data$covariate_is_categorical
   if("include_interaction" %in% names(design_data)) design@include_interaction = design_data$include_interaction
-  if("random_slope_variable" %in% names(design_data) && !is.null(design_data$random_slope_variable)) design@random_slope_variable = design_data$random_slope_variable
+  if("random_slope_variable" %in% names(design_data) && !is.null(design_data$random_slope_variable) && design_data$random_slope_variable != "") design@random_slope_variable = design_data$random_slope_variable
   if("outlier_alpha" %in% names(design_data) && is.numeric(design_data$outlier_alpha)) design@outlier_alpha = design_data$outlier_alpha
   return(design)
 }
