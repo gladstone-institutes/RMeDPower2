@@ -340,7 +340,7 @@ generate_qc_plots <-  function(lms,
       stat_qq() +
       stat_qq_line(color = "red") +
       labs(title = paste0("Q-Q Plot: Residuals", description_suffix),
-           subtitle = paste0("Check normality of residuals", ". Expectation is that the black points lie on or close to the solid red diaganol line. Check the Normal Q-Q plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots"),
+           subtitle = paste0("Check normality of residuals", ". Expectation is that the black points lie on or close to the solid red diaganol line"),
            x = "Theoretical Quantiles",
            y = "Sample Quantiles") +
       theme_minimal() +
@@ -349,7 +349,7 @@ generate_qc_plots <-  function(lms,
 
     names(plots)[plot_index+1] <- "residuals_QQ"
 
-    captions[plot_index+1] <- paste0("Check normality of residuals ", description_suffix, ". Expectation is that the black points lie on or close to the solid red diaganol line")
+    captions[plot_index+1] <- paste0("Check normality of residuals ", description_suffix, ". Expectation is that the black points lie on or close to the solid red diaganol line. Check the Normal Q-Q plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots ")
 
 
 
@@ -359,7 +359,7 @@ generate_qc_plots <-  function(lms,
       geom_smooth(method = "loess", se = TRUE, color = "red") +
       geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +
       labs(title = paste0("Residuals vs Fitted Values ", description_suffix),
-           subtitle = paste0("Check for linearity", ". Expectation is that the best fit solid red line is horizontal or close to being horizontal. . Check the Residuals vs Fitted plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots"),
+           subtitle = paste0("Check for linearity", ". Expectation is that the best fit solid red line is horizontal or close to being horizontal"),
            x = "Fitted Values",
            y = "Residuals") +
       theme_minimal() +
@@ -382,7 +382,7 @@ generate_qc_plots <-  function(lms,
       theme(plot.subtitle  = element_textbox_simple())
 
     names(plots)[plot_index+3] <- "residuals_homoscedasticity"
-    captions[plot_index+3] <- paste0("Check for homoscedasticity ",description_suffix, ". Expectation is that the best fit solid red line is horizontal or close to being so. . Check the Scale-Location plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots")
+    captions[plot_index+3] <- paste0("Check for homoscedasticity ",description_suffix, ". Expectation is that the best fit solid red line is horizontal or close to being so. Check the Scale-Location plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots")
     plot_index <- plot_index + 3
 
   }else{
@@ -393,11 +393,11 @@ generate_qc_plots <-  function(lms,
 
     plots[[plot_index + 1]] <- ggplot_QQunif(simulationOutput, description_suffix = description_suffix)
     names(plots)[plot_index+1] <- "residuals_QQ"
-    captions[plot_index + 1] <- paste0("Q-Q Plot for Uniform Distribution", ". Expectation is that the black points lie on or close to the solid red diaganol line")
+    captions[plot_index + 1] <- paste0("Q-Q Plot for Uniform Distribution", ". Expectation is that the black points lie on or close to the solid red diaganol line. Check the Q-Q plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots ")
 
     plots[[plot_index + 2]] <- ggplot_residuals_vs_predictor(simulationOutput, description_suffix = description_suffix)
     names(plots)[plot_index+2] <- "residuals_vs_predicted"
-    captions[plot_index + 2] <- paste0("Residuals vs Predicted", ". Expectation is that the best fit blue lines at the three quartiles- 0.25, 0.50 and 0.75 - are close to the dashed horizontal lines at their respective quartiles")
+    captions[plot_index + 2] <- paste0("Residuals vs Predicted", ". Expectation is that the best fit blue lines at the three quartiles- 0.25, 0.50 and 0.75 - are close to the dashed horizontal lines at their respective quartiles.  Check the Residuals vs Fitted plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots ")
 
     plot_index <- plot_index + 2
   }
@@ -423,7 +423,7 @@ generate_qc_plots <-  function(lms,
         theme(plot.subtitle  = element_textbox_simple())
 
       names(plots)[plot_index+1] <- paste0("random_effects_QQ_",temp_count)
-      captions[plot_index+1] <- paste0("Check normality of random effects for ", names(random_effects)[c], "_", colnames(random_effects[[c]][j]), " ", description_suffix, ": ", exp_factor, ". Expectation is that the black points lie on or close to the solid red diaganol line")
+      captions[plot_index+1] <- paste0("Check normality of random effects for ", names(random_effects)[c], "_", colnames(random_effects[[c]][j]), " ", description_suffix, ": ", exp_factor, ". Expectation is that the black points lie on or close to the solid red diaganol line. Check the Normal Q-Q plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots ")
 
       plot_index <- plot_index + 1
       temp_count <- temp_count + 1
@@ -611,7 +611,7 @@ ggplot_QQunif <- function(dharma_obj,
     geom_point(alpha = 0.6, size = 1.5) +
     geom_abline(intercept = 0, slope = 1, color = "red",  linewidth = 1) +
     labs(title = paste(title, description_suffix),
-         subtitle = paste0("Q-Q Plot for Uniform Distribution", ". Expectation is that the black points lie on or close to the solid red diaganol line. Check the Q-Q plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots"),
+         subtitle = paste0("Q-Q Plot for Uniform Distribution", ". Expectation is that the black points lie on or close to the solid red diaganol line."),
          x = "Expected (Uniform)",
          y = "Observed Residuals") +
     theme_minimal() +
@@ -702,7 +702,7 @@ ggplot_residuals_vs_predictor <- function(dharma_obj,
       p <- p + geom_smooth(method = "lm", se = TRUE, color = "red", alpha = 0.7) +
         geom_hline(yintercept = 0.5, linetype = "dashed", color = "black", alpha = 0.6) +
         labs(title = paste("DHARMa Residuals vs", predictor_name, description_suffix),
-             subtitle = paste0("Residuals vs Predicted", ". Expectation is that the best fit solid red line(s) is horizontal or close to being so. Check the Residuals vs Fitted plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots. The best fit median and also the 25th and 75th quantiles (when present) should also be more or less horizontal"),
+             subtitle = paste0("Residuals vs Predicted", ". Expectation is that the best fit solid red line(s) is horizontal or close to being so"),
              x = x_label,
              y = "DHARMa Residuals")
   }
