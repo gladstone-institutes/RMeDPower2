@@ -49,7 +49,7 @@ template_dir="~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final
 ```{r eval=FALSE}
 install.packages("devtools")
 library(devtools)
-install_github('gladstone-institutes/RMeDPower2@july25Rev', build_vignettes=TRUE, force = TRUE)
+install_github('gladstone-institutes/RMeDPower2', build_vignettes=TRUE, force = TRUE)
 ```
 
 ## Quick tutorial
@@ -314,10 +314,10 @@ Let us look the basic QC plots for the models fit in the natural scale of the re
 ```{r output-plots1, results='asis'}
 plot_no <- 1
 plots <- diagnose_res$diagnostic_plots$natural_scale$plots
-
+captions <- diagnose_res$diagnostic_plots$natural_scale$captions
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -336,10 +336,10 @@ print(diagnose_res$inferred_outlier_groups$natural_scale)
 Now, let us look at the same set of QC plots for models on the log-transformed responses.
 ```{r output-plots2, results='asis'}
 plots <- diagnose_res$diagnostic_plots$log_scale$plots
-
+captions <- diagnose_res$diagnostic_plots$log_scale$captions
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -499,10 +499,10 @@ print(diagnose_res$models)
 
 ```{r output-plots3, results='asis'}
 plots <- diagnose_res$diagnostic_plots$natural_scale$plots
-
+captions <- diagnose_res$diagnostic_plots$natural_scale$captions
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -580,10 +580,10 @@ print(diagnose_res$models)
 Let us look the basic QC plots for the models fit in the natural scale of the responses. There are only two levels for the animal model. So cooks distance estimates not generated for them.
 ```{r output-plots4, results='asis'}
 plots <- diagnose_res$diagnostic_plots$natural_scale$plots
-
+captions <- diagnose_res$diagnostic_plots$natural_scale$captions
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -592,10 +592,11 @@ for (i in seq_along(plots)) {
 Let us also now look at the QC plots after removing the identified outliers
 ```{r output-plots5, results='asis'}
 plots <- diagnose_res$diagnostic_plots$natural_scale_wo_outliers$plots
+captions <- diagnose_res$diagnostic_plots$natural_scale_wo_outliers$captions
 
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 ```
@@ -662,10 +663,11 @@ print(diagnose_res$models)
 Let us look the basic QC plots for the models fit in the natural scale of the responses.
 ```{r output-plots6, results='asis'}
 plots <- diagnose_res$diagnostic_plots$natural_scale$plots
+captions <- diagnose_res$diagnostic_plots$natural_scale$captions
 
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -684,10 +686,11 @@ print(diagnose_res$inferred_outlier_groups$natural_scale)
 Let us also now look at the QC plots after removing the identified outliers
 ```{r output-plots7, results='asis'}
 plots <- diagnose_res$diagnostic_plots$natural_scale_wo_outliers$plots
+captions <- diagnose_res$diagnostic_plots$natural_scale_wo_outliers$captions
 
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -760,10 +763,11 @@ We see that three models were fit to this data - one in the natural scale of cel
 Let us look the basic QC plots for the models fit in the natural scale of the responses.
 ```{r output-plots8, results='asis'}
 plots <- diagnose_res$diagnostic_plots$natural_scale$plots
+captions <- diagnose_res$diagnostic_plots$natural_scale$captions
 
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -782,10 +786,11 @@ print(diagnose_res$inferred_outlier_groups$natural_scale)
 Now, let us look at the same set of QC plots for models on the log-transformed responses.
 ```{r output-plots9, results='asis'}
 plots <- diagnose_res$diagnostic_plots$log_scale$plots
+captions <- diagnose_res$diagnostic_plots$log_scale$captions
 
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -805,10 +810,11 @@ Now, let us look at the same set of QC plots for models on the log-transformed r
 
 ```{r output-plots10, results='asis'}
 plots <- diagnose_res$diagnostic_plots$log_scale_wo_outliers$plots
+captions <- diagnose_res$diagnostic_plots$log_scale_wo_outliers$captions
 
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -889,10 +895,10 @@ We see that three models were fit to this data - one in the natural scale of neg
 Let us look the basic QC plots for the models fit in the natural scale of the responses.
 ```{r output-plots11, results='asis'}
 plots <- diagnose_res$diagnostic_plots$natural_scale$plots
-
+captions <- diagnose_res$diagnostic_plots$natural_scale$captions
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -911,10 +917,11 @@ print(diagnose_res$inferred_outlier_groups$natural_scale)
 Let us look the basic QC plots for the models fit in the natural scale of the responses without the outliers.
 ```{r output-plots12, results='asis'}
 plots <- diagnose_res$diagnostic_plots$natural_scale_wo_outliers$plots
+captions <- diagnose_res$diagnostic_plots$natural_scale_wo_outliers$captions
 
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -933,10 +940,10 @@ print(diagnose_res$inferred_outlier_groups$natural_scale)
 Now, let us look at the same set of QC plots for models on the log-transformed responses.
 ```{r output-plots13, results='asis'}
 plots <- diagnose_res$diagnostic_plots$log_scale$plots
-
+captions <- diagnose_res$diagnostic_plots$log_scale$captions
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -977,10 +984,10 @@ We see that two models were fit to this data - one in the natural scale of negat
 Let us look the basic QC plots for the models fit in the natural scale of the responses.
 ```{r output-plots14, results='asis'}
 plots <- diagnose_res_update$diagnostic_plots$natural_scale$plots
-
+captions <- diagnose_res_update$diagnostic_plots$natural_scale$captions
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
@@ -999,10 +1006,10 @@ print(diagnose_res$inferred_outlier_groups$natural_scale)
 Let us look the basic QC plots for the models fit in the log scale of the responses.
 ```{r output-plots15, results='asis'}
 plots <- diagnose_res_update$diagnostic_plots$log_scale$plots
-
+captions <- diagnose_res_update$diagnostic_plots$log_scale$captions
 for (i in seq_along(plots)) {
   print(plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
 
