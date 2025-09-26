@@ -305,7 +305,7 @@ generate_cooks_results_plots <- function(cooks_result, models, experimental_colu
         geom_col() +
         theme_minimal() +
         geom_vline(xintercept = 4/nrow(temp_data), lty=2) +
-        theme(axis.text.y = element_text(size = 3)) +
+        theme(axis.text.y = element_text(size = 8)) +
         ggtitle(plot_title) +
         labs(subtitle = paste0("Outliers are: ", paste(outliers, collapse = ","), " determined by the 4/n threshold as indicated by the vertical dashed line")) +
         theme(plot.title  = element_textbox_simple()) +
