@@ -397,7 +397,7 @@ generate_qc_plots <-  function(lms,
 
     plots[[plot_index + 2]] <- ggplot_residuals_vs_predictor(simulationOutput, description_suffix = description_suffix)
     names(plots)[plot_index+2] <- "residuals_vs_predicted"
-    captions[plot_index + 2] <- paste0("Residuals vs Predicted", ". Expectation is that the best fit blue lines at the three quartiles- 0.25, 0.50 and 0.75 - are close to the dashed horizontal lines at their respective quartiles.  Check the Residuals vs Fitted plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots ")
+    captions[plot_index + 2] <- paste0("Residuals vs Predicted", ". Expectation is that the best fit red lines at the three quartiles- 0.25, 0.50 and 0.75 - are close to the dashed horizontal lines at their respective quartiles.  Check the Residuals vs Fitted plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots ")
 
     plot_index <- plot_index + 2
   }
