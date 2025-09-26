@@ -127,7 +127,7 @@ power_res <- calculatePower(data, design, model, power_param)
 Once we have ran the models, the user can estimate and visualize parameters of interest in order to investigate the association between response variable and condition variables.
 
 ```{r eval=FALSE}
-estimate_res <- getEstimatesOfInterest(data, design, model)
+estimate_res <- getEstimatesOfInterest(data, design, model, print_plots = F)
 ```
 
 
@@ -372,11 +372,12 @@ data_update <- diagnose_res$Data_updated
 print(colnames(data_update))
 design_update@response_column <-  "cell_size2_logTransformed"
 estimate_res <- getEstimatesOfInterest(data_update, design_update, model,print_plots = FALSE)
+```
 
+```{r, results="asis", echo = FALSE}
 print(estimate_res[[2]]$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
-cat("\n\n\n")
 
 ```
 
@@ -394,11 +395,12 @@ We can also estimate the statistical needed to estimate the observed differences
 ```{r}
 power_param@max_size <- 15
 power_res <- calculatePower(data_update, design_update, model, power_param)
-print(power_res$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
-plot_no <- plot_no + 1
-cat("\n\n\n")
+```
 
+```{r,results="asis", echo = FALSE}
+print(power_res$plots)
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+plot_no <- plot_no + 1
 ```
 
 The power curve shows that at least eight or more experimental batches are required to achieve a power of 80% or greater.
@@ -421,7 +423,7 @@ full_design@response_column <- "perim_2th_effect_logTransformed"
 
 Note now, none of the experimental batches or the 13 cell-lines are considered outliers or unduly influencing the final parameter estimates.
 
-```{r}
+```{r, results='asis'}
 cooks_plots <- full_diag_res$cooks_plots$log_scale
 cat("\n\n\n")
 for(i in 1:length(cooks_plots)) {
@@ -440,13 +442,17 @@ We derive an estimate of 0.027 as the mean difference in perimeter with an assoc
 ```{r}
 full_res <- getEstimatesOfInterest(full_data_update, full_design, model, print_plots = FALSE)
 print(full_res[[1]])
+```
 
+```{r, results="asis", echo = FALSE}
 print(full_res[[2]]$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
-
 ```
+
+
+
 ## Single-cell RNA-seq assays
 
 Here we will use data derived from the single-nuclei RNA-seq experiments performed in Koutsodendris et al[]. paper One of the goals in these experiments was to assess the effect of the APOE gene isoform on brain pathology in a mouse model of Alzheimer’s Disease (AD). Specifically, the *APOE4* haplotype is a known risk factor for AD compared to those with the *APOE3* gene isoform. Koutsodendris et a., investigates the role of expression of neuronal *APOE4* expression in the development of disease pathology in the *APOE4* knock-in mouse model. The scRNA seq dataset consists of over 1000 cells derived from the hippocampus brain region across 4 mice harboring the human *APOE4* gene knocked-in the mouse *Apoe* locus and 4 other mice (called E4-KI-Syn1-Cre) with the human *APOE4* gene also knocked-in in the same mouse. However, the *APOE4* expression in these mice is knocked out specifically in the neurons. The single cell data allowed the identification of multiple clusters or cell-types including cluster 7 representing a group of excitatory neurons.
@@ -521,13 +527,16 @@ print(diagnose_res$inferred_outlier_groups$natural_scale)
 We can now estimate differences in the log odds of cluster membership in cluster 7 between APOE4-KI mice and APOE4-KI-Syn1-Cre using the function 'getEstimatesOfInterest'.
 
 ```{r}
-estimate_res <- getEstimatesOfInterest(data, design, model)
+estimate_res <- getEstimatesOfInterest(data, design, model, print_plots = F)
 print(estimate_res[[1]])
+
+```
+
+```{r, results="asis", echo = FALSE}
 print(estimate_res[[2]]$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
-
 ```
 
 And estimate whether or not statistical power we have to estimate the given observed association with varying number of mice per group.
@@ -535,8 +544,11 @@ And estimate whether or not statistical power we have to estimate the given obse
 ```{r eval=TRUE}
 print(power_param@target_columns)
 power_res <- calculatePower(data, design, model, power_param)
+```
+
+```{r,results="asis", echo = FALSE}
 print(power_res$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
 ```
@@ -549,13 +561,16 @@ design@include_interaction <- TRUE
 The estimates after including the interaction term could be recovered by,
 
 ```{r}
-estimate_res_w_interaction <- getEstimatesOfInterest(data, design, model)
+estimate_res_w_interaction <- getEstimatesOfInterest(data, design, model,print_plots = F)
 print(estimate_res_w_interaction[[1]])
+
+```
+
+```{r, results="asis", echo = FALSE}
 print(estimate_res_w_interaction[[2]]$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
-
 ```
 We don't see a significant interaction of genotype with sex given that the interaction term is not significantly different from zero (p-value = 0.446)
 
@@ -586,7 +601,7 @@ for (i in seq_along(plots)) {
     cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
-
+cat("\n\n\n")
 ```
 
 Let us also now look at the QC plots after removing the identified outliers
@@ -599,6 +614,7 @@ for (i in seq_along(plots)) {
     cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
   plot_no <- plot_no + 1
 }
+cat("\n\n\n")
 ```
 
 
@@ -606,22 +622,27 @@ for (i in seq_along(plots)) {
 We can also estimate the parameter of interest - log odds ratio of cluster 7 membership per unit increase in hippocampus volume of associated mouse.
 
 ```{r}
-estimate_res <- getEstimatesOfInterest(data, design, model)
+estimate_res <- getEstimatesOfInterest(data, design, model,print_plots = F)
 print(estimate_res[[1]])
 
+```
+
+```{r, results="asis", echo = FALSE}
 print(estimate_res[[2]]$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
-
 ```
 
 And calculate the statistical power to estimate this association for different numbers of animals per group.
 
 ```{r eval=TRUE}
 power_plots <- calculatePower(data, design, model, power_param)
+```
+
+```{r,results="asis", echo = FALSE}
 print(power_res$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
 ```
@@ -710,22 +731,27 @@ We don't see a good fit to the assumption of negative binomial distribution base
 
 Estimate log-fold change of the Snhg11 gene with genotype.
 ```{r}
-estimate_res <- getEstimatesOfInterest(data, design, model)
+estimate_res <- getEstimatesOfInterest(data, design, model, print_plots = F)
 print(estimate_res[[1]])
 
+```
+
+```{r, results="asis", echo = FALSE}
 print(estimate_res[[2]]$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
-
 ```
 We can also perform a power analyses to detect a log(2) fold-change in this gene.
 
 ```{r}
 power_param@effect_size <- log(2)
 power_res <- calculatePower(data, design, model, power_param)
+```
+
+```{r,results="asis", echo = FALSE}
 print(power_res$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
 ```
@@ -843,21 +869,25 @@ Based on the above plots, it seems like the log transformed versions of the late
 data_update <- diagnose_res$Data_updated
 design_update <- design
 design_update@response_column %<>% paste0(., "_logTransformed_noOutlier")
-estimate_res <- getEstimatesOfInterest(data_update, design_update, model)
+estimate_res <- getEstimatesOfInterest(data_update, design_update, model, print_plots = F)
 print(estimate_res[[1]])
+```
+
+```{r, results="asis", echo = FALSE}
 print(estimate_res[[2]]$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
-
-#print(estimate_res[[2]]$plots)
 ```
 We will also perform sample-size calculations for the number of mice needed per cohort.
 ```{r}
 power_param@target_columns <- "MouseID"
 power_res <- calculatePower(data_update, design_update, model, power_param)
+```
+
+```{r,results="asis", echo = FALSE}
 print(power_res$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
 ```
@@ -1028,13 +1058,15 @@ print(diagnose_res$inferred_outlier_groups$natural_scale)
  It does not look like the log transformation resulted significantly changed how well the model assumptions were being met. We will estimate the association of genotype using the responses in their natural scale.
  
 ```{r}
-estimate_res <- getEstimatesOfInterest(data_update, design, model)
+estimate_res <- getEstimatesOfInterest(data_update, design, model, print_plots = F)
 print(estimate_res[[1]])
+```
+
+```{r, results="asis", echo = FALSE}
 print(estimate_res[[2]]$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
-
 ```
 
 This is not significant at all. How many mice do we need to have 80% power to estimate the observed difference?
@@ -1044,18 +1076,25 @@ This is not significant at all. How many mice do we need to have 80% power to es
 power_param@target_columns <- "Mice"
 power_param@effect_size <- 7
 power_res <- calculatePower(data, design, model, power_param)
+```
+
+```{r,results="asis", echo = FALSE}
 print(power_res$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
+```
 
+```{r}
 power_param@target_columns <- "slice_number"
 power_res_slice <- calculatePower(data, design, model, power_param)
+```
+
+```{r,results="asis", echo = FALSE}
 print(power_res_slice$plots)
-cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
-
 ```
 
 # Understanding simulations to estimate the power
