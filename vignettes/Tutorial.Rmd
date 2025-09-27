@@ -727,7 +727,7 @@ print("Inferred outlier groups are")
 print(diagnose_res$inferred_outlier_groups$natural_scale)
 ```
 
-We don't see a good fit to the assumption of negative binomial distribution based on the Quantile-Quantile plots suggesting that GLMM models for single cell RNA-seq data, even though they have been proposed as alternatives to dealing with the issue of pseudo-replication, are not good models to assess for differential expression.
+We don't see a good fit to the assumption of negative binomial distribution based on the residual vs predicted plots suggesting that GLMM models for single cell RNA-seq data, even though they have been proposed as alternatives to dealing with the issue of pseudo-replication, are not good models to assess for differential expression.
 
 Estimate log-fold change of the Snhg11 gene with genotype.
 ```{r}
