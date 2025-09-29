@@ -294,6 +294,7 @@ generate_cooks_results_plots <- function(cooks_result, models, experimental_colu
     inferred_outliers[[i]] <- list()
     names(cooks_plots)[i] <- models[i]
     names(inferred_outliers)[i] <- models[i]
+    #
     for(j in 1:length(cooks_result[[i]])){
       plot_title <- paste0("Cooks distance estimates for model ", models[i], " and experimental factor = ", experimental_columns[j])
       temp_data <- data.frame(cooks_distance = cooks_result[[i]][[j]])
