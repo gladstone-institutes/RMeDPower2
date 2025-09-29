@@ -343,6 +343,18 @@ build_random_formula <- function(experimental_columns, random_slope_variable = N
   return(paste(random_parts, collapse = " + "))
 }
 
+build_random_formula0 <- function(experimental_columns) {
+  random_parts <- c()
+
+  for (i in 1:length(experimental_columns)) {
+    exp_col <- paste0("experimental_column", i)
+    # Standard random intercept only
+    random_parts <- c(random_parts, paste0("(1 | ", exp_col, ")"))
+  }
+
+  return(paste(random_parts, collapse = " + "))
+}
+
 
 generate_model_fit <- function(data, fixed_formula, random_formula,
                                     error_is_non_normal = FALSE, family_p = NULL,

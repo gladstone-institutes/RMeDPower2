@@ -170,8 +170,7 @@ get_residuals <- function(data, condition_column, experimental_columns, response
     colnames(Data)[which(colnames(Data)==total_column)]="total_column"
 
   # Build formula components
-  fixed_formula <- build_fixed_formula(covariate, include_interaction)
-  random_formula <- build_random_formula(experimental_columns, random_slope_variable)
+  random_formula <- build_random_formula0(experimental_columns)
   lmerFit <- generate_model_fit0(data=Data,
                                 random_formula,
                                 error_is_non_normal,
