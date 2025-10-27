@@ -7,8 +7,12 @@ author:
 - name: Reuben Thomas
   affiliation: Gladstone Institutes
   email: reuben.thomas@gladstone.ucsf.edu
-package: RMeDPower
+package: RMeDPower2
 output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+    number_sections: true
   html_document:
     toc: true
     toc_float: true
