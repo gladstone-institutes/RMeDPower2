@@ -1,0 +1,94 @@
+url: https://gladstone-institutes.github.io/RMeDPower2/
+
+template:
+  bootstrap: 5
+  bootswatch: flatly
+
+reference:
+  - title: "Main Functions"
+    desc: "Core functions for power analysis"
+    contents:
+      - calculatePower
+      - diagnoseDataModel
+      - getEstimatesOfInterest
+  - title: "S4 Classes"
+    desc: "Class definitions for experimental design"
+    contents:
+      - RMeDesign-class
+      - ProbabilityModel-class
+      - PowerParams-class
+  - title: "Helper Functions"
+    desc: "Utility functions for analysis"
+    contents:
+      - get_model_and_data
+      - get_residuals
+      - calculate_power
+      - calculate_lmer_estimates
+      - readDesign
+      - readPowerParams
+      - readProbabilityModel
+      - transform_data
+
+articles:
+  getting-started:
+    title: "Getting Started"
+    desc: "Learn how to use RMeDPower2 for power analysis"
+    contents:
+      - "getting-started"
+  tutorial:
+    title: "Tutorial"
+    desc: "Complete tutorial with real-world examples"
+    contents:
+      - "Tutorial"
+  configuration:
+    title: "Configuration Guide"
+    desc: "Guide for choosing parameters for different classes"
+    contents:
+      - "RMeDPower2_Class_Configuration_Guide"
+
+navbar:
+  structure:
+    left: [getting-started, tutorial, reference, news]
+    right: [github]
+  components:
+    getting-started:
+      text: Quick Start Guide
+      href: articles/getting-started.html
+    tutorial:
+      text: Tutorial
+      href: articles/Tutorial.html
+    reference:
+      text: Reference
+      href: reference/index.html
+    news:
+      text: News
+      href: news/index.html
+    github:
+      icon: fa-github fa-lg
+      href: https://github.com/gladstone-institutes/RMeDPower2
+      aria-label: GitHub
+
+home:
+  title: RMeDPower2
+  description: Statistical Power Analysis for Repeated Measures Experiments
+  links:
+  - text: "Get started"
+    href: articles/getting-started.html
+  - text: "Tutorial"
+    href: articles/Tutorial.html
+  - text: "Configuration Guide"
+    href: articles/RMeDPower2_Class_Configuration_Guide.html
+
+authors:
+  "Min-Gyoung Shin":
+    href: https://gladstone.org/
+  "Reuben Thomas":
+    href: https://gladstone.org/
+
+footer:
+  structure:
+    left: [developed_by]
+    right: [built_with]
+  components:
+    developed_by: "Developed by Min-Gyoung Shin and Reuben Thomas."
+    built_with: "Site built with pkgdown 2.1.0."

@@ -62,7 +62,7 @@ This function retrieve residual values from an lmerFit summary object and plot r
 Note: The current version does not accept categorical response variables, sample size parameters smaller than the observed samples size
 }
 \examples{
-result=get_residuals_covariate(data=RMeDPower_data1,
+result=get_residuals_covariate(data=plate_assay_pilot_data,
 condition_column="classification",
 experimental_columns=c("experiment", "line"),
 response_column="cell_size1",

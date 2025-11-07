@@ -40,7 +40,7 @@ Here's a basic example of using RMeDPower2:
 library(RMeDPower2)
 
 # Load example data
-data(RMeDPower_data1)
+data(plate_assay_pilot_data)
 
 # Define experimental design
 design <- new("RMeDesign",
@@ -63,13 +63,13 @@ power_param <- new("PowerParams",
 )
 
 # Step 1: Diagnose data and model assumptions
-diagnose_res <- diagnoseDataModel(RMeDPower_data1, design, model)
+diagnose_res <- diagnoseDataModel(plate_assay_pilot_data, design, model)
 
 # Step 2: Calculate power
-power_res <- calculatePower(RMeDPower_data1, design, model, power_param)
+power_res <- calculatePower(plate_assay_pilot_data, design, model, power_param)
 
 # Step 3: Get parameter estimates
-estimate_res <- getEstimatesOfInterest(RMeDPower_data1, design, model)
+estimate_res <- getEstimatesOfInterest(plate_assay_pilot_data, design, model)
 ```
 
 ## Key Features

@@ -89,7 +89,7 @@ This function uses simulation to perform power analysis. It is designed to explo
 Note: The current version does not accept categorical response variables, sample size parameters smaller than the observed samples size
 }
 \examples{
-result=calculate_power(data=RMeDPower_data1,
+result=calculate_power(data=plate_assay_pilot_data,
 condition_column="classification",
 experimental_columns=c("experiment", "line"),
 response_column="cell_size1",

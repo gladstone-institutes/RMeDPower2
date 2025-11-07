@@ -1,0 +1,165 @@
+
+R version 4.5.1 (2025-06-13) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Load necessary libraries
+> library(testthat)
+> library(RMeDPower2)
+Loading required package: lme4
+Loading required package: Matrix
+Loading required package: dplyr
+
+Attaching package: 'dplyr'
+
+The following object is masked from 'package:testthat':
+
+    matches
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: simr
+
+Attaching package: 'simr'
+
+The following object is masked from 'package:lme4':
+
+    getData
+
+The following object is masked from 'package:testthat':
+
+    compare
+
+Loading required package: magrittr
+
+Attaching package: 'magrittr'
+
+The following objects are masked from 'package:testthat':
+
+    equals, is_less_than, not
+
+Loading required package: ggplot2
+Loading required package: ggtext
+Loading required package: quantreg
+Loading required package: SparseM
+
+Attaching package: 'SparseM'
+
+The following object is masked from 'package:Matrix':
+
+    det
+
+Warning message:
+replacing previous import 'lme4::getData' by 'simr::getData' when loading 'RMeDPower2' 
+> 
+> # Set up testing environment
+> options(warn = -1)  # Suppress warnings during testing
+> 
+> test_check("RMeDPower2")
+[1] "condition_column should be one of the column names"
+[1] "response_column should be one of the column names"
+[1] "experimental_columns must match column names"
+[1] "covariate should be null or one of the column names"
+[1] "crossed_columns must match column names"
+[1] "condition_is_categorical must be TRUE or FALSE"
+[1] "covariate_is_categorical must be TRUE or FALSE"
+[1] "Cannot include interaction when covariate is NULL"
+[1] "random_slope_variable should be 'condition_column', 'covariate' or the actual condition column name or covariate column name"
+[1] "condition_column should be one of the column names"
+[1] "covariate should be NA or one of the column names"
+[1] "nsimn should be a positive integer"
+[1] "nsimn should be a positive integer"
+[1] "levels must be 0 or 1"
+[1] "power_curve must be 0 or 1"
+[1] "covariate should be NA or one of the column names"
+[1] "covariate should be NA or one of the column names"
+[1] "covariate should be NA or one of the column names"
+[1] "covariate should be NA or one of the column names"
+[1] "covariate should be NA or one of the column names"
+[1] "covariate should be NA or one of the column names"
+[1] "covariate should be NA or one of the column names"
+[1] "covariate should be NA or one of the column names"
+[1] "covariate should be NA or one of the column names"
+[1] "covariate should be NA or one of the column names"
+[1] "covariate should be NA or one of the column names"
+[1] "User should specify levels of all target parameters"
+[1] "covariate should be NA or one of the column names"
+[1] "No outlier detected from the raw Data"
+[1] "No outlier detected from the raw Data"
+[1] "No outlier detected from the raw Data"
+[1] "No outlier detected from the raw Data"
+[1] "No outlier detected from the raw Data"
+[1] "No outlier detected from the raw Data"
+[1] "Not enough levels to perform cooks test for experimental_column1 with the assumed binomial distribution"
+[1] "No outlier detected from the raw Data"
+[1] "No outlier detected from the raw Data"
+[1] "No outlier detected from the raw Data"
+[1] "No outlier detected from the raw Data"
+[1] "condition_column should be one of the column names"
+[ FAIL 9 | WARN 0 | SKIP 0 | PASS 167 ]
+
+══ Failed tests ════════════════════════════════════════════════════════════════
+── Failure ('test-power-calculation.R:72:7'): calculate_power handles covariates ──
+Expected `{ ... }` to run without any errors.
+ℹ Actually got a <simpleError> with text:
+  missing value where TRUE/FALSE needed
+── Error ('test-utilities.R:26:3'): readDesign function works correctly ────────
+Error in `if ("total_column" %in% names(design_data) && !is.null(design_data$total_column) && 
+    design_data$total_column != "") design@total_column = design_data$total_column`: missing value where TRUE/FALSE needed
+Backtrace:
+    ▆
+ 1. └─RMeDPower2::readDesign(temp_file) at test-utilities.R:26:3
+── Failure ('test-utilities.R:159:3'): get_residuals function works correctly ──
+"residual" %in% names(result) is not TRUE
+
+`actual`:   FALSE
+`expected`: TRUE 
+── Failure ('test-utilities.R:160:3'): get_residuals function works correctly ──
+nrow(result) > 0 is not TRUE
+
+`actual`:       
+`expected`: TRUE
+── Failure ('test-utilities.R:179:3'): get_residuals handles covariates ────────
+"residual" %in% names(result) is not TRUE
+
+`actual`:   FALSE
+`expected`: TRUE 
+── Failure ('test-utilities.R:180:3'): get_residuals handles covariates ────────
+"covariate" %in% names(result) is not TRUE
+
+`actual`:   FALSE
+`expected`: TRUE 
+── Failure ('test-utilities.R:211:7'): diagnoseDataModel function works correctly ──
+Expected `{ ... }` to run without any errors.
+ℹ Actually got a <subscriptOutOfBoundsError> with text:
+  subscript out of bounds
+── Failure ('test-utilities.R:228:7'): diagnoseDataModel handles different model types ──
+Expected `{ ... }` to run without any errors.
+ℹ Actually got a <subscriptOutOfBoundsError> with text:
+  subscript out of bounds
+── Failure ('test-utilities.R:243:7'): transform_data function works correctly ──
+Expected `{ ... }` to run without any errors.
+ℹ Actually got a <subscriptOutOfBoundsError> with text:
+  subscript out of bounds
+
+[ FAIL 9 | WARN 0 | SKIP 0 | PASS 167 ]
+Error: Test failures
+Execution halted

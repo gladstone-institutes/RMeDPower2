@@ -1,0 +1,11 @@
+{
+  "response_column": "response_column",
+  "covariate": "",
+  "condition_column": "condition_column",
+  "experimental_columns": ["experimental_column1", "experimental_column2"],
+  "condition_is_categorical": true,
+  "crossed_columns": ["crossed_column1", "crossed_column2"],
+  "total_column": "total_column",
+  "outlier_alpha": 0.05,
+  "na_action": "complete"
+}

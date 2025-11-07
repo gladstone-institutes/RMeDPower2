@@ -1,0 +1,615 @@
+Hmm ... looks like a package
+Converting parsed Rd's to LaTeX .
+Creating pdf output from LaTeX ...
+
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+(./Rd2.tex
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2024/06/29 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/bk10.clo))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/textcomp.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/jknapltx/mathrsfs.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/times.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2025/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/usr/local/texlive/2025/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/color.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-def/pdftex.def)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
+ty (/usr/local/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty)))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/atbegshi-ltx.sty))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/atveryend-ltx.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+)))) (/usr/local/texlive/2025/texmf-dist/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
+No file Rd2.aux.
+(/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
+No file Rd2.toc.
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/jknapltx/ursfs.fd)
+[1{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/l
+ocal/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/20
+25/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}]
+[2]
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 111--112
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 127--128
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[3]
+[4]
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 203--204
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[5]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 235--236
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[6]
+[7]
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 377--378
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[8]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 393--394
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[9]
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 440--441
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 458--459
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[10]
+[11]
+Overfull \hbox (6.19771pt too wide) in paragraph at lines 554--555
+\T1/ptm/m/n/10 vari-ate, method, crossed_columns, er-ror_is_non_normal, fam-ily
+_p, out-lier_alpha,
+
+[12]
+Overfull \hbox (24.71716pt too wide) in paragraph at lines 608--609
+[]\T1/ptm/m/n/10 the json-file with the nec-es-sary pa-ram-e-ters for prob-a-bi
+l-ity model: er-ror_is_non_normal,
+
+[13]
+Overfull \hbox (4.87752pt too wide) in paragraph at lines 633--634
+[]\T1/ptm/m/n/10 Name of the vari-able re-lated to ex-per-i-men-tal de-sign suc
+h as "ex-per-i-ment", "plate",
+
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 641--642
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[14]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 659--660
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[15]
+Overfull \hbox (4.87752pt too wide) in paragraph at lines 706--707
+[]\T1/ptm/m/n/10 Name of the vari-able re-lated to ex-per-i-men-tal de-sign suc
+h as "ex-per-i-ment", "plate",
+
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 712--713
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[16]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 730--731
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+Overfull \hbox (785.24715pt too wide) in paragraph at lines 756--756
+ []\T1/zi4/m/n/9 result=transform_data2(data=data, condition_column="classif", 
+experimental_columns=c("experiment","line"), response_column="feature", conditi
+on_is_categorical=TRUE, error_is_non_normal=FALSE, alpha=0.05, crossed_columns 
+= "line", method="cook", na.action="complete") 
+
+Overfull \hbox (785.24715pt too wide) in paragraph at lines 757--757
+ []\T1/zi4/m/n/9 result=transform_data2(data=data, condition_column="classif", 
+experimental_columns=c("experiment","line"), response_column="feature", conditi
+on_is_categorical=TRUE, error_is_non_normal=FALSE, alpha=0.05, crossed_columns 
+= "line", method="cook", na.action="complete")[] 
+
+Overfull \hbox (869.24408pt too wide) in paragraph at lines 758--758
+ []\T1/zi4/m/n/9 result=transform_data2(data=data, condition_column="classif", 
+experimental_columns=c("experiment","line"), response_column="feature", conditi
+on_is_categorical=TRUE, error_is_non_normal=TRUE, family_p="poisson", alpha=0.0
+5, crossed_columns = "line", method="cook", na.action="complete")[] 
+No file Rd2.ind.
+
+[17]
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)</usr/local/texlive/2025/te
+xmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texliv
+e/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/tex
+mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fo
+nts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
+urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (17 pages, 104740 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.17 [TeX Live 2025] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (14 entries accepted, 0 rejected).
+Sorting entries....done (49 comparisons).
+Generating output file Rd2.ind....done (33 lines written, 0 warnings).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+(./Rd2.tex
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2024/06/29 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/bk10.clo))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/textcomp.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/jknapltx/mathrsfs.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/times.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2025/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/usr/local/texlive/2025/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/color.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-def/pdftex.def)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
+ty (/usr/local/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty)))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/atbegshi-ltx.sty))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/atveryend-ltx.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+)))) (/usr/local/texlive/2025/texmf-dist/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.aux)
+(/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.out)
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.out)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.toc
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/jknapltx/ursfs.fd))
+[1{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/l
+ocal/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/20
+25/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}]
+[2]
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 111--112
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 127--128
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[3]
+[4]
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 203--204
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[5]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 235--236
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[6]
+[7]
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 377--378
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[8]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 393--394
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[9]
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 440--441
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[10]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 458--459
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[11]
+[12]
+Overfull \hbox (6.19771pt too wide) in paragraph at lines 554--555
+\T1/ptm/m/n/10 vari-ate, method, crossed_columns, er-ror_is_non_normal, fam-ily
+_p, out-lier_alpha,
+
+[13]
+Overfull \hbox (24.71716pt too wide) in paragraph at lines 608--609
+[]\T1/ptm/m/n/10 the json-file with the nec-es-sary pa-ram-e-ters for prob-a-bi
+l-ity model: er-ror_is_non_normal,
+
+Overfull \hbox (4.87752pt too wide) in paragraph at lines 633--634
+[]\T1/ptm/m/n/10 Name of the vari-able re-lated to ex-per-i-men-tal de-sign suc
+h as "ex-per-i-ment", "plate",
+
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 641--642
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[14]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 659--660
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[15]
+Overfull \hbox (4.87752pt too wide) in paragraph at lines 706--707
+[]\T1/ptm/m/n/10 Name of the vari-able re-lated to ex-per-i-men-tal de-sign suc
+h as "ex-per-i-ment", "plate",
+
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 712--713
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[16]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 730--731
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+Overfull \hbox (785.24715pt too wide) in paragraph at lines 756--756
+ []\T1/zi4/m/n/9 result=transform_data2(data=data, condition_column="classif", 
+experimental_columns=c("experiment","line"), response_column="feature", conditi
+on_is_categorical=TRUE, error_is_non_normal=FALSE, alpha=0.05, crossed_columns 
+= "line", method="cook", na.action="complete") 
+
+Overfull \hbox (785.24715pt too wide) in paragraph at lines 757--757
+ []\T1/zi4/m/n/9 result=transform_data2(data=data, condition_column="classif", 
+experimental_columns=c("experiment","line"), response_column="feature", conditi
+on_is_categorical=TRUE, error_is_non_normal=FALSE, alpha=0.05, crossed_columns 
+= "line", method="cook", na.action="complete")[] 
+
+Overfull \hbox (869.24408pt too wide) in paragraph at lines 758--758
+ []\T1/zi4/m/n/9 result=transform_data2(data=data, condition_column="classif", 
+experimental_columns=c("experiment","line"), response_column="feature", conditi
+on_is_categorical=TRUE, error_is_non_normal=TRUE, family_p="poisson", alpha=0.0
+5, crossed_columns = "line", method="cook", na.action="complete")[] 
+
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.ind
+[17]
+
+[18])
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)</usr/local/texlive/2025/te
+xmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texliv
+e/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/tex
+mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fo
+nts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
+urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (18 pages, 107851 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.17 [TeX Live 2025] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (14 entries accepted, 0 rejected).
+Sorting entries....done (49 comparisons).
+Generating output file Rd2.ind....done (33 lines written, 0 warnings).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+(./Rd2.tex
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2024/06/29 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/bk10.clo))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/textcomp.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/jknapltx/mathrsfs.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/times.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2025/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/usr/local/texlive/2025/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/color.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-def/pdftex.def)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
+ty (/usr/local/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty)))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
+(/usr/local/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/atbegshi-ltx.sty))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/atveryend-ltx.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+)))) (/usr/local/texlive/2025/texmf-dist/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.aux)
+(/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.out)
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.out)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.toc
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/jknapltx/ursfs.fd))
+[1{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/l
+ocal/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/20
+25/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}]
+[2]
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 111--112
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 127--128
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[3]
+[4]
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 203--204
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[5]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 235--236
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[6]
+[7]
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 377--378
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[8]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 393--394
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[9]
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 440--441
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[10]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 458--459
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[11]
+[12]
+Overfull \hbox (6.19771pt too wide) in paragraph at lines 554--555
+\T1/ptm/m/n/10 vari-ate, method, crossed_columns, er-ror_is_non_normal, fam-ily
+_p, out-lier_alpha,
+
+[13]
+Overfull \hbox (24.71716pt too wide) in paragraph at lines 608--609
+[]\T1/ptm/m/n/10 the json-file with the nec-es-sary pa-ram-e-ters for prob-a-bi
+l-ity model: er-ror_is_non_normal,
+
+Overfull \hbox (4.87752pt too wide) in paragraph at lines 633--634
+[]\T1/ptm/m/n/10 Name of the vari-able re-lated to ex-per-i-men-tal de-sign suc
+h as "ex-per-i-ment", "plate",
+
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 641--642
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[14]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 659--660
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[15]
+Overfull \hbox (4.87752pt too wide) in paragraph at lines 706--707
+[]\T1/ptm/m/n/10 Name of the vari-able re-lated to ex-per-i-men-tal de-sign suc
+h as "ex-per-i-ment", "plate",
+
+Overfull \hbox (7.41762pt too wide) in paragraph at lines 712--713
+[]\T1/ptm/m/n/10 Specify whether the con-di-tion vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+[16]
+Overfull \hbox (5.8876pt too wide) in paragraph at lines 730--731
+[]\T1/ptm/m/n/10 Specify whether the co-vari-ate vari-able is cat-e-gor-i-cal. 
+TRUE: Cat-e-gor-i-cal, FALSE:
+
+Overfull \hbox (785.24715pt too wide) in paragraph at lines 756--756
+ []\T1/zi4/m/n/9 result=transform_data2(data=data, condition_column="classif", 
+experimental_columns=c("experiment","line"), response_column="feature", conditi
+on_is_categorical=TRUE, error_is_non_normal=FALSE, alpha=0.05, crossed_columns 
+= "line", method="cook", na.action="complete") 
+
+Overfull \hbox (785.24715pt too wide) in paragraph at lines 757--757
+ []\T1/zi4/m/n/9 result=transform_data2(data=data, condition_column="classif", 
+experimental_columns=c("experiment","line"), response_column="feature", conditi
+on_is_categorical=TRUE, error_is_non_normal=FALSE, alpha=0.05, crossed_columns 
+= "line", method="cook", na.action="complete")[] 
+
+Overfull \hbox (869.24408pt too wide) in paragraph at lines 758--758
+ []\T1/zi4/m/n/9 result=transform_data2(data=data, condition_column="classif", 
+experimental_columns=c("experiment","line"), response_column="feature", conditi
+on_is_categorical=TRUE, error_is_non_normal=TRUE, family_p="poisson", alpha=0.0
+5, crossed_columns = "line", method="cook", na.action="complete")[] 
+
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.ind
+[17]
+
+[18])
+(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmplIWNqU/Rd2pdf13fa
+e3d414422/Rd2.aux) )
+(see the transcript file for additional information)</usr/local/texlive/2025/te
+xmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texliv
+e/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/tex
+mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fo
+nts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
+urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (18 pages, 108673 bytes).
+Transcript written on Rd2.log.
+Saving output to ‘RMeDPower2-manual.pdf’ ...
+Done
+You may want to clean up by 'rm -Rf /var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T//RtmplIWNqU/Rd2pdf13fae3d414422'

@@ -1,0 +1,268 @@
+---
+title: 'Applying *RMeDPower2* to data from plate assays'
+author:
+ - Min-Gyoung Shin^[Gladstone Institutes, mingyoung.shin@gladstone.ucsf.edu]
+ - Reuben Thomas^[Gladstone Institutes, reuben.thomas@gladstone.ucsf.edu]
+package: RMeDPower2
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+    number_sections: true
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+abstract: "Biomedical research very often involves data generated from repeated measures
+  experiments. RMeDPower2 is an R package that provides complete functionality to
+  analyse data coming from repeated measures experiments, i.e., where one has repeated
+  measures from the same biological/independent units or samples. RMeDPower2 helps
+  test the modeling assumptions one makes, identify outlier observations, outlier
+  units at different levels of the design, estimates statistical power or perform
+  sample size calculations, estimate parameters of interest and also to visualize
+  the association being tested. The functionality is limited to testing associations
+  of one predictor (continuous or categorical, e.g., disease status or brain pathology)
+  along with one another covariate (e.g., gender status) in the context of hierarchical
+  or crossed experimental designs. This vignette illustrates the use of this package
+  in multiple contexts relevant to biomedical research. \n\nRMeDPower2 defines the
+  experimental design for the data, probability model of the data generating distribution
+  and necessary parameters required for sample size calculation using convenient S4
+  class objects. It uses these objects in one framework that brings together the functionality
+  implemented in multiple R packages - lme4 (implementation of linear mixed effects
+  models), influence.ME (identification of outlier units), EnvStats (identification
+  of outlier observations), DHARMa (testing of modeling assumptions for non-normal
+  distributions), simr (sample-size calculations) and tidyverse (data manipulation
+  and visualization).\n"
+vignette: "%\\VignetteIndexEntry{Vignette Title}\n%\\VignetteEngine{knitr::rmarkdown}\n%\\VignetteEncoding{UTF-8}\n"
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+options(warn = -1)
+```
+
+# Getting started
+```{r echo=FALSE}
+setwd("~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial/")
+template_dir="~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial//tutorial_session3/"
+```
+## Installing `RMeDPower2`
+`RMeDPower2` can be installed using the following commands
+```{r eval=FALSE}
+install.packages("devtools")
+library(devtools)
+install_github('gladstone-institutes/RMeDPower2', build_vignettes=TRUE, force = TRUE)
+```
+
+```{r results='hide'}
+suppressPackageStartupMessages(library(RMeDPower2))
+options(warn = -1)
+data <- RMeDPower_data1
+```
+
+# Plate assays
+
+iPSC lines from control and patient derived iPSCs from sALS patients were obtained through the Answer ALS (AALS) consortium36 . AALS is the largest repository of ALS patient samples, and contains publicly available patient-specific iPSCs and multi-OMIC data from motor neurons derived from those iPSCs—including RNA Seq, proteomics and whole genome sequence data— all of which is matched with longitudinal clinical data (https://dataportal.answerals.org/home)36. 
+
+
+We used 6 control lines and 4 sALS lines and differentiated each line into motor neurons (iMNs). iMNs were  transduced with a morphology marker and imaged on day ~25 using RM37-45 as previously described36. Images were processed and the soma size of neurons were captured using contour ellipse46 function adapted for use in python (https://www.python.org/).
+
+The next step is to read the data and perform data distribution diagnostics, association analysis, and power simulation.
+
+First, we will read the data from the package and json files with specified parameters:
+
+```{r}
+data <- RMeDPower_data1
+design <- readDesign(paste0(template_dir,"design_cell_assay.json"))
+model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+```
+
+A visualization of the distribution of cell_size2 across experiments and cell-lines as box-plots and also in terms of empirical cumulative distribution plots suggests the observations have an extremely long tail. We will therefore filter out the top 5 percent of the observations to ensure the results are not skewed by these extreme observations. We also see that the observations in experiment 3 are in general lower than those in the other two experiments.
+```{r echo=FALSE, results='asis'}
+plot_no <- 1
+print(ggplot(data, aes(x=experiment, y=cell_size2, color = line)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(text = element_text(size = 16)))
+cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, "Box plots depicting the distributions of the 1271 observations across the ALS lines and the 1317 observations across the control lines by the three experimental batches. Note, the data shown in this panel and in all the remaining panels and figures are based on simulated data with variance characteristics that match the real data."))
+plot_no <- plot_no + 1
+
+print(ggplot(data, aes(x=cell_size2, color = experiment)) +
+  stat_ecdf() +
+  theme_bw() +
+  theme(text = element_text(size = 16)))
+cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, "Empirical cumulative distribution function of cell-size measured in the three experimental batches"))
+plot_no <- plot_no + 1
+
+```
+
+```{r}
+data %<>% filter(cell_size2 < quantile(cell_size2, 0.95))
+```
+
+We would like to estimate the difference in the mean cell-sizes across all the observations derived from all experimental batches between the ALS disease lines and the control cell lines (modeled by the _classification_ variable). The first step is run diagnosis on the data and model using the 'diagnoseDataModel' function. The Q-Q plot of the residuals of the LMM model fit to the log-transformed cell-sizes suggests a better fit than the one fit to the cell sizes in the natural scale , assuming that the data generating distribution is based on the Normal distribution. Therefore, we will hereafter model the log-transformed cell sizes. The reasonably horizontal best fit lines for the residuals from this versus the fitted values,  and the square-root of the absolute values of the residuals versus the fitted values, Figure 7e suggest both the LMM model assumptions of linearity and homoscedasticity are reasonable. There were no identified individual outlier observations based on the application of the Rosner’s test to the distribution of the residuals in.
+
+
+```{r}
+diagnose_res <- diagnoseDataModel(data, design, model)
+```
+The *diagnoseDataModel* function fits  at least one model representing one in the natural scale of the response of interest. Additionally, if individual observations are inferred as outliers using the rosner's test applied to the residuals of the fitted model then another model is fit without these outlier observations. In addition, if the assumed probability distribution of the residuals of the model is normal then a further additional model are fit using logarithm (log) transformed responses and another one if there are outliers in the log-transformed model fit.
+
+To identify all the models fit to the data
+```{r}
+print(diagnose_res$models)
+```
+We see that two models were fit to this data - one in the natural scale of cell size and the other in the logarithmic scale. No individual observations were identified as outliers in each of these models.
+
+Let us look the basic QC plots for the models fit in the natural scale of the responses.
+```{r output-plots1, results='asis'}
+#plot_no <- 1
+plots <- diagnose_res$diagnostic_plots$natural_scale$plots
+captions <- diagnose_res$diagnostic_plots$natural_scale$captions
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
+  plot_no <- plot_no + 1
+}
+
+cat("\n\n\n")
+cooks_plots <- diagnose_res$cooks_plots$natural_scale
+for(i in 1:length(cooks_plots)) {
+  print(cooks_plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+  plot_no <- plot_no + 1
+}
+
+print("Inferred outlier groups are")
+print(diagnose_res$inferred_outlier_groups$natural_scale)
+```
+
+Now, let us look at the same set of QC plots for models on the log-transformed responses.
+```{r output-plots2, results='asis'}
+plots <- diagnose_res$diagnostic_plots$log_scale$plots
+captions <- diagnose_res$diagnostic_plots$log_scale$captions
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
+  plot_no <- plot_no + 1
+}
+
+
+cooks_plots <- diagnose_res$cooks_plots$log_scale
+
+cat("\n\n\n")
+for(i in 1:length(cooks_plots)) {
+  print(cooks_plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+  plot_no <- plot_no + 1
+}
+
+print("Inferred outlier groups are")
+print(diagnose_res$inferred_outlier_groups$natural_scale)
+```
+
+We see normality assumption is better met with the log-transformed model (Figure 6) compared to the model in the natural scale (Figure 1).
+
+The code also outputs Cook's distance measures for each experiment and cell-line that is intended to capture how influential each of these were in determining the final parameter estimates in the LMM model.
+
+
+The observations in experimental batch 3 and those for cell lines 4 and 9 were identified as outliers using a 4/n (where n is the number of replicates, n=3 for experimental batches and n=10 for cell-lines) threshold applied to the estimates of Cook’s distance for the estimated model parameters. We will not do anything further with these estimates, given the relatively small number of experiments and cell-lines for this data. In other situations, where we have a larger number of replicates and have additional reasons to believe that the outliers are real and have nothing to do with the biology being studied (example: the microscope was not set correctly for a given experimental batch), we could decide to drop the identified outlier units.
+
+ We will use the log transformed cell_size2 data for parameter estimation using the following commands. 
+
+```{r}
+design_update <- design
+data_update <- diagnose_res$Data_updated
+print(colnames(data_update))
+design_update@response_column <-  "cell_size2_logTransformed"
+estimate_res <- getEstimatesOfInterest(data_update, design_update, model,print_plots = FALSE)
+```
+
+```{r, results="asis", echo = FALSE}
+print(estimate_res[[2]]$plots)
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+plot_no <- plot_no + 1
+
+```
+
+The median residual boxplot shows the differences in the distribution of the response variable for the two conditions.
+
+```{r}
+##print model summary output
+print(estimate_res[[1]])
+```
+
+As a result of linear mixed model-based association analysis, the response variable was found to be significantly associated with the condition variable with an estimate of 0.03.
+
+We can also estimate the statistical needed to estimate the observed differences in mean perimeter across 15 experimental batches
+
+```{r}
+power_param@max_size <- 15
+power_res <- calculatePower(data_update, design_update, model, power_param)
+```
+
+```{r,results="asis", echo = FALSE}
+print(power_res$plots)
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+plot_no <- plot_no + 1
+```
+
+The power curve shows that at least eight or more experimental batches are required to achieve a power of 80% or greater.
+
+Accordingly, we will now load data from 8 experimental batches and estimate our parameter of interest.
+
+```{r}
+full_data <- read.table("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/OLD_Parts/simulated_perim.txt", header = TRUE)
+
+##filter the top 5% of the observations
+full_data %<>% filter(perim_2th_effect < quantile(perim_2th_effect, 0.95))
+
+design@response_column <- "perim_2th_effect"
+design@condition_column <- "classif"
+full_diag_res <- diagnoseDataModel(full_data, design, model)
+full_data_update <- full_diag_res$Data_updated
+full_design <- design
+full_design@response_column <- "perim_2th_effect_logTransformed"
+```
+
+Note now, none of the experimental batches or the 13 cell-lines are considered outliers or unduly influencing the final parameter estimates.
+
+```{r, results='asis'}
+cooks_plots <- full_diag_res$cooks_plots$log_scale
+cat("\n\n\n")
+for(i in 1:length(cooks_plots)) {
+  print(cooks_plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+  plot_no <- plot_no + 1
+}
+
+print("Inferred outlier groups are")
+print(diagnose_res$inferred_outlier_groups$natural_scale)
+
+```
+
+We derive an estimate of 0.027 as the mean difference in perimeter with an associated significance of 0.006 using the data from 8 experimental batches.
+
+```{r}
+full_res <- getEstimatesOfInterest(full_data_update, full_design, model, print_plots = FALSE)
+print(full_res[[1]])
+```
+
+```{r, results="asis", echo = FALSE}
+print(full_res[[2]]$plots)
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+plot_no <- plot_no + 1
+cat("\n\n\n")
+```
+
+
+
+
+# Session info
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```

@@ -42,7 +42,7 @@
 #' @return A power curve as a ggplot object or a power calculation result printed in a text file
 #'
 #' @export
-#' @examples result=calculate_power(data=RMeDPower_data1,
+#' @examples result=calculate_power(data=plate_assay_pilot_data,
 #' @examples condition_column="classification",
 #' @examples experimental_columns=c("experiment", "line"),
 #' @examples response_column="cell_size1",

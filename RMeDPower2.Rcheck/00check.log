@@ -1,0 +1,190 @@
+* using log directory ‘/Users/rthomas/Documents/RMeDPower2/RMeDPower2.Rcheck’
+* using R version 4.5.1 (2025-06-13)
+* using platform: aarch64-apple-darwin20
+* R was compiled by
+    Apple clang version 16.0.0 (clang-1600.0.26.6)
+    GNU Fortran (GCC) 14.2.0
+* running under: macOS Sonoma 14.7.6
+* using session charset: UTF-8
+* checking for file ‘RMeDPower2/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘RMeDPower2’ version ‘0.1.0’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... INFO
+Depends: includes the non-default packages:
+  'lme4', 'dplyr', 'simr', 'magrittr', 'ggplot2', 'ggtext', 'quantreg'
+Adding so many packages to the search path is excessive and importing
+selectively is preferable.
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘RMeDPower2’ can be installed ... WARNING
+Found the following significant warnings:
+  Warning: replacing previous import ‘lme4::getData’ by ‘simr::getData’ when loading ‘RMeDPower2’
+See ‘/Users/rthomas/Documents/RMeDPower2/RMeDPower2.Rcheck/00install.out’ for details.
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking ‘build’ directory ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking code files for non-ASCII characters ... WARNING
+Found the following file with non-ASCII characters:
+  R/transform_data.R
+Portable packages must use only ASCII characters in their R code and
+NAMESPACE directives, except perhaps in comments.
+Use \uxxxx escapes for other characters.
+Function ‘tools::showNonASCIIfile’ can help in finding non-ASCII
+characters in files.
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking dependencies in R code ... WARNING
+'::' or ':::' import not declared from: ‘tibble’
+Namespaces in Imports field not imported from:
+  ‘magick’ ‘tidyr’
+  All declared Imports should be used.
+Packages in Depends field not imported from:
+  ‘ggtext’ ‘quantreg’
+  These packages need to be imported from (in the NAMESPACE file)
+  for when this namespace is loaded but not attached.
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+calculate_power: no visible binding for '<<-' assignment to
+  ‘formula_str’
+calculate_power: no visible binding for global variable ‘formula_str’
+calculate_power: no visible binding for global variable ‘lower’
+calculate_power: no visible binding for global variable ‘upper’
+calculate_power: no visible global function definition for
+  ‘element_textbox_simple’
+generate_cooks_results_plots: no visible binding for global variable
+  ‘cooks_distance’
+generate_cooks_results_plots: no visible binding for global variable
+  ‘.’
+generate_cooks_results_plots: no visible binding for global variable
+  ‘exp.factor’
+generate_cooks_results_plots: no visible global function definition for
+  ‘element_textbox_simple’
+generate_model_fit: no visible binding for '<<-' assignment to
+  ‘formula_str’
+generate_model_fit: no visible binding for global variable
+  ‘formula_str’
+generate_qc_plots: no visible global function definition for ‘predict’
+generate_qc_plots: no visible binding for global variable
+  ‘model_residuals’
+generate_qc_plots: no visible global function definition for
+  ‘element_textbox_simple’
+generate_qc_plots: no visible binding for global variable ‘fitted’
+generate_qc_plots: no visible binding for global variable
+  ‘sqrt_abs_residuals’
+generate_qc_plots: no visible global function definition for
+  ‘residuals’
+generate_qc_plots: no visible binding for global variable ‘qnorm’
+generate_qc_plots: no visible binding for global variable
+  ‘response_column’
+get_residuals: no visible binding for global variable
+  ‘experimental_column1’
+get_residuals: no visible binding for global variable ‘residual’
+get_residuals: no visible binding for global variable ‘med_residual1’
+get_residuals: no visible global function definition for
+  ‘element_textbox_simple’
+ggplot_QQunif: no visible global function definition for
+  ‘element_textbox_simple’
+ggplot_residuals_vs_predictor: no visible binding for global variable
+  ‘residuals’
+ggplot_residuals_vs_predictor: no visible global function definition
+  for ‘element_textbox_simple’
+rosner_test: no visible global function definition for ‘mad’
+transform_data: no visible binding for '<<-' assignment to
+  ‘fixed_global_variable_data’
+Undefined global functions or variables:
+  . cooks_distance element_textbox_simple exp.factor
+  experimental_column1 fitted formula_str lower mad med_residual1
+  model_residuals predict qnorm residual residuals response_column
+  sqrt_abs_residuals upper
+Consider adding
+  importFrom("stats", "fitted", "mad", "predict", "qnorm", "residuals")
+to your NAMESPACE file.
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  ‘RMeDPower_data1’ ‘RMeDPower_data2’ ‘RMeDPower_data3’
+  ‘RMeDPower_data4’ ‘RMeDPower_data5’ ‘RMeDPower_data6’
+  ‘RMeDPower_data7’ ‘build_fixed_formula’ ‘build_random_formula’
+  ‘checkDots’ ‘cooks_test’ ‘ensureDHARMa’ ‘ensurePredictor’
+  ‘extract_dharma_data’ ‘generate_cooks_results_plots’
+  ‘generate_model_fit’ ‘generate_model_fit0’ ‘generate_qc_plots’
+  ‘ggplot_QQunif’ ‘ggplot_residuals_vs_predictor’ ‘rosner_test’
+Undocumented data sets:
+  ‘RMeDPower_data1’ ‘RMeDPower_data2’ ‘RMeDPower_data3’
+  ‘RMeDPower_data4’ ‘RMeDPower_data5’ ‘RMeDPower_data6’
+  ‘RMeDPower_data7’
+All user-level objects in a package should have documentation entries.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of ‘data’ directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking LazyData ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking installed files from ‘inst/doc’ ... OK
+* checking files in ‘vignettes’ ... NOTE
+Files named as vignettes but with no recognized vignette engine:
+   ‘vignettes/RMeDPower2_Class_Configuration_Guide.Rmd’
+   ‘vignettes/Tutorial.Rmd’
+(Is a VignetteBuilder field missing?)
+* checking examples ... ERROR
+Running examples in ‘RMeDPower2-Ex.R’ failed
+The error most likely occurred in:
+
+> ### Name: calculatePower
+> ### Title: calculatePower
+> ### Aliases: calculatePower
+> 
+> ### ** Examples
+> 
+> result=calculatePower(data=data, design=design, model=model, power_param=power_param)
+Error: object 'power_param' not found
+Execution halted
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... ERROR
+  Running ‘testthat.R’
+Running the tests in ‘tests/testthat.R’ failed.
+Last 13 lines of output:
+  Expected `{ ... }` to run without any errors.
+  ℹ Actually got a <subscriptOutOfBoundsError> with text:
+    subscript out of bounds
+  ── Failure ('test-utilities.R:228:7'): diagnoseDataModel handles different model types ──
+  Expected `{ ... }` to run without any errors.
+  ℹ Actually got a <subscriptOutOfBoundsError> with text:
+    subscript out of bounds
+  ── Failure ('test-utilities.R:243:7'): transform_data function works correctly ──
+  Expected `{ ... }` to run without any errors.
+  ℹ Actually got a <subscriptOutOfBoundsError> with text:
+    subscript out of bounds
+  
+  [ FAIL 9 | WARN 0 | SKIP 0 | PASS 167 ]
+  Error: Test failures
+  Execution halted
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes ... OK
+* checking re-building of vignette outputs ... OK
+* checking PDF version of manual ... OK
+* DONE
+Status: 2 ERRORs, 4 WARNINGs, 2 NOTEs

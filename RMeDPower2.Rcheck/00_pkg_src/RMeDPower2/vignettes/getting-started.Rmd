@@ -1,0 +1,87 @@
+---
+title: "Getting Started with RMeDPower2"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with RMeDPower2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+# Introduction
+
+RMeDPower2 is an R package for statistical power analysis in repeated measures experiments. It provides complete functionality to analyze data from hierarchical or crossed experimental designs, test modeling assumptions, identify outliers, estimate statistical power, and perform sample size calculations.
+
+## Installation
+
+You can install RMeDPower2 from GitHub:
+
+```{r eval=FALSE}
+# Install devtools if you haven't already
+install.packages("devtools")
+
+# Install RMeDPower2 from GitHub
+devtools::install_github("gladstone-institutes/RMeDPower2", build_vignettes = TRUE)
+```
+
+## Quick Start
+
+Here's a basic example of using RMeDPower2:
+
+```{r eval=FALSE}
+library(RMeDPower2)
+
+# Load example data
+data(RMeDPower_data1)
+
+# Define experimental design
+design <- new("RMeDesign",
+    response_column = "cell_size2",
+    condition_column = "classification",
+    experimental_columns = c("experiment", "line"),
+    condition_is_categorical = TRUE
+)
+
+# Define probability model
+model <- new("ProbabilityModel",
+    error_is_non_normal = FALSE
+)
+
+# Define power parameters
+power_param <- new("PowerParams",
+    target_columns = c("experiment"),
+    power_curve = 1,
+    nsimn = 100
+)
+
+# Step 1: Diagnose data and model assumptions
+diagnose_res <- diagnoseDataModel(RMeDPower_data1, design, model)
+
+# Step 2: Calculate power
+power_res <- calculatePower(RMeDPower_data1, design, model, power_param)
+
+# Step 3: Get parameter estimates
+estimate_res <- getEstimatesOfInterest(RMeDPower_data1, design, model)
+```
+
+## Key Features
+
+- **Experimental Design Support**: Handles nested and crossed experimental designs
+- **Power Analysis**: Simulation-based power calculations using mixed-effects modeling
+- **Outlier Detection**: Two-level outlier identification at observation and group levels
+- **Model Validation**: Comprehensive assumption testing and diagnostic visualizations
+- **Flexible Distributions**: Support for normal, binomial, Poisson, and negative binomial distributions
+
+## Next Steps
+
+- Read the [Tutorial](tutorial.html) for a complete walkthrough
+- See [Examples](examples.html) for real-world applications
+- Check the [Reference](../reference/) for detailed function documentation

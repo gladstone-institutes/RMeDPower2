@@ -1,0 +1,17 @@
+PowerParams-class       PowerParams-class
+ProbabilityModel-class
+                        ProbabilityModel-class
+RMeDesign-class         RMeDesign-class
+calculatePower          calculatePower
+calculate_lmer_estimates
+                        calculate_lmer_estimates_covariate
+calculate_power         calculate_power_covariate
+diagnoseDataModel       diagnoseDataModel
+getEstimatesOfInterest
+                        getEstimatesOfInterest
+get_model_and_data      get_model_and_data
+get_residuals           get_residuals_covariate
+readDesign              readDesign
+readPowerParams         readPowerParams
+readProbabilityModel    readProbabilityModel
+transform_data          transform_data

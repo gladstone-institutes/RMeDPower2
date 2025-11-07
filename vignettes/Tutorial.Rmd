@@ -66,7 +66,7 @@ The first step is to load RMeDPower2 and read-in the input data as a data frame.
 ```{r results='hide'}
 suppressPackageStartupMessages(library(RMeDPower2))
 options(warn = -1)
-data <- RMeDPower_data1
+data <- plate_assay_pilot_data
 ```
 
 Example data has experiment, line as experience columns, classification as the condition column, and cell size as the response column.
@@ -278,7 +278,7 @@ The next step is to read the data and perform data distribution diagnostics, ass
 First, we will read the data from the package and json files with specified parameters:
 
 ```{r}
-data <- RMeDPower_data1
+data <- plate_assay_pilot_data
 design <- readDesign(paste0(template_dir,"design_cell_assay.json"))
 model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
 power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
@@ -1112,7 +1112,7 @@ First, a user can assess how increasing the number of independent experiments af
 knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part5.png")
 ```
 
-In the code that tests power using the example data 'RMeDPower_data1', this scenario can be simulated by setting 'target_columns' to 'line' and 'levels' to 1 where 'line' corresponds to the cell line. The 'condition_column' of the data corresponds to 'classification' indicating the cell state, and there are two experimental variables: 'experiment' and 'line'. Since the same cell line may appear in multiple experiments,  "line" is treated as "crossed_column". "cell_size2" is used as 'response_column' for the simulation (Figure \@ref(fig:Sim1)).
+In the code that tests power using the example data 'plate_assay_pilot_data', this scenario can be simulated by setting 'target_columns' to 'line' and 'levels' to 1 where 'line' corresponds to the cell line. The 'condition_column' of the data corresponds to 'classification' indicating the cell state, and there are two experimental variables: 'experiment' and 'line'. Since the same cell line may appear in multiple experiments,  "line" is treated as "crossed_column". "cell_size2" is used as 'response_column' for the simulation (Figure \@ref(fig:Sim1)).
 
 ```{r}
 
@@ -1126,7 +1126,7 @@ model <- readProbabilityModel(paste0(template_dir,"prob_model_sim1.json"))
 power_param <- readPowerParams(paste0(template_dir,"power_param_sim1.json"))
 
 ##filter out the top 5% of observations
-RMeDPower_data1 %<>% filter(cell_size2 < quantile(cell_size2, 0.95))
+plate_assay_pilot_data %<>% filter(cell_size2 < quantile(cell_size2, 0.95))
 
 print(design)
 print(model)
@@ -1137,7 +1137,7 @@ print(power_param)
 
 The first step involves running a diagnosis of the data and the model.
 ```{r}
-diagnose_res <- diagnoseDataModel(RMeDPower_data1, design, model)
+diagnose_res <- diagnoseDataModel(plate_assay_pilot_data, design, model)
 design_update <- design
 data_update <- diagnose_res$Data_updated
 print(colnames(data_update))
@@ -1230,7 +1230,7 @@ Our power simulations depend on the variance components estimated from the input
 $$
 ICC_i=\frac{V_i}{∑_{j∈S}V_i+e}
 $$                                                                                                                                                             
- where V_i represents the variance of the random effect linked to experimental variable (e.g., experimental batch, plate or cell-line) i, and epsilon represents the variance of the residual error. S represents all the modeled sources of variability of the response under consideration. We will test this scenario using the example RMeDPower_data2 with only single experiment and cell line. To test power in scenarios with varying number of experiments, we set the ‘icc’ parameter to 0.8, 0.05, 0.05.
+ where V_i represents the variance of the random effect linked to experimental variable (e.g., experimental batch, plate or cell-line) i, and epsilon represents the variance of the residual error. S represents all the modeled sources of variability of the response under consideration. We will test this scenario using the example RMeDPower_data2 with only single experiment and cell line. To test power in scenarios with varying number of experiments, we set the 'icc' parameter to 0.8, 0.05, 0.05.
 
 ```{r}
 
@@ -1253,7 +1253,7 @@ print(power_param)
 ```{r}
 
 ##calculate power
-power_res <- calculatePower(RMeDPower_data2, design, model, power_param)
+power_res <- calculatePower(plate_assay_pilot_data_wo_repeats, design, model, power_param)
 
 ```
 

@@ -29,7 +29,7 @@
 #' @return A linear mixed model result
 #'
 #' @export
-#' @examples result=calculate_lmer_estimates(data=RMeDPower_data1,
+#' @examples result=calculate_lmer_estimates(data=plate_assay_pilot_data,
 #' @examples condition_column="classification",
 #' @examples experimental_columns=c("experiment", "line"),
 #' @examples response_column="cell_size1",

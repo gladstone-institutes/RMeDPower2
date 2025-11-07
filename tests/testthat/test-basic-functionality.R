@@ -18,10 +18,10 @@ test_that("S4 classes are defined", {
 })
 
 test_that("Example data is available", {
-  expect_true(exists("RMeDPower_data1"))
-  data("RMeDPower_data1", envir = environment())
-  expect_true(is.data.frame(RMeDPower_data1))
-  expect_true(nrow(RMeDPower_data1) > 0)
+  expect_true(exists("plate_assay_pilot_data"))
+  data("plate_assay_pilot_data", envir = environment())
+  expect_true(is.data.frame(plate_assay_pilot_data))
+  expect_true(nrow(plate_assay_pilot_data) > 0)
 })
 
 test_that("Basic S4 class creation works", {

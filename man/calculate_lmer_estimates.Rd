@@ -59,7 +59,7 @@ This function performs a (generalized) linear mixed model analysis using (g)lmer
 Note: The current version does not accept categorical response variables, sample size parameters smaller than the observed samples size
 }
 \examples{
-result=calculate_lmer_estimates(data=RMeDPower_data1,
+result=calculate_lmer_estimates(data=plate_assay_pilot_data,
 condition_column="classification",
 experimental_columns=c("experiment", "line"),
 response_column="cell_size1",

@@ -1,0 +1,124 @@
+
+R version 4.5.1 (2025-06-13) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "RMeDPower2"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('RMeDPower2')
+Loading required package: lme4
+Loading required package: Matrix
+Loading required package: dplyr
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Loading required package: simr
+
+Attaching package: ‘simr’
+
+The following object is masked from ‘package:lme4’:
+
+    getData
+
+Loading required package: magrittr
+Loading required package: ggplot2
+Loading required package: ggtext
+Loading required package: quantreg
+Loading required package: SparseM
+
+Attaching package: ‘SparseM’
+
+The following object is masked from ‘package:Matrix’:
+
+    det
+
+Warning: replacing previous import ‘lme4::getData’ by ‘simr::getData’ when loading ‘RMeDPower2’
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("PowerParams-class")
+> ### * PowerParams-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: PowerParams-class
+> ### Title: PowerParams-class
+> ### Aliases: PowerParams-class
+> 
+> ### ** Examples
+> 
+> power_param=new("PowerParams")
+> 
+> 
+> 
+> cleanEx()
+> nameEx("ProbabilityModel-class")
+> ### * ProbabilityModel-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: ProbabilityModel-class
+> ### Title: ProbabilityModel-class
+> ### Aliases: ProbabilityModel-class
+> 
+> ### ** Examples
+> 
+> model=new("ProbabilityModel")
+> 
+> 
+> 
+> cleanEx()
+> nameEx("RMeDesign-class")
+> ### * RMeDesign-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: RMeDesign-class
+> ### Title: RMeDesign-class
+> ### Aliases: RMeDesign-class
+> 
+> ### ** Examples
+> 
+> design=new("RMeDesign")
+> 
+> 
+> 
+> cleanEx()
+> nameEx("calculatePower")
+> ### * calculatePower
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: calculatePower
+> ### Title: calculatePower
+> ### Aliases: calculatePower
+> 
+> ### ** Examples
+> 
+> result=calculatePower(data=data, design=design, model=model, power_param=power_param)
+Error: object 'power_param' not found
+Execution halted

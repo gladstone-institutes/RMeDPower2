@@ -28,7 +28,7 @@
 #'
 #' @export
 #'
-#' @examples result=get_residuals_covariate(data=RMeDPower_data1,
+#' @examples result=get_residuals_covariate(data=plate_assay_pilot_data,
 #' @examples condition_column="classification",
 #' @examples experimental_columns=c("experiment", "line"),
 #' @examples response_column="cell_size1",

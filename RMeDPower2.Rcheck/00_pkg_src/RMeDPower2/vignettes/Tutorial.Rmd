@@ -1,0 +1,1196 @@
+---
+title: '*RMeDPower2*: helping design and analyses of data from repeated measures experiments'
+author:
+- name: "Min-Gyoung Shin"
+  affiliation: Gladstone Institutes
+  email: mingyoung.shin@gladstone.ucsf.edu
+- name: Reuben Thomas
+  affiliation: Gladstone Institutes
+  email: reuben.thomas@gladstone.ucsf.edu
+package: RMeDPower
+output:
+  html_document
+abstract: "Biomedical research very often involves data generated from repeated measures
+  experiments. RMeDPower2 is an R package that provides complete functionality to
+  analyse data coming from repeated measures experiments, i.e., where one has repeated
+  measures from the same biological/independent units or samples. RMeDPower2 helps
+  test the modeling assumptions one makes, identify outlier observations, outlier
+  units at different levels of the design, estimates statistical power or perform
+  sample size calculations, estimate parameters of interest and also to visualize
+  the association being tested. The functionality is limited to testing associations
+  of one predictor (continuous or categorical, e.g., disease status or brain pathology)
+  along with one another covariate (e.g., gender status) in the context of hierarchical
+  or crossed experimental designs. This vignette illustrates the use of this package
+  in multiple contexts relevant to biomedical research. \n\nRMeDPower2 defines the
+  experimental design for the data, probability model of the data generating distribution
+  and necessary parameters required for sample size calculation using convenient S4
+  class objects. It uses these objects in one framework that brings together the functionality
+  implemented in multiple R packages - lme4 (implementation of linear mixed effects
+  models), influence.ME (identification of outlier units), EnvStats (identification
+  of outlier observations), DHARMa (testing of modeling assumptions for non-normal
+  distributions), simr (sample-size calculations) and tidyverse (data manipulation
+  and visualization).\n"
+vignette: "%\\VignetteIndexEntry{Vignette Title}\n%\\VignetteEngine{knitr::rmarkdown}\n%\\VignetteEncoding{UTF-8}\n"
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+options(warn = -1)
+```
+
+# Getting started
+```{r echo=FALSE}
+setwd("~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial/")
+template_dir="~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial//tutorial_session3/"
+```
+## Installing `RMeDPower2`
+`RMeDPower2` can be installed using the following commands
+```{r eval=FALSE}
+install.packages("devtools")
+library(devtools)
+install_github('gladstone-institutes/RMeDPower2@july25Rev', build_vignettes=TRUE, force = TRUE)
+```
+
+## Quick tutorial
+The workflow can be accomplished in 5 main steps as described in the sections below (1.2.1-.2.5).
+
+### Load libraries and read input data
+The first step is to load RMeDPower2 and read-in the input data as a data frame. This is accomplished by the following commands:
+
+```{r results='hide'}
+suppressPackageStartupMessages(library(RMeDPower2))
+options(warn = -1)
+data <- RMeDPower_data1
+```
+
+Example data has experiment, line as experience columns, classification as the condition column, and cell size as the response column.
+
+```{r}
+knitr::kable(data[1:5,] )
+```
+
+
+### Specify design, model and power parameters
+
+The following set of commands allows users to specify parameters for experimental design, assumed probability models and distributions, and power simulations. 
+
+1. Use a text editor to modify the template jsonfile capturing the design for the data and read in this file.
+
+```{r}
+design <- readDesign(paste0(template_dir,"design_cell_assay.json"))
+```
+
+2. Use a text editor to modify the template jsonfile capturing the error probability model and read in this file.
+
+```{r}
+model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+```
+
+3. Use a text editor to modify the template jsonfile capturing the power parameters and read in this file.
+
+```{r}
+power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+```
+
+
+### Diagnose data and model
+
+The next set of commands will allow the user to evaluate the datatype, examine if the model is appropriate and identity outliers. 
+
+1. To diagnose the data and model, test model assumptions, identify outlier observations, outlier biological/independent units.
+
+```{r eval=FALSE}
+diagnose_res <- diagnoseDataModel(data, design, model)
+data_update. = diagnose_res$Data_updated
+```
+
+2. Modify design objects (e.g., remove outliers), model objects (e.g., change probability distribution assumption) if needed based on output of step 1 above.
+
+```{r eval=FALSE}
+diagnose_res_update <- diagnoseDataModel(data_update, design_update, model_update)
+```
+
+3. Repeat steps 1 and 2 until the models assumptions are met. For example, users can choose to remove outlier-experiments so that the distribution is close to normal.
+
+
+### Statistical power estimation
+
+This section of code will allow the user to run sample-size calculations from the pilot input data. 
+
+```{r eval=FALSE}
+power_res <- calculatePower(data, design, model, power_param)
+```
+
+### Estimate parameters of interest
+
+Once we have ran the models, the user can estimate and visualize parameters of interest in order to investigate the association between response variable and condition variables.
+
+```{r eval=FALSE}
+estimate_res <- getEstimatesOfInterest(data, design, model)
+```
+
+
+## Input data
+
+Users will have to ensure that the input data is organized in a format that will allow RMedPower2 to read in the data. The data should be structured in a table with rows representing the  individual observations or responses and columns representing not only the corresponding explanatory variables but also other variables that capture the hierarchical or crossed design of how the data was generated. It is important that the columns have names or headers - these column names will be used to define the relevant S4 class objects. 
+
+For example, the next below illustrates the input data from a cellular assay where each of the 2,588 observations represents a measurement of size (`cell_size2`) of a single cell, from a given cell line (`line`) that is either from a control or disease condition (`classification`) and is measured in a given experimental batch (`experiment`).
+
+```{r echo=FALSE} 
+suppressPackageStartupMessages(require(dplyr)) 
+suppressPackageStartupMessages(library(RMeDPower2))
+template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/cell_assay_data/"
+
+data <- read.csv(paste0(template_dir, "cell_size_data.csv"), header = T) %>%
+  select(experiment, line, classification, cell_size2) %>%
+  mutate(experiment = as.factor(experiment), line = as.factor(line), classification = as.factor(classification))
+
+str(data)
+```
+
+
+## Three key classes of `RMeDPower2`
+
+Here, users will learn how to set up parameters for experimental designs, probability and distributional assumptions, and power simulations.
+
+
+### `RMeDesign` S4 class
+
+The underlying design for the data will be stored in an object (R data structure with variables) of this class. The slots of this class are: 
+
+1. `response_column`: character that is the column name in the input data table that captures the responses or individual observations. This has to be set by the user.
+
+2. `covariate`: character that is the column name in the input data table that captures the covariate information. This will be used as a fixed effect in the mixed effects model of the data. This slot is set to `NULL` if there are no covariates.
+
+3. `condition_column`: character that is the column name in the input data table that captures the predictor/independent variable information. This will be used as a fixed effect in the mixed effects model of the data.This has to be set by the user.
+
+4. `experimental_columns`: character vector that represents the column names in the input data table that captures the experimental variables of the design. These will be used as random effects in the mixed effects model of the data. The order of the names in this character vector is important. The first element captures the top hierarchical level of the design, the second element the next level of the hierarchy and so on. The hierarchy is explicitly modeled in the specification of the mixed effects models. The hierarchy will not be modeled for variables specified in the `crossed_columns` slot (see below). This has to be set by the user. 
+
+5. `condition_is_categorical`: logical value equal to TRUE if the variable in the `condition_column` is to be considered as a categorical variable and is equal to FALSE otherwise. Defaults to TRUE.
+
+6. `crossed_columns`: character vector that represents the column names in the input data table that are a subset of the values in `experimental_columns` representing crossed factors. Defaults to `NULL`.
+
+7. `total_column`: character that is the column name in the input table that will be used to offset values in the mixed effects models. Useful for modeling count data. Defaults to `NULL`.
+  
+8. `outlier_alpha`: numeric value that is the p-value threshold used to identify outlier observations. Defaults to 0.05. 
+
+9. `na_action`: character equal to _complete_ or _unique_. To be used in the context where the input data has multiple responses that will each be sequentially modeled. For example, from a single set of data, a user is gathering numerous observations.  Here we refer to _complete_ in the scenario  where the observed outliers that identified for one response will also be identified as outliers for all the other responses while  _unique_ refers to the situation where the outlier observations identified for one response will only be used for the model of that particular response. Defaults to _complete_. 
+
+10. `include_interaction`: Whether to include condition * covariate interaction
+
+11. `random_slope_variable`: Variable for random slopes (typically "condition_column")
+
+12.  `covariate_is_categorical`: Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
+
+
+To create an object of class RMeDesign, the following code is used:
+
+```{r}
+design <- new("RMeDesign")
+print(design)
+```
+
+In practice, for a given data set the design can be input from a jsonfile. The user can use a text editor to modify the `design_template.json` file available with the package to input the relevant information based on the column names of the input data. For example, the design for the cell size data referred to above can be read using the function `readDesign`.
+
+```{r echo=FALSE}
+template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/cell_assay_data/"
+```
+```{r}
+design <- readDesign(paste0(template_dir,"design_cell_assay.json"))
+print(design)
+```
+
+### `ProbabilityModel` S4 class
+The error probability distribution is specified by two slots in objects of the `ProbabilityModel` class.
+
+1. `error_is_non_normal`: Is the logical value that is TRUE if the underlying probability distribution is not assumed to be Normal and is FALSE otherwise.
+
+2. `family_p`: This character value specifies the probability distribution. Accepted values are _poisson_(`=poisson(link="log")`), _binomial_(`=binomial(link="logit")`), _bionomial_log_(`=binomial(link="log")`), _Gamma_log_(`=Gamma(link="log")`), _Gamma_(`=Gamma(link="inverse")`), _negative_binomial_. Defaults to `NULL`.
+
+```{r}
+model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+print(model)
+```
+
+### `PowerParams` S4 class
+
+The parameters described below are necessary for sample-size estimation and are stored in the following slots of the `PowerParams` class.
+
+1. `target_columns`: This describes the character vector with column names of experimental variables for which the sample-size estimation is to be performed
+2. `power_curve`: This is numeric 1 or 0. 1: Power simulation over a range of sample sizes or levels. 0: Power calculation over a single sample size or a level. Defaults to 1.
+3. `nsimn`: The number of simulations to estimate power. Defaults to 10.
+4. `levels`: numeric 1 or 0. 1: Amplify the number of corresponding target parameter. 0: Amplify the number of samples from the corresponding target parameter, ex) If target_columns = c("experiment","cell_line") and if you want to expand the number of experiment and sample more cells from each cell line, set levels = c(1,0).
+5. `max_size`: Maximum levels or sample sizes to test. Default if set to `NULL` equals the current level or the current sample size x 5. ex) If max_levels = c(10,5), it will test upto 10 experiments and 5 cell lines.
+6. `alpha`: Type I error for sample-size estimation. Defaults to 0.05.
+7. `breaks`: Levels /sample sizes of the variable to be specified along the power curve. Default if set to NULL equals max (1, round (the number of current levels / 5)).
+8. `effect_size`: If you know the effect size of your condition variable, the effect size can be provided as a parameter. Default set to `NULL`, that is, if the effect size is not provided, it will be estimated from your data.
+9. `icc`: Intra-class coefficients for each of the experimental variables. Used only in the situation when `error_is_non_normal=FALSE` and when the data does not allow variance component estimation.
+
+```{r}
+power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+print(power_param)
+```
+
+## Three key functions of `RMeDPower2`
+
+The following are main functions to be used by users to manipulate data, estimate power, and perform association analysis.
+
+### `diagnoseDataModel(data, design, model)` function
+
+This set of code, tests the model assumptions by using quantile-quantile, residuals vs fitted and residuals versus predicted plots. If needed, the code also transforms the responses if feasible and identifies outlier observations and also outlier experimental units.
+
+### `calculatePower(data, design, model, power_param)` function
+
+This set of code performs sample-size calculations for given experimental design/target variable.
+
+### `getEstimatesOfInterest(data, design, model)` function
+This string estimates parameter of interest and also plots the resulting association with predictor of interest using residuals from the model that removes the effects of the modeled experimental variables.
+
+An overview of the anticipated usage of the functionality of this package is shown in the figure below.
+
+```{r flowchart, echo=FALSE, fig.align = "center", fig.cap="Flowchart illustrating the functionality of the package", fig.small=TRUE, echo=FALSE}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/Figure1.png")
+```
+
+# Application examples
+Here we illustrate the application of RMeDPower2 using data derived from a range of domains in biomedical research.
+```{r applications, echo=FALSE, fig.align = "center", fig.cap="Flowchart illustrating the functionality of the package", fig.small=TRUE, echo=FALSE}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/Figure12.png")
+```
+
+
+## Plate assays
+
+iPSC lines from control and patient derived iPSCs from sALS patients were obtained through the Answer ALS (AALS) consortium36 . AALS is the largest repository of ALS patient samples, and contains publicly available patient-specific iPSCs and multi-OMIC data from motor neurons derived from those iPSCs—including RNA Seq, proteomics and whole genome sequence data— all of which is matched with longitudinal clinical data (https://dataportal.answerals.org/home)36. 
+
+
+We used 6 control lines and 4 sALS lines and differentiated each line into motor neurons (iMNs). iMNs were  transduced with a morphology marker and imaged on day ~25 using RM37-45 as previously
+described36. Images were processed and the soma size of neurons were captured using contour ellipse46 function adapted for use in python (https://www.python.org/).
+
+The next step is to read the data and perform data distribution diagnostics, association analysis, and power simulation.
+
+First, we will read the data from the package and json files with specified parameters:
+
+```{r}
+data <- RMeDPower_data1
+design <- readDesign(paste0(template_dir,"design_cell_assay.json"))
+model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+```
+
+A visualization of the distribution of cell_size2 across experiments and cell-lines as box-plots and also in terms of empirical cumulative distribution plots suggests the observations have an extremely long tail. We will therefore filter out the top 5 percent of the observations to ensure the results are not skewed by these extreme observations. We also see that the observations in experiment 3 are in general lower than those in the other two experiments.
+```{r echo=FALSE}
+print(ggplot(data, aes(x=experiment, y=cell_size2, color = line)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(text = element_text(size = 16)))
+
+print(ggplot(data, aes(x=cell_size2, color = experiment)) +
+  stat_ecdf() +
+  theme_bw() +
+  theme(text = element_text(size = 16)))
+```
+
+```{r}
+data %<>% filter(cell_size2 < quantile(cell_size2, 0.95))
+```
+
+We would like to estimate the difference in the mean cell-sizes across all the observations derived from all experimental batches between the ALS disease lines and the control cell lines (modeled by the _classification_ variable). The first step is run diagnosis on the data and model using the 'diagnoseDataModel' function. The Q-Q plot of the residuals of the LMM model fit to the log-transformed cell-sizes suggests a better fit than the one fit to the cell sizes in the natural scale , assuming that the data generating distribution is based on the Normal distribution. Therefore, we will hereafter model the log-transformed cell sizes. The reasonably horizontal best fit lines for the residuals from this versus the fitted values,  and the square-root of the absolute values of the residuals versus the fitted values, Figure 7e suggest both the LMM model assumptions of linearity and homoscedasticity are reasonable. There were no identified individual outlier observations based on the application of the Rosner’s test to the distribution of the residuals in.
+
+
+```{r}
+diagnose_res <- diagnoseDataModel(data, design, model)
+```
+The *diagnoseDataModel* function fits  at least one model representing one in the natural scale of the response of interest. Additionally, if individual observations are inferred as outliers using the rosner's test applied to the residuals of the fitted model then another model is fit without these outlier observations. In addition, if the assumed probability distribution of the residuals of the model is normal then a further additional model are fit using logarithm (log) transformed responses and another one if there are outliers in the log-transformed model fit.
+
+To identify all the models fit to the data
+```{r}
+print(diagnose_res$models)
+```
+We see that two models were fit to this data - one in the natural scale of cell size and the other in the logarithmic scale. No individual observations were identified as outliers in each of these models.
+
+Let us look the basic QC plots for the models fit in the natural scale of the responses.
+```{r output-plots1, results='asis'}
+plot_no <- 1
+plots <- diagnose_res$plots_info$natural_scale$plots
+captions <- diagnose_res$plots_info$natural_scale$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+```
+
+Now, let us look at the same set of QC plots for models on the log-transformed responses.
+```{r output-plots2, results='asis'}
+plots <- diagnose_res$plots_info$log_scale$plots
+captions <- diagnose_res$plots_info$log_scale$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+
+```
+
+We see normality assumption is better met with the log-transformed model (Figure 6) compared to the model in the natural scale (Figure 1).
+
+The code also outputs Cook's distance measures for each experiment and cell-line that is intended to capture how influential each of these were in determining the final parameter estimates in the LMM model.
+
+```{r}
+##see which experimental columns correspond to which variable
+print(design@experimental_columns)
+## for each experimental column
+for(i in 1:length(diagnose_res$models)) {
+  for(j in 1:length(design@experimental_columns)){
+    print(paste0("Cooks distance estimates for model ", diagnose_res$models[i], " and experimental factor = ", design@experimental_columns[j]))
+    print(diagnose_res$cooks_result[[i]][[j]])
+  }
+}
+```
+
+The observations in experimental batch 3 and those for cell lines 4 and 9 were identified as outliers using a 4/n (where n is the number of replicates, n=3 for experimental batches and n=10 for cell-lines) threshold applied to the estimates of Cook’s distance for the estimated model parameters. We will not do anything further with these estimates, given the relatively small number of experiments and cell-lines for this data. In other situations, where we have a larger number of replicates and have additional reasons to believe that the outliers are real and have nothing to do with the biology being studied (example: the microscope was not set correctly for a given experimental batch), we could decide to drop the identified outlier units.
+
+ We will use the log transformed cell_size2 data for parameter estimation using the following commands. 
+
+```{r}
+design_update <- design
+data_update <- diagnose_res$Data_updated
+print(colnames(data_update))
+design_update@response_column <-  "cell_size2_logTransformed"
+estimate_res <- getEstimatesOfInterest(data_update, design_update, model)
+```
+
+The median residual boxplot shows the differences in the distribution of the response variable for the two conditions.
+
+```{r}
+##print model summary output
+print(estimate_res[[1]])
+```
+
+As a result of linear mixed model-based association analysis, the response variable was found to be significantly associated with the condition variable with an estimate of 0.03.
+
+We can also estimate the statistical needed to estimate the observed differences in mean perimeter across 15 experimental batches
+
+```{r}
+power_param@max_size <- 15
+power_res <- calculatePower(data_update, design_update, model, power_param)
+print(power_res$plots)
+```
+
+The power curve shows that at least eight or more experimental batches are required to achieve a power of 80% or greater.
+
+Accordingly, we will now load data from 8 experimental batches and estimate our parameter of interest.
+
+```{r}
+full_data <- read.table("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/OLD_Parts/simulated_perim.txt", header = TRUE)
+
+##filter the top 5% of the observations
+full_data %<>% filter(perim_2th_effect < quantile(perim_2th_effect, 0.95))
+
+design@response_column <- "perim_2th_effect"
+design@condition_column <- "classif"
+full_diag_res <- diagnoseDataModel(full_data, design, model)
+full_data_update <- full_diag_res$Data_updated
+full_design <- design
+full_design@response_column <- "perim_2th_effect_logTransformed"
+```
+
+Note now, none of the experimental batches or the 13 cell-lines are considered outliers or unduly influencing the final parameter estimates.
+
+```{r}
+##see which experimental columns correspond to which variable
+print(design@experimental_columns)
+## for each experimental column
+for(i in 1:length(diagnose_res$models)) {
+  for(j in 1:length(design@experimental_columns)){
+    print(paste0("Cooks distance estimates for model ", full_diag_res$models[i], " and experimental factor = ", design@experimental_columns[j]))
+    print(full_diag_res$cooks_result[[i]][[j]])
+  }
+}
+```
+
+We derive an estimate of 0.027 as the mean difference in perimeter with an associated significance of 0.006 using the data from 8 experimental batches.
+
+```{r}
+full_res <- getEstimatesOfInterest(full_data_update, full_design, model)
+print(full_res[[1]])
+```
+## Single-cell RNA-seq assays
+
+Here we will use data derived from the single-nuclei RNA-seq experiments performed in Koutsodendris et al[]. paper One of the goals in these experiments was to assess the effect of the APOE gene isoform on brain pathology in a mouse model of Alzheimer’s Disease (AD). Specifically, the *APOE4* haplotype is a known risk factor for AD compared to those with the *APOE3* gene isoform. Koutsodendris et a., investigates the role of expression of neuronal *APOE4* expression in the development of disease pathology in the *APOE4* knock-in mouse model. The scRNA seq dataset consists of over 1000 cells derived from the hippocampus brain region across 4 mice harboring the human *APOE4* gene knocked-in the mouse *Apoe* locus and 4 other mice (called E4-KI-Syn1-Cre) with the human *APOE4* gene also knocked-in in the same mouse. However, the *APOE4* expression in these mice is knocked out specifically in the neurons. The single cell data allowed the identification of multiple clusters or cell-types including cluster 7 representing a group of excitatory neurons.
+
+
+### Cell-type/cluster associations
+
+One typical use of scRNA seq data is clustering analysis. First, we can ask whether the proportion of nuclei derived from APOE4-KI mice differs from the proportion of nuclei derived from APOE4-KI-Syn1-Cre mice in cluster 7. We want to examine the proportion of cells in each mouse assigned cluster 7 by testing whether there were differences in the log odds of cluster membership in cluster 7 between APOE4-KI mice and APOE4-KI-Syn1-Cre. The data consists of the number of nuclei per animal present in the cluster and also the total number of nuclei that were isolated from this animal.
+
+#### Associations with genotype
+The following commands load data and set parameters to specify the experimental design, distribution information, and power simulation conditions.
+
+The first few lines of data display cell meta information.
+
+```{r}
+template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/single_cell_data/celltype_proportions_with_genotype/"
+data <- read.csv(paste0(template_dir, "apoe_associated_cell_proportions.csv"), header = T)
+head(data)
+```
+
+The following command reads parameters from json files and print corresponding objects, allowing us to check which parameters have been assigned.
+
+```{r}
+##load the design
+design <- readDesign(paste0(template_dir,"design_celltype1.json"))
+design@covariate_is_categorical <- TRUE
+design@include_interaction <- FALSE
+print(design)
+
+##load the probability model
+model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+print(model)
+
+##load the relevant power parameters
+power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+print(power_param)
+```
+
+
+Now let's use the 'diagnoseDataModel' function to diagnose the data quality and distributional assumptions of the model.
+
+```{r}
+diagnose_res <- diagnoseDataModel(data, design, model)
+```
+
+To identify all the models fit to the data. There were no outliers identified so only one model fit to natural scale is fit.
+```{r}
+print(diagnose_res$models)
+```
+
+```{r output-plots3, results='asis'}
+plots <- diagnose_res$plots_info$natural_scale$plots
+captions <- diagnose_res$plots_info$natural_scale$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+```
+
+We can now estimate differences in the log odds of cluster membership in cluster 7 between APOE4-KI mice and APOE4-KI-Syn1-Cre using the function 'getEstimatesOfInterest'.
+
+```{r}
+estimate_res <- getEstimatesOfInterest(data, design, model)
+print(estimate_res[[1]])
+```
+
+And estimate whether or not statistical power we have to estimate the given observed association with varying number of mice per group.
+
+```{r eval=TRUE}
+print(power_param@target_columns)
+power_res <- calculatePower(data, design, model, power_param)
+print(power_res$plots)
+```
+
+Alternatively, we may believe that effect of genotype on the cluster membership may be cluster specific. Therefore we would include an interaction term in the model
+
+```{r}
+design@include_interaction <- TRUE
+```
+The estimates after including the interaction term could be recovered by,
+
+```{r}
+estimate_res_w_interaction <- getEstimatesOfInterest(data, design, model)
+print(estimate_res_w_interaction[[1]])
+
+```
+We don't see a significant interaction of genotype with sex given that the interaction term is not significantly different from zero (p-value = 0.446)
+
+#### Associations with hippocampus volume
+Next, we can first ask the question whether or not the proportion of nuclei derived from each of the  mice are associated with their hippocampus volumes. Note, more neuro-degeneration is linked to smaller hippocampus volumes. More exactly, we want to test whether or not there is a change in the log odds of cluster membership in cluster 7 corresponding to a unit change in the hippocampus volume. The above data provided includes the hippocampus volume for each mouse.
+
+```{r}
+##Associations of cell-type proportions with hippocampus volume
+design@condition_column = "Hippocampus_Vol_mm"
+design@condition_is_categorical = FALSE
+design@experimental_columns = c("animal_model", "sample_id")
+
+diagnose_res <- diagnoseDataModel(data, design, model)
+
+```
+
+To identify all the models fit to the data. There were outliers identified so two models were fit with and without outliers.
+```{r}
+print(diagnose_res$models)
+```
+
+Let us look the basic QC plots for the models fit in the natural scale of the responses.
+```{r output-plots4, results='asis'}
+plots <- diagnose_res$plots_info$natural_scale$plots
+captions <- diagnose_res$plots_info$natural_scale$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+```
+
+Let us also now look at the QC plots after removing the identified outliers
+```{r output-plots5, results='asis'}
+plots <- diagnose_res$plots_info$natural_scale_wo_outliers$plots
+captions <- diagnose_res$plots_info$natural_scale_wo_outliers$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+```
+Note, there are only two levels for the animal model variable. So the cook's distance estimates are not evaluated for this variable.
+```{r}
+##see which experimental columns correspond to which variable
+print(design@experimental_columns)
+## for each experimental column
+for(i in 1:length(diagnose_res$models)) {
+  for(j in 1:length(diagnose_res$cooks_result[[i]])){
+    print(paste0("Cooks distance estimates for model ", diagnose_res$models[i], " and experimental factor = ", design@experimental_columns[j]))
+    print(diagnose_res$cooks_result[[i]][[j]])
+  }
+}
+```
+
+
+
+We can also estimate the parameter of interest - log odds ratio of cluster 7 membership per unit increase in hippocampus volume of associated mouse.
+
+```{r}
+estimate_res <- getEstimatesOfInterest(data, design, model)
+print(estimate_res[[1]])
+```
+
+And calculate the statistical power to estimate this association for different numbers of animals per group.
+
+```{r eval=TRUE}
+power_plots <- calculatePower(data, design, model, power_param)
+```
+```{r}
+for (i in seq_along(power_plots)) {
+  print(power_plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, captions[i]))
+  plot_no <- plot_no + 1
+}
+```
+### Gene expression associations with genotype
+We will now estimate the association of the expression levels of the Snhg11 gene with genotype among cells in cluster 7 in the same data set. We will now load the raw counts for this gene and create the relevant RMeDesign, ProbabilityModel and PowerParams objects.
+
+```{r}
+template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/single_cell_data/gene_expression_with_genotype/"
+
+data <- read.csv(paste0(template_dir, "raw_counts_Snhg11_gene_cluster_7_snRNAseq_Koutsodendris_et_al_2023.csv"), header = T)
+# data %<>% mutate(genotype = gsub(" ", "-", genotype))
+# data %>% write.csv(., paste0(template_dir, "raw_counts_Snhg11_gene_cluster_7_snRNAseq_Koutsodendris_et_al_2023.csv"), row.names = F)
+head(data)
+
+design <- readDesign(paste0(template_dir,"design_gene_expression.json"))
+print(design)
+design@covariate_is_categorical <- TRUE
+design@include_interaction <- FALSE
+
+model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+print(model)
+
+power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+print(power_param)
+```
+
+Note, we will assume the underlying probability distribution for the counts is negative binomial and will control for differences in the sequencing depths or the total reads each cell receives using `library_size`.
+
+Diagnosis of the data and the model
+```{r}
+diagnose_res <- diagnoseDataModel(data, design, model)
+```
+To identify all the models fit to the data. There were outliers identified so two models were fit in the natural scale.
+```{r}
+print(diagnose_res$models)
+```
+
+Let us look the basic QC plots for the models fit in the natural scale of the responses.
+```{r output-plots6, results='asis'}
+plots <- diagnose_res$plots_info$natural_scale$plots
+captions <- diagnose_res$plots_info$natural_scale$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+```
+
+Let us also now look at the QC plots after removing the identified outliers
+```{r output-plots7, results='asis'}
+plots <- diagnose_res$plots_info$natural_scale_wo_outliers$plots
+captions <- diagnose_res$plots_info$natural_scale_wo_outliers$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+```
+
+We don't see a good fit to the assumption of negative binomial distribution based on the Quantile-Quantile plots suggesting that GLMM models for single cell RNA-seq data, even though they have been proposed as alternatives to dealing with the issue of pseudo-replication, are not good models to assess for differential expression.
+
+Estimate log-fold change of the Snhg11 gene with genotype.
+```{r}
+estimate_res <- getEstimatesOfInterest(data, design, model)
+print(estimate_res[[1]])
+```
+We can also perform a power analyses to detect a log(2) fold-change in this gene.
+
+```{r}
+power_param@effect_size <- log(2)
+power_res <- calculatePower(data, design, model, power_param)
+print(power_res$plots)
+```
+
+## Behavior assays
+Morris Water Maze (MWM) is an assay used to test spatial learning in animal models of diseases like Alzheimer's disease. The time recorded by each mouse to reach a target region (in the MWM) over multiple trials denoted as latency is the response of interest. Mouse models deficient in spatial learning would demonstrate an increased latency to reach a target region (invisible platform in Figure \@ref(fig:MWM)) across the learning trials.
+
+
+
+```{r}
+template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/behavior_data/"
+data <- read.csv(paste0(template_dir, "MWM_data.csv"), header = T)
+# data %<>% mutate(trial = sapply(Trial, function(x) gsub("LATENCY_", "", x) %>% as.numeric())) %>% select(-Trial)
+# data %>% write.csv(paste0(template_dir, "MWM_data.csv"), row.names = F)
+design <- readDesign(paste0(template_dir,"design_behavior.json"))
+design@covariate <- "trial"
+design@covariate_is_categorical <- FALSE
+design@include_interaction <- FALSE
+model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+
+
+```
+
+```{r}
+diagnose_res <- diagnoseDataModel(data, design, model)
+```
+
+To identify all the models fit to the data
+```{r}
+print(diagnose_res$models)
+```
+We see that three models were fit to this data - one in the natural scale of cell size, other in the logarithmic scale and the last one in log scale without outliers. 
+
+Let us look the basic QC plots for the models fit in the natural scale of the responses.
+```{r output-plots8, results='asis'}
+plots <- diagnose_res$plots_info$natural_scale$plots
+captions <- diagnose_res$plots_info$natural_scale$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+```
+
+Now, let us look at the same set of QC plots for models on the log-transformed responses.
+```{r output-plots9, results='asis'}
+plots <- diagnose_res$plots_info$log_scale$plots
+captions <- diagnose_res$plots_info$log_scale$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+
+```
+Now, let us look at the same set of QC plots for models on the log-transformed responses without the identified outliers in the log-transformed model
+
+```{r output-plots10, results='asis'}
+plots <- diagnose_res$plots_info$log_scale_wo_outliers$plots
+captions <- diagnose_res$plots_info$log_scale_wo_outliers$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+
+```
+
+
+We see normality assumption is better met with the log-transformed model (Figure 6) compared to the model in the natural scale (Figure 1).
+
+The code also outputs Cook's distance measures for each cohort and mouse that is intended to capture how influential each of these were in determining the final parameter estimates in the LMM model.
+
+```{r eval=FALSE}
+##see which experimental columns correspond to which variable
+print(design@experimental_columns)
+## for each experimental column
+for(i in 1:length(diagnose_res$models)) {
+  for(j in 1:length(design@experimental_columns)){
+    print(paste0("Cooks distance estimates for model ", diagnose_res$models[i], " and experimental factor = ", design@experimental_columns[j]))
+    print(diagnose_res$cooks_result[[i]][[j]])
+  }
+}
+```
+There aren't any obvious outliers in any of these models for cohort or mice.
+
+
+Based on the above plots, it seems like the log transformed versions of the latency responses better fit the model assumptions. Therefore using these transformed responses we will estimate and visualize our parameter of interest.
+```{r}
+data_update <- diagnose_res$Data_updated
+design_update <- design
+design_update@response_column %<>% paste0(., "_logTransformed_noOutlier")
+estimate_res <- getEstimatesOfInterest(data_update, design_update, model)
+print(estimate_res[[1]])
+#print(estimate_res[[2]]$plots)
+```
+We will also perform sample-size calculations for the number of mice needed per cohort.
+```{r}
+power_param@target_columns <- "MouseID"
+power_res <- calculatePower(data_update, design_update, model, power_param)
+print(power_res$plots)
+```
+
+## Brain electrical signal assays
+Patch clamp is a technique that can be used to measure membrane action potential in excitable cells like neurons. We will work with (simulated) data from two sets of mice - one representing a Alzheimer's Disease model (hAPP) and the other representing control or wild-type mice. In each of these mice, multiple brain tissue slices are isolated and the membrane action potential for at least one neuronal cell in each slice is recorded.
+
+```{r}
+template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/electrical_patch_clamp_data/"
+data <- read.csv(paste0(template_dir, "patch_clamp_data.csv"), header = T)
+head(data)
+
+design <- readDesign(paste0(template_dir,"design_patch_clamp.json"))
+print(design)
+
+model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+print(model)
+
+power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+print(power_param)
+
+```
+
+We will now evaluate the model.
+
+```{r}
+diagnose_res <-diagnoseDataModel(data, design, model)
+```
+To identify all the models fit to the data
+```{r}
+print(diagnose_res$models)
+```
+We see that three models were fit to this data - one in the natural scale of negative_action_potential_mV, other in the natural scale without outliers and the last one in log scale. 
+
+Let us look the basic QC plots for the models fit in the natural scale of the responses.
+```{r output-plots11, results='asis'}
+plots <- diagnose_res$plots_info$natural_scale$plots
+captions <- diagnose_res$plots_info$natural_scale$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+```
+
+Let us look the basic QC plots for the models fit in the natural scale of the responses without the outliers.
+```{r output-plots12, results='asis'}
+plots <- diagnose_res$plots_info$natural_scale_wo_outliers$plots
+captions <- diagnose_res$plots_info$natural_scale_wo_outliers$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+```
+
+Now, let us look at the same set of QC plots for models on the log-transformed responses.
+```{r output-plots13, results='asis'}
+plots <- diagnose_res$plots_info$log_scale$plots
+captions <- diagnose_res$plots_info$log_scale$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+
+```
+
+We will work with the model of the electrical responses in the natural scale without outliers
+
+The code also outputs Cook's distance measures for each cohort and mouse that is intended to capture how influential each of these were in determining the final parameter estimates in the LMM model.
+
+```{r}
+##see which experimental columns correspond to which variable
+print(design@experimental_columns)
+## for each experimental column
+for(i in 1:length(diagnose_res$models)) {
+  for(j in 1:length(design@experimental_columns)){
+    print(paste0("Cooks distance estimates for model ", diagnose_res$models[i], " and experimental factor = ", design@experimental_columns[j]))
+    print(diagnose_res$cooks_result[[i]][[j]])
+  }
+}
+```
+Mouse_2 appears to be an outlier based on its cook's distance estimate (of 0.90) from the natural scale without outliers model and a 4/n=4/9=0.44 threshold.
+
+We will therefore drop all observations from Mouse_2.
+
+```{r}
+data_update <- diagnose_res$Data_updated
+data_update %<>% filter(Mice != "Mouse_2")
+design_update <- design
+design_update@response_column %<>% paste0(., "_noOutlier")
+diagnose_res_update <- diagnoseDataModel(data_update, design_update, model)
+```
+To identify all the models fit to the data
+```{r}
+print(diagnose_res_update$models)
+```
+We see that two models were fit to this data - one in the natural scale of negative_action_potential_mV, other in the log scale. 
+
+Let us look the basic QC plots for the models fit in the natural scale of the responses.
+```{r output-plots14, results='asis'}
+plots <- diagnose_res_update$plots_info$natural_scale$plots
+captions <- diagnose_res_update$plots_info$natural_scale$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+```
+
+Let us look the basic QC plots for the models fit in the log scale of the responses.
+```{r output-plots15, results='asis'}
+plots <- diagnose_res_update$plots_info$log_scale$plots
+captions <- diagnose_res_update$plots_info$log_scale$captions
+
+for (i in seq_along(plots)) {
+  print(plots[[i]])
+  cat(sprintf("\n\n\n**Figure %d:** %s\n\n", plot_no, names(plots)[i]))
+  plot_no <- plot_no + 1
+}
+```
+
+ It does not look like the log transformation resulted significantly changed how well the model assumptions were being met. We will estimate the association of genotype using the responses in their natural scale.
+ 
+```{r}
+estimate_res <- getEstimatesOfInterest(data, design, model)
+print(estimate_res[[1]])
+```
+
+This is not significant at all. How many mice do we need to have 80% power to estimate the observed difference?
+
+```{r}
+
+power_param@target_columns <- "Mice"
+power_param@effect_size <- 7
+power_res <- calculatePower(data, design, model, power_param)
+print(power_res$plots)
+
+power_param@target_columns <- "slice_number"
+power_res_slice <- calculatePower(data, design, model, power_param)
+print(power_res_slice)
+```
+
+# Understanding simulations to estimate the power
+
+`RMeDPower2` is designed to simulate the effect of variability of the responses which could come from differences in the  processing batch, plates or cell lines on the responses of interest the cell assay data (described above for exampel). There are several ways to assess the impact of different choices for the experimental variables in this package as outlined below.
+
+First, a user can assess how increasing the number of independent experiments affects power. For example, if a user has a pilot dataset that consists of 3 experimental batches that each contain 2 plates, expanding this dataset two-fold would have the effect of simulating 6 experiments with a total of 12 plates (Figure \@ref(fig:exp) ). 
+
+```{r exp, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of experimental variability for 'experiment' for the power analysis. If level=1 is set, RMeDPower simulates the effect of adding in additional experiments by inheriting the experimental design structure from the existing data. This describes the situation where the pilot study involves data from 3 experiments, with 2 plates used per experiment, 3 cell lines within each plate and 12 cells per cell line are assayed.", fig.small=TRUE, echo=FALSE}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part5.png")
+```
+
+In the code that tests power using the example data 'RMeDPower_data1', this scenario can be simulated by setting 'target_columns' to 'line' and 'levels' to 1 where 'line' corresponds to the cell line. The 'condition_column' of the data corresponds to 'classification' indicating the cell state, and there are two experimental variables: 'experiment' and 'line'. Since the same cell line may appear in multiple experiments,  "line" is treated as "crossed_column". "cell_size2" is used as 'response_column' for the simulation (Figure \@ref(fig:Sim1)).
+
+```{r}
+
+template_dir="~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial//tutorial_session3/"
+
+##load the design
+design <- readDesign(paste0(template_dir,"design_cell_assay_sim1.json"))
+##load the probability model
+model <- readProbabilityModel(paste0(template_dir,"prob_model_sim1.json"))
+##load the relevant power parameters
+power_param <- readPowerParams(paste0(template_dir,"power_param_sim1.json"))
+
+##filter out the top 5% of observations
+RMeDPower_data1 %<>% filter(cell_size2 < quantile(cell_size2, 0.95))
+
+print(design)
+print(model)
+print(power_param)
+
+
+```
+
+The first step involves running a diagnosis of the data and the model.
+```{r}
+diagnose_res <- diagnoseDataModel(RMeDPower_data1, design, model)
+design_update <- design
+data_update <- diagnose_res$Data_updated
+print(colnames(data_update))
+design_update@response_column <-  "cell_size2_logTransformed"
+
+```
+
+We can now perform sample-size estimations for the effects of increasing the number of experimental batches.
+```{r}
+
+##calculate power
+power_res <- calculatePower(data_update, design_update, model, power_param)
+
+```
+
+
+In a similar context, users can evaluate power for a given number of experiments. To do this, we assign a value corresponding to the number of experiments to 'max_size' and set 'power_curve' to 0. We can set the 'output' variable to specify the output file name.
+
+```{r}
+
+template_dir="~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial//tutorial_session3/"
+
+##load the relevant power parameters
+power_param <- readPowerParams(paste0(template_dir,"power_param_sim3.json"))
+
+print(power_param)
+
+```
+
+```{r}
+
+##calculate power
+power_res <- calculatePower(data_update, design_update, model, power_param)
+
+```
+
+Consider the situation where a user has a specific difference of mean perimeters in mind based on prior information from related previous experiments, but the pilot data itself does not reflect the a priori assumed difference. For example, previously an experimenter found a significant difference comparing a given response between control cell lines “A”, “B”, “C”, and cell lines from patients with a disease, “D”, “E” and “F”, and there was a sufficient sample size to estimate the effect size reliably. The experimenter then performs another set of experiments comparing the same disease lines (“D”, “E” and “F”) but this time uses different control cell lines (“G” and “H”), and the data did not have a sufficient sample size in terms of the number of experimental batches. It seems reasonable to expect that the magnitude of the associations of the response variable between the new control lines and the original disease lines would be similar to the first set of experiments. In this case, the user can then run power simulations using the known difference instead of estimating it from the pilot data. For our illustration, in the pilot data set the observed difference in mean log-transformed perimeter was 0.031 units. The power analysis shows that the power to detect this specific association between ALS status and the cell perimeter using 8 experimental batches is 72.1% with a 95% confidence interval (69.2, 74.9) at type I error rate of 0.05 reflecting what we observed in Figure 10 while if we expect the difference of means to be equal to 0.02 then the corresponding power estimate is 38.7% with a 95% confidence interval (35.7, 41.8). 
+
+
+```{r}
+set.seed(12345)
+##observed differences of means = 0.03072
+power_param@max_size <- 8
+power_param@target_columns <- "experiment"
+power_param@levels <- 1
+power_param@power_curve <- 0
+power_param@effect_size <- 0.03072
+calculatePower(data_update, design_update, model, power_param)
+
+```
+
+```{r}
+set.seed(12345)
+##asssumed difference of means = 0.02
+power_param@max_size <- 8
+power_param@target_columns <- "experiment"
+power_param@levels <- 1
+power_param@power_curve <- 0
+power_param@effect_size <- 0.02
+calculatePower(data_update, design_update, model, power_param)
+
+```
+
+
+
+We can also test the power of two experimental variables by assigning a vector of variable names to 'target_columns'.
+
+```{r}
+
+template_dir="~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial//tutorial_session3/"
+
+power_param <- readPowerParams(paste0(template_dir,"power_param_sim5.json"))
+
+print(power_param)
+
+```
+
+```{r}
+
+##calculate power
+power_res <- calculatePower(data_update, design_update, model, power_param)
+
+```
+
+
+
+Our power simulations depend on the variance components estimated from the input dataset. However, in some cases there may not be enough data to estimate the variance component. For example, the pilot data might have only a single category for 'experimental batch', ‘plate’ or 'line'. When this occurs, the user needs to provide ICC values. These values can be estimated from another dataset for which the variance components are assumed to be similar to those inherent for the new response being considered in the input dataset. ICC can be estimated by taking the ratio between the variance estimates using the following formula:
+
+
+$$
+ICC_i=\frac{V_i}{∑_{j∈S}V_i+e}
+$$                                                                                                                                                             
+ where V_i represents the variance of the random effect linked to experimental variable (e.g., experimental batch, plate or cell-line) i, and epsilon represents the variance of the residual error. S represents all the modeled sources of variability of the response under consideration. We will test this scenario using the example RMeDPower_data2 with only single experiment and cell line. To test power in scenarios with varying number of experiments, we set the ‘icc’ parameter to 0.8, 0.05, 0.05.
+
+```{r}
+
+template_dir="~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial//tutorial_session3/"
+
+##load the design
+design <- readDesign(paste0(template_dir,"design_cell_assay_sim6.json"))
+##load the probability model
+model <- readProbabilityModel(paste0(template_dir,"prob_model_sim6.json"))
+##load the relevant power parameters
+power_param <- readPowerParams(paste0(template_dir,"power_param_sim6.json"))
+
+#print(design)
+#print(model)
+print(power_param)
+
+
+```
+
+```{r}
+
+##calculate power
+power_res <- calculatePower(RMeDPower_data2, design, model, power_param)
+
+```
+
+Alternatively, a user can assess how increasing the number of plates per experiment affects power. In the case where there are two experiments that each contain two plates, the user can double the number of plates used per experiment. In this way, the user can simulate how the statistical power changes as a result of increasing the number of plates used per experiment rather than increasing the number of experimental batches (Figure \@ref(fig:plate)). 
+
+
+```{r plate, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of plate variability for ‘plate' power analysis. If level=1 is set, RMeDPower simulates new plates by inheriting the experimental design structure from the existing data."}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part7.png")
+```
+
+In a third example, a user can examine the effect of expanding the number of cell lines within each experiment affects power (Figure \@ref(fig:line)). This would capture the effect of increasing the number of cells assayed as a consequence of having more cell lines. 
+
+```{r line, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of cell line variability for ‘cell line' power analysis. If level=1 is set, RMeDPower simulates new cell lines by inheriting the experimental design structure from the existing data.", fig.wide=TRUE,  fig.topcaption=TRUE}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part9.png")
+```
+
+Alternatively, one might want to assess the effect of increasing the total number of cells by increasing the number of cells per cell line (Figure \@ref(fig:lineCell)). 
+
+```{r lineCell, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of a sample size increase by increasing the number of cell line. If level=0 is set, RMeDPower multiplies the number of cells per cell line by M/N, where N is the maximum number of cells per cell line and M is a value assigned to the parameter ‘max_size’.", fig.wide=TRUE, echo=FALSE, fig.topcaption=TRUE}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part10.png")
+```
+
+Tables 1-3, in addition to the figures, show the change in cell number after variable expansion in experiment, plate or cell line, especially when the cell distribution is asymmetric.
+A user may want to examine the power of increasing the total number of cells measured from each experimental variable per experiment. For example, if there are 12 cells per cell line on plate 1, doubling the number of cells from each plate will result in assessing the effect in twice the number
+of cells per cell line, even if the number of experiments and cell lines remain the same (Figure \@ref(fig:plateCell)). 
+
+```{r plateCell, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of a sample size increase for ‘plate' power analysis. If level=0 is set, RMeDPower multiplies the number of cells per plate by M/N, where N is the maximum number of cells per plate and M is a value assigned to the parameter ‘max_size’.", fig.wide=TRUE, fig.topcaption=TRUE}
+knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part8.png")
+```
+
+```{r echo=FALSE}
+knitr::kable( rbind(c("(A)", "Cell line 1", "Cell line 2"),
+             c("Exp 1", 3, 6),
+             c("Exp 2", 3, 0),
+             c("(B)", "Cell line 1", "Cell line2"),
+             c("Exp 1", 3, 6),
+             c("Exp 2", 3, 0),
+             c("Exp 3", 3, 6),
+             c("Exp 4", 3, 0)),
+  caption="Example of changes in cell counts in a simulation of experimental batch variability. (A) Original data structure and (B) changed data structure after simulation. Simulation based on level=1 keeps the same structure and increases the number of experiments. This describes the situation where the pilot study involved 2 experiments, in the first experiment two cell lines are used with 3 and 6 cells assayed, respectively, and in the second experiment only 3 cells from the first experiment are assayed."
+)
+```
+
+```{r echo=FALSE}
+knitr::kable(rbind(c("(A)", "Cell line 1", "Cell line 2"),
+            c("Plate 1", 4, 5),
+            c("Plate 2", 2, 0),
+            c("(B)", "Cell line 1", "Cell line 2"),
+            c("Plate 1", 4, 5),
+            c("Plate 2", 2, 0),
+            c("Plate 1'", 4 ,5),
+            c("Plate 2'", 2, 0)),
+  caption="Example of changes in cell counts in a simulation of plate variability. (A) Original data structure and (B) changed data structure after simulation. Simulation based on level=1 keeps the same structure and increases the number of plates."
+)
+```
+
+```{r echo=FALSE}
+knitr::kable(rbind(c("(A)", "Cell line 1", "Cell line 2", "", "", "", ""),
+            c("Exp 1", 3, 6, "", "", "", ""),
+            c("Exp 2", 3, 0, "", "", "", ""),
+            c("(B)", "Cell line 1a", "Cell line 2a", "Cell line 1b", "Cell line 2b", "Cell line 1c", "Cell line 2c"),
+            c("Exp 1", 3, 6, 3, 6, 3, 6),
+            c("Exp 2", 3, 0, 3, 0, 3, 0)),
+  caption="Example of changes in cell counts in a simulation of cell line variability. (A) Original data structure and (B) changed data structure after simulation. If level=1 is set, RMeDPower simulates new cell lines by inheriting the experimental design structure from the existing data. An example of a simulation in tabular format shows the change in the number of cells per cell line and experiment after simulation. Simulation based on level=1 keeps the same structure and increases the number of cell lines."
+)
+```
+
+
+
+
+
+Expansion results for plates and cell lines may differ if cells are asymmetrically distributed in different settings. Tables 4 and 5 show the different results users can get in an asymmetric distributed cell scenario. This type of variable expansion can be accomplished by setting ‘level=0’ in the calculate_power function.
+
+```{r echo=FALSE}
+knitr::kable(rbind(c("(A)", "Cell line 1", "Cell line2"),
+            c("Plate 1", 3, 6),
+            c("Plate 2", 3, 0),
+            c("(B)", "Cell line 1", "Cell line 2"),
+            c("Plate 1", 6, 12), 
+            c("Plate 2", 6, 0)),
+  caption="Example of plate-based cell count expansion simulation. (A) Original data structure and (B) changed data structure after simulation. The simulation is based on level=0 which results in increased number of cells per plate."
+)
+```
+
+```{r echo=FALSE}
+knitr::kable(rbind(c("(A)", "Cell line 1", "Cell line 2"),
+            c("Exp 1", 3, 6),
+            c("Exp 2", 3, 0),
+            c("(B)", "Cell line 1", "Cell line 2"),
+            c("Exp 1", 9, 18),
+            c("Exp 2", 9, 0)),
+  caption="Example of cell line-based cell count expansion simulation. (A) Original data structure and (B) changed data structure after simulation. An example of a simulation in tabular format shows the change in the number of cells per cell line and experiment after simulation. The simulation is based on level=0 which results in an increased number of cells per cell line."
+)
+```
+
+The type of variable expansion shown in Table 3 and 5  can be accomplished by setting 'target_columns' to 'line' and 'levels' to 0. In the code example, we modified the maximum number of cell lines by setting 'max_size' to 700 (Figure \@ref(fig:Sim2)). 
+
+
+
+
+<!-- # Equations -->
+
+<!-- To number and reference equations, put them in equation environments and assign labels to them, see Equation \@ref(eq:binom). -->
+
+<!-- \begin{equation} -->
+<!--   f\left(k\right) = \binom{n}{k} p^k\left(1-p\right)^{n-k} -->
+<!--   (\#eq:binom) -->
+<!-- \end{equation} -->
+
+
+<!-- # Tables -->
+
+<!-- Like figures, tables with captions will also be numbered and can be referenced, see Table \@ref(tab:table). -->
+
+<!-- Fruit   | Price -->
+<!-- ------- | ----- -->
+<!-- bananas | 1.2 -->
+<!-- apples  | 1.0 -->
+<!-- oranges | 2.5 -->
+
+<!-- : (\#tab:table) A simple table. With caption. -->
+
+
+<!-- # Cross-references -->
+
+<!-- Apart from referencing figures (Section \@ref(figures)), tables (Section \@ref(tables)), and equations (Section \@ref(equations)), you can also use the same syntax to refer to sections by their default labels generated by pandoc. -->
+
+
+<!-- # Side notes -->
+
+<!-- Footnotes are displayed as side notes on the right margin^[this is a side note entered as a footnote], which has the advantage that they appear close to the place where they are defined. -->
+
+# References {.unnumbered}
+
+
+# Session info
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```
