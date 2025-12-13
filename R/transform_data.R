@@ -673,10 +673,16 @@ ggplot_residuals_vs_predictor <- function(dharma_obj,
     x_label <- predictor_name
   }
 
-  if(is.factor(plot_data$predictor)){
+  if(is.factor(plot_data$predictor) | length(unique(plot_data$predictor)) < 10){
+    plot_data$predictor <- as.factor(plot_data$predictor)
     p <- ggplot(plot_data, aes(x = predictor, y = residuals)) +
       geom_boxplot() +
-      theme_minimal()
+      theme_minimal() +
+      geom_hline(yintercept = 0.5, linetype = "dashed", color = "black", alpha = 0.6) +
+      labs(title = paste("DHARMa Residuals vs", predictor_name, description_suffix),
+           subtitle = paste0("Residuals vs Predicted", ". Expectation is that the median of the boxplots are at or close to 0.5"),
+           x = x_label,
+           y = "DHARMa Residuals")
   }
   else{
     p <- ggplot(plot_data, aes(x = predictor, y = residuals)) +
