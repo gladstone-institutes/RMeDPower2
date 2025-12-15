@@ -256,6 +256,11 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
                                        "+ offset(log(total_column))"))
       lmerFit <- lme4::glmer(formula_str, data = Data, family = family_p)
     }
+    else if (!is.null(family_p) && family_p$family == "negative_binomial" && is.null(total_column)) {
+      # Negative binomial with offset
+      formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
+      lmerFit <- lme4::glmer.nb(formula_str, data = data, family = family_p)
+    }
     else {
       # Other GLMMs
       formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
