@@ -30,7 +30,7 @@
 #' @param na.action "complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, response, and target columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.
 #' @param output Output file name
 ##### If variance estimates should be estimated from data
-#' @param  effect_size If you know the effect size of your condition variable, the effect size can be provided as a parameter. If the effect size is not provided, it will be estimated from your data
+#' @param  effect_size A 3 dimensional numeric vector given the proposed effect sizes/parameter estimates for the condition_column, covariate and interaction term between these two variables, respectively in that order. Depending on the model not all elements of the effect_size would make sense. For example, in situations, where there is only the condition column, the second and third elements of effect_size should be equal to NA. If you know the effect size of your condition variable, the effect size can be provided as a parameter. If the effect size is not provided, it will be estimated from your data
 ##### If variance estimates are to be assigned by a user
 #' @param  alpha Threshold for Type I error
 #' @param  ICC Intra-Class Coefficients (ICC) for each parameter
@@ -86,8 +86,8 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   if(sum(levels%in%c(0,1))!=length(levels)){ print("levels must be 0 or 1");return(NULL) }
   if(!( is.null(max_size) | (is.numeric(max_size)&&sum(max_size>0)==length(max_size)) ) ){print("max_size a positive integer");return(NULL) }
   if(!( is.null(breaks) | (is.numeric(breaks)&&breaks>0) ) ){ print("breaks must be a positive integer");return(NULL) }
-  if(!( is.null(effect_size) | (is.numeric(effect_size)&&effect_size>0) ) ){ print("effect_size a positive integer");return(NULL) }
-  if(!is.null(ICC) & error_is_non_normal==TRUE ){ print("ICC-based simulations are not supported when the response is categorical.");return(NULL) }
+  if(!( is.null(effect_size) | (is.numeric(effect_size)  & length(effect_size) < 3))){ print("effect_size must be a 3 element numeric vector");return(NULL) }
+  if(!is.null(ICC) & error_is_non_normal==TRUE ){ print("ICC-based simulations are not supported when the response is non-normal");return(NULL) }
   if(!is.null(ICC)){if(length(ICC) != length(experimental_columns)) {print("The ICC vector should be of the same dimension as the number of experimental columns");return(NULL)}}
   # Validation for new parameters
   if(!is.na(include_interaction)) {
@@ -240,31 +240,56 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
       # Linear mixed effects model
       formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
       lmerFit <- lme4::lmer(formula_str, data = Data)
+      ##base model fixed formula when there is an interaction term
+      if(include_interaction){
+        formula_str0 <<- as.formula(paste0("response_column ~ covariate"))
+      }
     } else if (!is.null(family_p) && family_p$family == "binomial" && !is.null(total_column)) {
       # Binomial with total column
       formula_str <<- as.formula(paste("cbind(response_column, (total_column - response_column)) ~",
                                        fixed_formula, "+", random_formula))
       lmerFit <- lme4::glmer(formula_str, data = Data, family = family_p)
+      ##base model fixed formula when there is an interaction term
+      if(include_interaction){
+        formula_str0 <<- as.formula(paste0("cbind(response_column, (total_column - response_column)) ~ covariate"))
+      }
+
     } else if (!is.null(family_p) && family_p$family == "negative_binomial" && !is.null(total_column)) {
       # Negative binomial with offset
       formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
                                        "+ offset(log(total_column))"))
       lmerFit <- lme4::glmer.nb(formula_str, data = Data, family = family_p)
+      ##base model fixed formula when there is an interaction term
+      if(include_interaction){
+        formula_str0 <<- as.formula(paste0("response_column ~ covariate"))
+      }
     } else if (!is.null(family_p) && family_p$family == "poisson" && !is.null(total_column)) {
-      # Negative binomial with offset
+      # Poisson with offset
       formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
                                        "+ offset(log(total_column))"))
       lmerFit <- lme4::glmer(formula_str, data = Data, family = family_p)
+      ##base model fixed formula when there is an interaction term
+      if(include_interaction){
+        formula_str0 <<- as.formula(paste0("response_column ~ covariate"))
+      }
     }
     else if (!is.null(family_p) && family_p$family == "negative_binomial" && is.null(total_column)) {
       # Negative binomial with offset
       formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
       lmerFit <- lme4::glmer.nb(formula_str, data = Data, family = family_p)
+      ##base model fixed formula when there is an interaction term
+      if(include_interaction){
+        formula_str0 <<- as.formula(paste0("response_column ~ covariate"))
+      }
     }
     else {
       # Other GLMMs
       formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
       lmerFit <- lme4::glmer(formula_str, data = Data, family = family_p)
+      ##base model fixed formula when there is an interaction term
+      if(include_interaction){
+        formula_str0 <<- as.formula(paste0("response_column ~ covariate"))
+      }
     }
 
     # lmerFit@call$formula = formula_str
@@ -555,6 +580,11 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
     # cat("\n")
     lmerFit=artificial_lmer
 
+    ##base model fixed formula when there is an interaction term
+    if(include_interaction){
+      formula_str0 <<- as.formula(paste0("response_column ~ covariate"))
+    }
+
 
   }
 
@@ -598,13 +628,28 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   ##### Assign known effect sizes
   if(length(effect_size)>0){
 
+    if(is.na(effect_size[1])){
+      fixef(lmerFit)[2] <- effect_size[1]
+      cat("\n")
+      print(paste0("_________________________________Effect size of the condition_column is now ",effect_size[1]))
+      cat("\n")
 
-    fixef(lmerFit)[2] <- effect_size
+    }
+    if(is.na(effect_size[2]) & !is.null(covariate)){
+      fixef(lmerFit)[3] <- effect_size[2]
+      cat("\n")
+      print(paste0("_________________________________Effect size of the covariate is now ",effect_size[2]))
+      cat("\n")
 
-    cat("\n")
-    print(paste0("_________________________________Effect size of the condition_column is now ",effect_size))
-    #print(summary(lmerFit))
-    cat("\n")
+    }
+    if(is.na(effect_size[3]) & include_interaction){
+      fixef(lmerFit)[4] <- effect_size[3]
+      cat("\n")
+      print(paste0("_________________________________Effect size of the interaction term is now ",effect_size[3]))
+      cat("\n")
+
+    }
+
 
   }
 
@@ -705,7 +750,10 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
     ###### power simulation
 
-    ps=simr::powerSim(extended_target_columns, test=simr::fixed("condition_column"), nsim=nsimn, progress = FALSE)
+    if(include_interaction)
+      ps=simr::powerSim(extended_target_columns, test=simr::fcompare(formula_str0), nsim=nsimn, progress = FALSE)
+    else
+      ps=simr::powerSim(extended_target_columns, test=simr::fixed("condition_column"), nsim=nsimn, progress = FALSE)
     # cat("\n")
     # print("__________________________________________________________________Power simulation result:")
     # print(ps)
