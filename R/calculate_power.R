@@ -857,11 +857,22 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
       if(levels[i]==1){
 
-          pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"),along=target_columns_renamed[i], nsim=nsimn,
-                            breaks=seq(1,max_size[i],breaks[i]), progress = FALSE   )
+          # pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"),along=target_columns_renamed[i], nsim=nsimn,
+          #                   breaks=seq(1,max_size[i],breaks[i]), progress = FALSE   )
+          if(include_interaction)
+            pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fcompare(formula_str0),along=target_columns_renamed[i], nsim=nsimn, breaks=seq(1,max_size[i],breaks[i]), progress = FALSE)
+          else
+            pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"), along=target_columns_renamed[i], nsim=nsimn, breaks=seq(1,max_size[i],breaks[i]), progress = FALSE)
+
       }else{
-          pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"),within=target_columns_renamed[i], nsim=nsimn,
-                            breaks=seq(1,max_size[i],breaks[i]), progress = FALSE   )
+          # pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"),within=target_columns_renamed[i], nsim=nsimn,
+          #                   breaks=seq(1,max_size[i],breaks[i]), progress = FALSE   )
+
+          if(include_interaction)
+            pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fcompare(formula_str0),within=target_columns_renamed[i], nsim=nsimn, breaks=seq(1,max_size[i],breaks[i]), progress = FALSE)
+          else
+            pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"), within=target_columns_renamed[i], nsim=nsimn, breaks=seq(1,max_size[i],breaks[i]), progress = FALSE)
+
       }
 
 
