@@ -1,0 +1,4 @@
+This directory is installed with the package and is intended to hold
+JSON template files and example input data for single-cell RNA-seq
+cell-type proportion examples used in the RMeDPower2 vignette.
+

@@ -1,5 +1,4 @@
 #' @title calculatePower
-#'
 #' @description This functions makes statistical power estimates given the data, the underlying design for it and the assumed probability model of the error distribution
 #'
 #'

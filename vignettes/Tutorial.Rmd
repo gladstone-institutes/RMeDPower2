@@ -46,8 +46,8 @@ options(warn = -1)
 
 # Getting started
 ```{r echo=FALSE}
-setwd("~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial/")
-template_dir="~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial//tutorial_session3/"
+template_dir <- system.file("input_templates/cell_assay_data",
+                            package = "RMeDPower2")
 ```
 ## Installing `RMeDPower2`
 `RMeDPower2` can be installed using the following commands
@@ -83,19 +83,19 @@ The following set of commands allows users to specify parameters for experimenta
 1. Use a text editor to modify the template jsonfile capturing the design for the data and read in this file.
 
 ```{r}
-design <- readDesign(paste0(template_dir,"design_cell_assay.json"))
+design <- readDesign(file.path(template_dir,"design_cell_assay.json"))
 ```
 
 2. Use a text editor to modify the template jsonfile capturing the error probability model and read in this file.
 
 ```{r}
-model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+model <- readProbabilityModel(file.path(template_dir,"prob_model.json"))
 ```
 
 3. Use a text editor to modify the template jsonfile capturing the power parameters and read in this file.
 
 ```{r}
-power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+power_param <- readPowerParams(file.path(template_dir,"power_param.json"))
 ```
 
 
@@ -107,7 +107,7 @@ The next set of commands will allow the user to evaluate the datatype, examine i
 
 ```{r eval=FALSE}
 diagnose_res <- diagnoseDataModel(data, design, model)
-data_update. = diagnose_res$Data_updated
+data_update = diagnose_res$Data_updated
 ```
 
 2. Modify design objects (e.g., remove outliers), model objects (e.g., change probability distribution assumption) if needed based on output of step 1 above.
@@ -129,7 +129,7 @@ power_res <- calculatePower(data, design, model, power_param)
 
 ### Estimate parameters of interest
 
-Once we have ran the models, the user can estimate and visualize parameters of interest in order to investigate the association between response variable and condition variables.
+Once we have run the models, the user can estimate and visualize parameters of interest in order to investigate the association between response variable and condition variables.
 
 ```{r eval=FALSE}
 estimate_res <- getEstimatesOfInterest(data, design, model, print_plots = F)
@@ -142,12 +142,13 @@ Users will have to ensure that the input data is organized in a format that will
 
 For example, the next below illustrates the input data from a cellular assay where each of the 2,588 observations represents a measurement of size (`cell_size2`) of a single cell, from a given cell line (`line`) that is either from a control or disease condition (`classification`) and is measured in a given experimental batch (`experiment`).
 
-```{r echo=FALSE} 
-suppressPackageStartupMessages(require(dplyr)) 
+```{r echo=FALSE}
+suppressPackageStartupMessages(require(dplyr))
 suppressPackageStartupMessages(library(RMeDPower2))
-template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/cell_assay_data/"
+template_dir <- system.file("input_templates/cell_assay_data",
+                            package = "RMeDPower2")
 
-data <- read.csv(paste0(template_dir, "cell_size_data.csv"), header = T) %>%
+data <- plate_assay_pilot_data %>%
   select(experiment, line, classification, cell_size2) %>%
   mutate(experiment = as.factor(experiment), line = as.factor(line), classification = as.factor(classification))
 
@@ -199,10 +200,11 @@ print(design)
 In practice, for a given data set the design can be input from a jsonfile. The user can use a text editor to modify the `design_template.json` file available with the package to input the relevant information based on the column names of the input data. For example, the design for the cell size data referred to above can be read using the function `readDesign`.
 
 ```{r echo=FALSE}
-template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/cell_assay_data/"
+template_dir <- system.file("input_templates/cell_assay_data",
+                            package = "RMeDPower2")
 ```
 ```{r}
-design <- readDesign(paste0(template_dir,"design_cell_assay.json"))
+design <- readDesign(file.path(template_dir, "design_cell_assay.json"))
 print(design)
 ```
 
@@ -214,7 +216,7 @@ The error probability distribution is specified by two slots in objects of the `
 2. `family_p`: This character value specifies the probability distribution. Accepted values are _poisson_(`=poisson(link="log")`), _binomial_(`=binomial(link="logit")`), _bionomial_log_(`=binomial(link="log")`), _Gamma_log_(`=Gamma(link="log")`), _Gamma_(`=Gamma(link="inverse")`), _negative_binomial_. Defaults to `NULL`.
 
 ```{r}
-model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+model <- readProbabilityModel(file.path(template_dir, "prob_model.json"))
 print(model)
 ```
 
@@ -226,20 +228,20 @@ The parameters described below are necessary for sample-size estimation and are 
 2. `power_curve`: This is numeric 1 or 0. 1: Power simulation over a range of sample sizes or levels. 0: Power calculation over a single sample size or a level. Defaults to 1.
 3. `nsimn`: The number of simulations to estimate power. Defaults to 10.
 4. `levels`: numeric 1 or 0. 1: Amplify the number of corresponding target parameter. 0: Amplify the number of samples from the corresponding target parameter, ex) If target_columns = c("experiment","cell_line") and if you want to expand the number of experiment and sample more cells from each cell line, set levels = c(1,0).
-5. `max_size`: Maximum levels or sample sizes to test. Default if set to `NULL` equals the current level or the current sample size x 5. ex) If max_levels = c(10,5), it will test upto 10 experiments and 5 cell lines.
+5. max_size: Maximum levels or sample sizes to test. Default if set to `NULL` equals the current level or the current sample size x 5. ex) If max_levels = c(10,5), it will test upto 10 experiments and 5 cell lines.
 6. `alpha`: Type I error for sample-size estimation. Defaults to 0.05.
 7. `breaks`: Levels /sample sizes of the variable to be specified along the power curve. Default if set to NULL equals max (1, round (the number of current levels / 5)).
-8. `effect_size`: If you know the effect size of your condition variable, the effect size can be provided as a parameter. Default set to `NULL`, that is, if the effect size is not provided, it will be estimated from your data.
+8. `effect_size`: A 3 dimensional numeric vector given the proposed effect sizes/parameter estimates for the condition_column, covariate and interaction term between these two variables, respectively in that order. Depending on the model not all elements of the effect_size would make sense. For example, in situations, where there is only the condition column, the second and third elements of effect_size should be equal to NA. If you know the effect size of your condition variable, the effect size can be provided as a parameter. Default set to `NULL`,i.e., if the effect size is not provided then it will be estimated from your data.
 9. `icc`: Intra-class coefficients for each of the experimental variables. Used only in the situation when `error_is_non_normal=FALSE` and when the data does not allow variance component estimation.
 
 ```{r}
-power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+power_param <- readPowerParams(file.path(template_dir, "power_param.json"))
 print(power_param)
 ```
 
 ## Three key functions of `RMeDPower2`
 
-The following are main functions to be used by users to manipulate data, estimate power, and perform association analysis.
+The following are functions for users to manipulate data, estimate power, and perform association analysis.
 
 ### `diagnoseDataModel(data, design, model)` function
 
@@ -255,13 +257,13 @@ This string estimates parameter of interest and also plots the resulting associa
 An overview of the anticipated usage of the functionality of this package is shown in the figure below.
 
 ```{r flowchart, echo=FALSE, fig.align = "center", fig.cap="Flowchart illustrating the functionality of the package", fig.small=TRUE, echo=FALSE}
-knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/Figure1.png")
+knitr::include_graphics(system.file("figures/package_structure.png", package = "RMeDPower2"))
 ```
 
 # Application examples
 Here we illustrate the application of RMeDPower2 using data derived from a range of domains in biomedical research.
 ```{r applications, echo=FALSE, fig.align = "center", fig.cap="Flowchart illustrating the functionality of the package", fig.small=TRUE, echo=FALSE}
-knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/Figure12.png")
+knitr::include_graphics(system.file("figures/application_domains.png", package = "RMeDPower2"))
 ```
 
 
@@ -278,10 +280,11 @@ The next step is to read the data and perform data distribution diagnostics, ass
 First, we will read the data from the package and json files with specified parameters:
 
 ```{r}
+template_dir <- system.file("input_templates/cell_assay_data", package = "RMeDPower2")
 data <- plate_assay_pilot_data
-design <- readDesign(paste0(template_dir,"design_cell_assay.json"))
-model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
-power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+design <- readDesign(file.path(template_dir,"design_cell_assay.json"))
+model <- readProbabilityModel(file.path(template_dir,"prob_model.json"))
+power_param <- readPowerParams(file.path(template_dir,"power_param.json"))
 ```
 
 A visualization of the distribution of cell_size2 across experiments and cell-lines as box-plots and also in terms of empirical cumulative distribution plots suggests the observations have an extremely long tail. We will therefore filter out the top 5 percent of the observations to ensure the results are not skewed by these extreme observations. We also see that the observations in experiment 3 are in general lower than those in the other two experiments.
@@ -367,7 +370,7 @@ We see normality assumption is better met with the log-transformed model (Figure
 The code also outputs Cook's distance measures for each experiment and cell-line that is intended to capture how influential each of these were in determining the final parameter estimates in the LMM model.
 
 
-The observations in experimental batch 3 and those for cell lines 4 and 9 were identified as outliers using a 4/n (where n is the number of replicates, n=3 for experimental batches and n=10 for cell-lines) threshold applied to the estimates of Cook’s distance for the estimated model parameters. We will not do anything further with these estimates, given the relatively small number of experiments and cell-lines for this data. In other situations, where we have a larger number of replicates and have additional reasons to believe that the outliers are real and have nothing to do with the biology being studied (example: the microscope was not set correctly for a given experimental batch), we could decide to drop the identified outlier units.
+The observations in experimental batch 3 and those for cell lines 4 and 9 were identified as outliers using a 4/n (where n is the number of replicates, n=3 for experimental batches and n=10 for cell-lines) threshold applied to the estimates of Cook’s distance for the estimated model parameters. This warranted further investigation on whether or not there was something unusual with the observations made in experimental batch 3 (example: the images from the microscope displayed low signal to noise and may have skewed the measurements) and also for cell line 4# and 9# (example: differentiation runs, genetic background was different from the other lines) that would suggest observations linked to this experiment and cell lines may need to be removed from the analysis. Our investigation did not indicate anything untoward and therefore we ran a sensitivity analysis where we dropped all observations linked to either experiment 3, cell line 4# or cell line 9#, refit the model and visualized the resulting change in ALS status associated mean soma perimeter value. There were only relatively slight changes in the estimated changes in the mean, so that the conclusions we would draw of an increase in the soma cell perimeter in ALS lines remains irrespective of whether or not we drop observations from the experimental batch or the two cell lines.
 
  We will use the log transformed cell_size2 data for parameter estimation using the following commands. 
 
@@ -408,12 +411,12 @@ knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 ```
 
-The power curve shows that at least eight or more experimental batches are required to achieve a power of 80% or greater.
+The power curve shows that at least eight or more experimental batches are required to achieve a power of 80% or greater. The points in the plot represent the mean estimate of power over the simulations while the error bars represent the 95% confidence intervals.
 
 Accordingly, we will now load data from 8 experimental batches and estimate our parameter of interest.
 
 ```{r}
-full_data <- read.table("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/OLD_Parts/simulated_perim.txt", header = TRUE)
+full_data <- plate_assay_full_data
 
 ##filter the top 5% of the observations
 full_data %<>% filter(perim_2th_effect < quantile(perim_2th_effect, 0.95))
@@ -473,8 +476,8 @@ The following commands load data and set parameters to specify the experimental 
 The first few lines of data display cell meta information.
 
 ```{r}
-template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/single_cell_data/celltype_proportions_with_genotype/"
-data <- read.csv(paste0(template_dir, "apoe_associated_cell_proportions.csv"), header = T)
+template_dir <- system.file("input_templates/single_cell_data/celltype_proportions_with_genotype", package = "RMeDPower2")
+data <- snRNAseq_cluster_count_data
 head(data)
 ```
 
@@ -482,17 +485,15 @@ The following command reads parameters from json files and print corresponding o
 
 ```{r}
 ##load the design
-design <- readDesign(paste0(template_dir,"design_celltype1.json"))
-design@covariate_is_categorical <- TRUE
-design@include_interaction <- FALSE
+design <- readDesign(file.path(template_dir, "design_celltype.json"))
 print(design)
 
 ##load the probability model
-model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+model <- readProbabilityModel(file.path(template_dir, "prob_model.json"))
 print(model)
 
 ##load the relevant power parameters
-power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+power_param <- readPowerParams(file.path(template_dir, "power_param.json"))
 print(power_param)
 ```
 
@@ -584,9 +585,9 @@ Next, we can first ask the question whether or not the proportion of nuclei deri
 
 ```{r}
 ##Associations of cell-type proportions with hippocampus volume
-design@condition_column = "Hippocampus_Vol_mm"
-design@condition_is_categorical = FALSE
-design@experimental_columns = c("animal_model", "sample_id")
+template_dir <- system.file("input_templates/single_cell_data/celltype_proportions_with_hippocampus_vol", package = "RMeDPower2")
+
+design <- readDesign(file.path(template_dir, "design_celltype.json"))
 
 diagnose_res <- diagnoseDataModel(data, design, model)
 
@@ -656,22 +657,18 @@ cat("\n\n\n")
 We will now estimate the association of the expression levels of the Snhg11 gene with genotype among cells in cluster 7 in the same data set. We will now load the raw counts for this gene and create the relevant RMeDesign, ProbabilityModel and PowerParams objects.
 
 ```{r}
-template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/single_cell_data/gene_expression_with_genotype/"
+template_dir <- system.file("input_templates/single_cell_data/gene_expression_with_genotype", package = "RMeDPower2")
 
-data <- read.csv(paste0(template_dir, "raw_counts_Snhg11_gene_cluster_7_snRNAseq_Koutsodendris_et_al_2023.csv"), header = T)
-# data %<>% mutate(genotype = gsub(" ", "-", genotype))
-# data %>% write.csv(., paste0(template_dir, "raw_counts_Snhg11_gene_cluster_7_snRNAseq_Koutsodendris_et_al_2023.csv"), row.names = F)
+data <- snRNAseq_gene_count_data
 head(data)
 
-design <- readDesign(paste0(template_dir,"design_gene_expression.json"))
+design <- readDesign(file.path(template_dir, "design_gene_expression.json"))
 print(design)
-design@covariate_is_categorical <- TRUE
-design@include_interaction <- FALSE
 
-model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+model <- readProbabilityModel(file.path(template_dir, "prob_model.json"))
 print(model)
 
-power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+power_param <- readPowerParams(file.path(template_dir, "power_param.json"))
 print(power_param)
 ```
 
@@ -767,16 +764,11 @@ Morris Water Maze (MWM) is an assay used to test spatial learning in animal mode
 
 
 ```{r}
-template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/behavior_data/"
-data <- read.csv(paste0(template_dir, "MWM_data.csv"), header = T)
-# data %<>% mutate(trial = sapply(Trial, function(x) gsub("LATENCY_", "", x) %>% as.numeric())) %>% select(-Trial)
-# data %>% write.csv(paste0(template_dir, "MWM_data.csv"), row.names = F)
-design <- readDesign(paste0(template_dir,"design_behavior.json"))
-design@covariate <- "trial"
-design@covariate_is_categorical <- FALSE
-design@include_interaction <- FALSE
-model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
-power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+template_dir <- system.file("input_templates/behavior_data", package = "RMeDPower2")
+data <- mouse_behavior_MWM_assay_data
+design <- readDesign(file.path(template_dir, "design_behavior.json"))
+model <- readProbabilityModel(file.path(template_dir, "prob_model.json"))
+power_param <- readPowerParams(file.path(template_dir, "power_param.json"))
 
 
 ```
@@ -837,30 +829,6 @@ print("Inferred outlier groups are")
 print(diagnose_res$inferred_outlier_groups$natural_scale)
 
 ```
-Now, let us look at the same set of QC plots for models on the log-transformed responses without the identified outliers in the log-transformed model
-
-```{r output-plots10, results='asis'}
-plots <- diagnose_res$diagnostic_plots$log_scale_wo_outliers$plots
-captions <- diagnose_res$diagnostic_plots$log_scale_wo_outliers$captions
-
-for (i in seq_along(plots)) {
-  print(plots[[i]])
-    cat(sprintf("\n\n\n**Figure %d:** %s. %s\n\n", plot_no,names(plots)[i], captions[i]))
-  plot_no <- plot_no + 1
-}
-
-cooks_plots <- diagnose_res$cooks_plots$log_scale_wo_outliers
-cat("\n\n\n")
-for(i in 1:length(cooks_plots)) {
-  print(cooks_plots[[i]])
-  cat(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
-  plot_no <- plot_no + 1
-}
-
-print("Inferred outlier groups are")
-print(diagnose_res$inferred_outlier_groups$natural_scale)
-
-```
 
 
 We see normality assumption is better met with the log-transformed model (Figure 6) compared to the model in the natural scale (Figure 1).
@@ -873,7 +841,7 @@ Based on the above plots, it seems like the log transformed versions of the late
 ```{r}
 data_update <- diagnose_res$Data_updated
 design_update <- design
-design_update@response_column %<>% paste0(., "_logTransformed_noOutlier")
+design_update@response_column %<>% paste0(., "_logTransformed")
 estimate_res <- getEstimatesOfInterest(data_update, design_update, model, print_plots = F)
 print(estimate_res[[1]])
 ```
@@ -901,17 +869,17 @@ cat("\n\n\n")
 Patch clamp is a technique that can be used to measure membrane action potential in excitable cells like neurons. We will work with (simulated) data from two sets of mice - one representing a Alzheimer's Disease model (hAPP) and the other representing control or wild-type mice. In each of these mice, multiple brain tissue slices are isolated and the membrane action potential for at least one neuronal cell in each slice is recorded.
 
 ```{r}
-template_dir <- "~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/input_templates/electrical_patch_clamp_data/"
-data <- read.csv(paste0(template_dir, "patch_clamp_data.csv"), header = T)
+template_dir <- system.file("input_templates/electrical_patch_clamp_data",package = "RMeDPower2")
+data <- mouse_brain_electro_physiology_data
 head(data)
 
-design <- readDesign(paste0(template_dir,"design_patch_clamp.json"))
+design <- readDesign(file.path(template_dir, "design_patch_clamp.json"))
 print(design)
 
-model <- readProbabilityModel(paste0(template_dir,"prob_model.json"))
+model <- readProbabilityModel(file.path(template_dir, "prob_model.json"))
 print(model)
 
-power_param <- readPowerParams(paste0(template_dir,"power_param.json"))
+power_param <- readPowerParams(file.path(template_dir, "power_param.json"))
 print(power_param)
 
 ```
@@ -1079,7 +1047,7 @@ This is not significant at all. How many mice do we need to have 80% power to es
 ```{r}
 
 power_param@target_columns <- "Mice"
-power_param@effect_size <- 7
+power_param@effect_size <- c(7, NA, NA)
 power_res <- calculatePower(data, design, model, power_param)
 ```
 
@@ -1109,21 +1077,24 @@ cat("\n\n\n")
 First, a user can assess how increasing the number of independent experiments affects power. For example, if a user has a pilot dataset that consists of 3 experimental batches that each contain 2 plates, expanding this dataset two-fold would have the effect of simulating 6 experiments with a total of 12 plates (Figure \@ref(fig:exp) ). 
 
 ```{r exp, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of experimental variability for 'experiment' for the power analysis. If level=1 is set, RMeDPower simulates the effect of adding in additional experiments by inheriting the experimental design structure from the existing data. This describes the situation where the pilot study involves data from 3 experiments, with 2 plates used per experiment, 3 cell lines within each plate and 12 cells per cell line are assayed.", fig.small=TRUE, echo=FALSE}
-knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part5.png")
+knitr::include_graphics(
+  system.file("figures/Part5.png", package = "RMeDPower2")
+)
 ```
 
 In the code that tests power using the example data 'plate_assay_pilot_data', this scenario can be simulated by setting 'target_columns' to 'line' and 'levels' to 1 where 'line' corresponds to the cell line. The 'condition_column' of the data corresponds to 'classification' indicating the cell state, and there are two experimental variables: 'experiment' and 'line'. Since the same cell line may appear in multiple experiments,  "line" is treated as "crossed_column". "cell_size2" is used as 'response_column' for the simulation (Figure \@ref(fig:Sim1)).
 
 ```{r}
 
-template_dir="~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial//tutorial_session3/"
+template_dir <- system.file("input_templates/understanding_simulations",
+                            package = "RMeDPower2")
 
 ##load the design
-design <- readDesign(paste0(template_dir,"design_cell_assay_sim1.json"))
+design <- readDesign(file.path(template_dir, "design_cell_assay_sim1.json"))
 ##load the probability model
-model <- readProbabilityModel(paste0(template_dir,"prob_model_sim1.json"))
+model <- readProbabilityModel(file.path(template_dir, "prob_model_sim1.json"))
 ##load the relevant power parameters
-power_param <- readPowerParams(paste0(template_dir,"power_param_sim1.json"))
+power_param <- readPowerParams(file.path(template_dir, "power_param_sim1.json"))
 
 ##filter out the top 5% of observations
 plate_assay_pilot_data %<>% filter(cell_size2 < quantile(cell_size2, 0.95))
@@ -1154,14 +1125,15 @@ power_res <- calculatePower(data_update, design_update, model, power_param)
 ```
 
 
-In a similar context, users can evaluate power for a given number of experiments. To do this, we assign a value corresponding to the number of experiments to 'max_size' and set 'power_curve' to 0. We can set the 'output' variable to specify the output file name.
+In a similar context, users can evaluate power for a given number of experiments. To do this, we assign a value corresponding to the number of experiments to max_size and set 'power_curve' to 0. We can set the 'output' variable to specify the output file name.
 
 ```{r}
 
-template_dir="~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial//tutorial_session3/"
+template_dir <- system.file("input_templates/understanding_simulations",
+                            package = "RMeDPower2")
 
 ##load the relevant power parameters
-power_param <- readPowerParams(paste0(template_dir,"power_param_sim3.json"))
+power_param <- readPowerParams(file.path(template_dir, "power_param_sim3.json"))
 
 print(power_param)
 
@@ -1184,7 +1156,7 @@ power_param@max_size <- 8
 power_param@target_columns <- "experiment"
 power_param@levels <- 1
 power_param@power_curve <- 0
-power_param@effect_size <- 0.03072
+power_param@effect_size <- c(0.03072, NA, NA)
 calculatePower(data_update, design_update, model, power_param)
 
 ```
@@ -1196,7 +1168,7 @@ power_param@max_size <- 8
 power_param@target_columns <- "experiment"
 power_param@levels <- 1
 power_param@power_curve <- 0
-power_param@effect_size <- 0.02
+power_param@effect_size <- c(0.02, NA, NA)
 calculatePower(data_update, design_update, model, power_param)
 
 ```
@@ -1207,9 +1179,8 @@ We can also test the power of two experimental variables by assigning a vector o
 
 ```{r}
 
-template_dir="~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial//tutorial_session3/"
 
-power_param <- readPowerParams(paste0(template_dir,"power_param_sim5.json"))
+power_param <- readPowerParams(file.path(template_dir,"power_param_sim5.json"))
 
 print(power_param)
 
@@ -1234,14 +1205,15 @@ $$
 
 ```{r}
 
-template_dir="~/Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Versions Tutorial//tutorial_session3/"
+template_dir <- system.file("input_templates/understanding_simulations",
+                            package = "RMeDPower2")
 
 ##load the design
-design <- readDesign(paste0(template_dir,"design_cell_assay_sim6.json"))
+design <- readDesign(file.path(template_dir, "design_cell_assay_sim6.json"))
 ##load the probability model
-model <- readProbabilityModel(paste0(template_dir,"prob_model_sim6.json"))
+model <- readProbabilityModel(file.path(template_dir, "prob_model_sim6.json"))
 ##load the relevant power parameters
-power_param <- readPowerParams(paste0(template_dir,"power_param_sim6.json"))
+power_param <- readPowerParams(file.path(template_dir, "power_param_sim6.json"))
 
 #print(design)
 #print(model)
@@ -1261,27 +1233,39 @@ Alternatively, a user can assess how increasing the number of plates per experim
 
 
 ```{r plate, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of plate variability for ‘plate' power analysis. If level=1 is set, RMeDPower simulates new plates by inheriting the experimental design structure from the existing data."}
-knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part7.png")
+knitr::include_graphics(
+  system.file("figures/Part7.png", package = "RMeDPower2")
+)
+
 ```
 
 In a third example, a user can examine the effect of expanding the number of cell lines within each experiment affects power (Figure \@ref(fig:line)). This would capture the effect of increasing the number of cells assayed as a consequence of having more cell lines. 
 
 ```{r line, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of cell line variability for ‘cell line' power analysis. If level=1 is set, RMeDPower simulates new cell lines by inheriting the experimental design structure from the existing data.", fig.wide=TRUE,  fig.topcaption=TRUE}
-knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part9.png")
+knitr::include_graphics(
+  system.file("figures/Part9.png", package = "RMeDPower2")
+)
+
 ```
 
 Alternatively, one might want to assess the effect of increasing the total number of cells by increasing the number of cells per cell line (Figure \@ref(fig:lineCell)). 
 
-```{r lineCell, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of a sample size increase by increasing the number of cell line. If level=0 is set, RMeDPower multiplies the number of cells per cell line by M/N, where N is the maximum number of cells per cell line and M is a value assigned to the parameter ‘max_size’.", fig.wide=TRUE, echo=FALSE, fig.topcaption=TRUE}
-knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part10.png")
+```{r lineCell, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of a sample size increase by increasing the number of cell line. If level=0 is set, RMeDPower multiplies the number of cells per cell line by M/N, where N is the maximum number of cells per cell line and M is a value assigned to the parameter maxsize.", fig.wide=TRUE, echo=FALSE, fig.topcaption=TRUE}
+knitr::include_graphics(
+  system.file("figures/Part10.png", package = "RMeDPower2")
+)
+
 ```
 
 Tables 1-3, in addition to the figures, show the change in cell number after variable expansion in experiment, plate or cell line, especially when the cell distribution is asymmetric.
 A user may want to examine the power of increasing the total number of cells measured from each experimental variable per experiment. For example, if there are 12 cells per cell line on plate 1, doubling the number of cells from each plate will result in assessing the effect in twice the number
 of cells per cell line, even if the number of experiments and cell lines remain the same (Figure \@ref(fig:plateCell)). 
 
-```{r plateCell, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of a sample size increase for ‘plate' power analysis. If level=0 is set, RMeDPower multiplies the number of cells per plate by M/N, where N is the maximum number of cells per plate and M is a value assigned to the parameter ‘max_size’.", fig.wide=TRUE, fig.topcaption=TRUE}
-knitr::include_graphics("~/Dropbox (Gladstone)/calcPower f1000_manuscript/Final_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part8.png")
+```{r plateCell, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of a sample size increase for ‘plate' power analysis. If level=0 is set, RMeDPower multiplies the number of cells per plate by M/N, where N is the maximum number of cells per plate and M is a value assigned to the parameter maxsize.", fig.wide=TRUE, fig.topcaption=TRUE}
+knitr::include_graphics(
+  system.file("figures/Part8.png", package = "RMeDPower2")
+)
+
 ```
 
 ```{r echo=FALSE}
@@ -1349,7 +1333,7 @@ knitr::kable(rbind(c("(A)", "Cell line 1", "Cell line 2"),
 )
 ```
 
-The type of variable expansion shown in Table 3 and 5  can be accomplished by setting 'target_columns' to 'line' and 'levels' to 0. In the code example, we modified the maximum number of cell lines by setting 'max_size' to 700 (Figure \@ref(fig:Sim2)). 
+The type of variable expansion shown in Table 3 and 5  can be accomplished by setting 'target_columns' to 'line' and 'levels' to 0. In the code example, we modified the maximum number of cell lines by setting max_size to 700 (Figure \@ref(fig:Sim2)). 
 
 
 

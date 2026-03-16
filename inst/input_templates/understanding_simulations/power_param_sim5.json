@@ -1,0 +1,11 @@
+{
+
+  "target_columns": ["experiment", "line"],
+  "power_curve": 1,
+  "nsimn": 10,
+  "levels": [1, 0],
+  "max_size": [9, 142],
+  "alpha": 0.05,
+  "breaks": null
+  
+}

@@ -1,0 +1,13 @@
+{
+  "response_column": "number_of_cells_per_sample_in_cluster",
+  "covariate": "Sex",
+  "condition_column": "Genotype",
+  "experimental_columns": ["sample_id"],
+  "condition_is_categorical": true,
+  "covariate_is_categorical": true,
+  "include_interaction": false,
+  "crossed_columns": null,
+  "total_column": "total_numbers_of_cells_per_sample",
+  "outlier_alpha": 0.05,
+  "na_action": "complete"
+}

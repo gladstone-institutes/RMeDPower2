@@ -1,0 +1,13 @@
+{
+  "response_column": "Latency",
+  "covariate": "Trial",
+  "condition_column": "hAPP",
+  "experimental_columns": ["cohort","MouseID"],
+  "condition_is_categorical": true,
+  "covariate_is_categorical": false,
+  "include_interaction": false,
+  "crossed_columns": null,
+  "total_column": null,
+  "outlier_alpha": 0.05,
+  "na_action": "complete"
+}

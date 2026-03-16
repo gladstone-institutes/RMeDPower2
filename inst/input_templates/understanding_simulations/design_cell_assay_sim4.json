@@ -1,0 +1,11 @@
+{
+  "response_column": "cell_size2",
+  "covariate": null,
+  "condition_column": "classification",
+  "experimental_columns": ["experiment", "line"],
+  "condition_is_categorical": true,
+  "crossed_columns": "line",
+  "total_column": null,
+  "outlier_alpha": 0.05,
+  "na_action": "complete"
+}

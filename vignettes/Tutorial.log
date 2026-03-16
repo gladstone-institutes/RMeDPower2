@@ -1,12 +1,9 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  21 OCT 2025 06:41
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  13 MAR 2026 17:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/preview-d
-03f7f7c1566.dir/Tutorial.tex
-
-(/private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/preview-d0
-3f7f7c1566.dir/Tutorial.tex
+**Tutorial.tex
+(./Tutorial.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/article.cls
@@ -472,8 +469,7 @@ File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count329
 )) (/usr/local/texlive/2025/texmf-dist/tex/latex/xurl/xurl.sty
 Package: xurl 2022/01/09 v 0.10 modify URL breaks
-)
-No file Tutorial.aux.
+) (./Tutorial.aux)
 \openout1 = `Tutorial.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 121.
@@ -807,9 +803,6 @@ File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
 ern Roman (RS)
 )
 Package hyperref Info: Link coloring OFF on input line 121.
-
-Package hyperref Warning: Rerun to get /PageLabels entry.
-
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 12.0pt on input line 123.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
@@ -846,20 +839,37 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 123
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
+) (./Tutorial.toc
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 7.0pt on input line 2.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 5.0pt on input line 2.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 10.00092pt on input line 2.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 7.00064pt on input line 2.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 5.00046pt on input line 2.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 9.99893pt on input line 2.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 6.99925pt on input line 2.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 4.99947pt on input line 2.
 )
-No file Tutorial.toc.
 \tf@toc=\write4
 \openout4 = `Tutorial.toc'.
 
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
 (Font)              Font shape `TU/lmtt/b/n' tried instead on input line 158.
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 164.
 
 
 [1
 
 ]
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 164.
+
 Overfull \hbox (4.82722pt too wide) in paragraph at lines 210--211
 []\TU/lmr/m/n/10 experiment  
  []
@@ -937,6 +947,8 @@ ne10",..: 1 1 1 1 1 1 1 1 1 1 ...[]
 [3]
 
 [4]
+
+[5]
 Overfull \hbox (40.659pt too wide) in paragraph at lines 585--593
 \TU/lmr/m/it/10 son\TU/lmr/m/n/10 (\TU/lmtt/m/n/10 =poisson(link="log")\TU/lmr/
 m/n/10 ), \TU/lmr/m/it/10 binomial\TU/lmr/m/n/10 (\TU/lmtt/m/n/10 =binomial(lin
@@ -946,1166 +958,823 @@ tt/m/n/10 =binomial(link="log")\TU/lmr/m/n/10 ),
 
 
 
-[5]
-
 [6]
-File: ../../../Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final
-_paper_materials/Revisions/Older Version_Figures/Figures/Figure1.png Graphic fi
-le (type bmp)
-<../../../Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_pape
-r_materials/Revisions/Older Version_Figures/Figures/Figure1.png>
-
-Overfull \hbox (676.44722pt too wide) in paragraph at lines 731--732
- [][] 
- []
-
-
-LaTeX Warning: Float too large for page by 841.04176pt on input line 736.
-
-File: ../../../Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final
-_paper_materials/Revisions/Older Version_Figures/Figures/Figure12.png Graphic f
-ile (type bmp)
-<../../../Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_pape
-r_materials/Revisions/Older Version_Figures/Figures/Figure12.png>
-
-Overfull \hbox (347.6185pt too wide) in paragraph at lines 745--746
- [][] 
- []
-
-
-LaTeX Warning: Float too large for page by 273.38573pt on input line 750.
-
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 760.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 760.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.00092pt on input line 760.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.00064pt on input line 760.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00046pt on input line 760.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 9.99893pt on input line 760.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.99925pt on input line 760.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 760.
-
 
 [7]
+File: ../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resource
+s/library/RMeDPower2/figures/package_structure.png Graphic file (type bmp)
+<../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib
+rary/RMeDPower2/figures/package_structure.png>
 
-[8]
+Overfull \hbox (676.44722pt too wide) in paragraph at lines 737--738
+ [][] 
+ []
 
-[9]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-19-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-19-1.pdf>
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-19-2.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-19-2.pdf>
 
-Overfull \hbox (33.64888pt too wide) in paragraph at lines 784--793
+LaTeX Warning: Float too large for page by 841.04176pt on input line 742.
+
+File: ../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resource
+s/library/RMeDPower2/figures/application_domains.png Graphic file (type bmp)
+<../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib
+rary/RMeDPower2/figures/application_domains.png>
+
+Overfull \hbox (347.6185pt too wide) in paragraph at lines 751--752
+ [][] 
+ []
+
+
+LaTeX Warning: Float too large for page by 273.38573pt on input line 756.
+
+File: Tutorial_files/figure-latex/unnamed-chunk-19-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-19-1.pdf>
+File: Tutorial_files/figure-latex/unnamed-chunk-19-2.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-19-2.pdf>
+
+Overfull \hbox (33.64888pt too wide) in paragraph at lines 791--800
 \TU/lmr/m/n/10 periments. []
  []
 
 
 
+[8]
+
+[9]
+
 [10]
 
 [11]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-1.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-1.pdf>
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-2.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-2.pdf>
+File: Tutorial_files/figure-latex/output-plots1-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots1-1.pdf>
 
 
 [12]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-3.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-3.pdf>
+File: Tutorial_files/figure-latex/output-plots1-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots1-2.pdf>
 
 
 [13]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-4.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-4.pdf>
+File: Tutorial_files/figure-latex/output-plots1-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots1-3.pdf>
 
 
 [14]
-Overfull \hbox (5.26334pt too wide) in paragraph at lines 891--896
+File: Tutorial_files/figure-latex/output-plots1-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots1-4.pdf>
+
+
+[15]
+Overfull \hbox (5.26334pt too wide) in paragraph at lines 898--903
 []\TU/lmr/bx/n/10 Figure 4: \TU/lmr/m/n/10 random_effects_QQ_1. Check normality
  of random effects for experimental_column2_(Intercept)
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-5.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-5.pdf>
+File: Tutorial_files/figure-latex/output-plots1-5.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots1-5.pdf>
 
 
-[15]
-Overfull \hbox (5.26334pt too wide) in paragraph at lines 899--905
+[16]
+Overfull \hbox (5.26334pt too wide) in paragraph at lines 906--912
 []\TU/lmr/bx/n/10 Figure 5: \TU/lmr/m/n/10 random_effects_QQ_2. Check normality
  of random effects for experimental_column1_(Intercept)
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-6.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-6.pdf>
-
-
-[16]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-7.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots1-7.pdf>
+File: Tutorial_files/figure-latex/output-plots1-6.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots1-6.pdf>
 
 
 [17]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-1.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-1.pdf>
+File: Tutorial_files/figure-latex/output-plots1-7.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots1-7.pdf>
 
 
 [18]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-2.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-2.pdf>
+File: Tutorial_files/figure-latex/output-plots2-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots2-1.pdf>
 
 
 [19]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-3.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-3.pdf>
+File: Tutorial_files/figure-latex/output-plots2-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots2-2.pdf>
 
 
 [20]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-4.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-4.pdf>
+File: Tutorial_files/figure-latex/output-plots2-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots2-3.pdf>
 
 
 [21]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 990--995
+File: Tutorial_files/figure-latex/output-plots2-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots2-4.pdf>
+
+
+[22]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 997--1002
 []\TU/lmr/bx/n/10 Figure 11: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
 y of random effects for experimental_column2_(Intercept)
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-5.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-5.pdf>
+File: Tutorial_files/figure-latex/output-plots2-5.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots2-5.pdf>
 
 
-[22]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 998--1003
+[23]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 1005--1010
 []\TU/lmr/bx/n/10 Figure 12: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
 y of random effects for experimental_column1_(Intercept)
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-6.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-6.pdf>
-
-
-[23]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-7.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots2-7.pdf>
+File: Tutorial_files/figure-latex/output-plots2-6.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots2-6.pdf>
 
 
 [24]
+File: Tutorial_files/figure-latex/output-plots2-7.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots2-7.pdf>
+
 
 [25]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-24-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-24-1.pdf>
-
-LaTeX Font Warning: Font shape `TU/lmtt/bx/it' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/sl' tried instead on input line 1102.
-
-
-
 
 [26]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-27-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-27-1.pdf>
+File: Tutorial_files/figure-latex/unnamed-chunk-24-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-24-1.pdf>
 
-Overfull \hbox (8.30135pt too wide) in paragraph at lines 1153--1155
+LaTeX Font Warning: Font shape `TU/lmtt/bx/it' in size <10> not available
+(Font)              Font shape `TU/lmtt/b/sl' tried instead on input line 1118.
+
+
+
+
+[27]
+File: Tutorial_files/figure-latex/unnamed-chunk-27-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-27-1.pdf>
+
+Overfull \hbox (8.30135pt too wide) in paragraph at lines 1169--1171
 []\TU/lmr/m/n/10 [[1]] [] 
  []
 
 
 
-[27]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-29-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-29-1.pdf>
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-29-2.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-29-2.pdf>
-
-
 [28]
+Overfull \vbox (2.10666pt too high) detected at line 1216
+ []
+
+
 
 [29]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-31-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-31-1.pdf>
+File: Tutorial_files/figure-latex/unnamed-chunk-29-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-29-1.pdf>
+File: Tutorial_files/figure-latex/unnamed-chunk-29-2.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-29-2.pdf>
 
 
 [30]
 
 [31]
+File: Tutorial_files/figure-latex/unnamed-chunk-31-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-31-1.pdf>
+
 
 [32]
 
 [33]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots3-1.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots3-1.pdf>
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots3-2.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots3-2.pdf>
-
 
 [34]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots3-3.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots3-3.pdf>
-
 
 [35]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 1529--1535
+File: Tutorial_files/figure-latex/output-plots3-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots3-1.pdf>
+File: Tutorial_files/figure-latex/output-plots3-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots3-2.pdf>
+
+
+[36]
+File: Tutorial_files/figure-latex/output-plots3-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots3-3.pdf>
+
+
+[37]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 1545--1551
 []\TU/lmr/bx/n/10 Figure 22: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
 y of random effects for experimental_column1_(Intercept)
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots3-4.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots3-4.pdf>
-
-
-[36]
-
-[37]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-37-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-37-1.pdf>
+File: Tutorial_files/figure-latex/output-plots3-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots3-4.pdf>
 
 
 [38]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-39-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-39-1.pdf>
 
-Overfull \hbox (8.30135pt too wide) in paragraph at lines 1642--1644
+[39]
+File: Tutorial_files/figure-latex/unnamed-chunk-37-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-37-1.pdf>
+
+
+[40]
+File: Tutorial_files/figure-latex/unnamed-chunk-39-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-39-1.pdf>
+
+Overfull \hbox (8.30135pt too wide) in paragraph at lines 1658--1660
 []\TU/lmr/m/n/10 [[1]] [] 
  []
 
 
 
-[39]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-42-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-42-1.pdf>
+[41]
+File: Tutorial_files/figure-latex/unnamed-chunk-42-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-42-1.pdf>
 
 
-[40]
-Overfull \hbox (118.24498pt too wide) in paragraph at lines 1741--1741
+[42]
+Overfull \hbox (118.24498pt too wide) in paragraph at lines 1755--1755
 []\TU/lmtt/m/n/10 ## [1] "Not enough levels to perform cooks test for experimen
 tal_column1 with the assumed binomial distribution"[] 
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots4-1.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots4-1.pdf>
 
+Overfull \hbox (118.24498pt too wide) in paragraph at lines 1760--1760
+[]\TU/lmtt/m/n/10 ## [1] "Not enough levels to perform cooks test for experimen
+tal_column1 with the assumed binomial distribution"[] 
+ []
 
-[41]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots4-2.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots4-2.pdf>
-
-
-[42]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots4-3.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots4-3.pdf>
+File: Tutorial_files/figure-latex/output-plots4-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots4-1.pdf>
 
 
 [43]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 1787--1793
+File: Tutorial_files/figure-latex/output-plots4-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots4-2.pdf>
+
+
+[44]
+File: Tutorial_files/figure-latex/output-plots4-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots4-3.pdf>
+
+
+[45]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 1806--1812
 []\TU/lmr/bx/n/10 Figure 29: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
 y of random effects for experimental_column2_(Intercept)
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots4-4.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots4-4.pdf>
+File: Tutorial_files/figure-latex/output-plots4-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots4-4.pdf>
 
 
-[44]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 1796--1802
+[46]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 1815--1821
 []\TU/lmr/bx/n/10 Figure 30: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
 y of random effects for experimental_column1_(Intercept)
  []
 
+File: Tutorial_files/figure-latex/output-plots4-5.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots4-5.pdf>
 
 
-[45]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-46-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-46-1.pdf>
+[47]
+File: Tutorial_files/figure-latex/output-plots5-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots5-1.pdf>
 
 
-[46]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-48-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-48-1.pdf>
+[48]
+File: Tutorial_files/figure-latex/output-plots5-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots5-2.pdf>
 
-Overfull \hbox (8.30135pt too wide) in paragraph at lines 1888--1890
+
+[49]
+File: Tutorial_files/figure-latex/output-plots5-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots5-3.pdf>
+
+
+[50]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 1866--1872
+[]\TU/lmr/bx/n/10 Figure 34: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
+y of random effects for experimental_column2_(Intercept)
+ []
+
+File: Tutorial_files/figure-latex/output-plots5-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots5-4.pdf>
+
+
+[51]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 1875--1881
+[]\TU/lmr/bx/n/10 Figure 35: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
+y of random effects for experimental_column1_(Intercept)
+ []
+
+
+Underfull \hbox (badness 1043) in paragraph at lines 1875--1881
+\TU/lmr/m/n/10 to the solid red diagonal line. Check the Normal Q-Q plots for g
+ood and bad examples here:
+ []
+
+
+
+[52]
+File: Tutorial_files/figure-latex/unnamed-chunk-46-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-46-1.pdf>
+File: Tutorial_files/figure-latex/unnamed-chunk-48-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-48-1.pdf>
+
+Overfull \hbox (8.30135pt too wide) in paragraph at lines 1950--1952
 []\TU/lmr/m/n/10 [[1]] [] 
  []
 
 
 
-[47]
-
-[48]
-
-[49]
-
-[50]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots6-1.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots6-1.pdf>
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots6-2.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots6-2.pdf>
-
-
-[51]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots6-3.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots6-3.pdf>
-
-
-[52]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 2109--2115
-[]\TU/lmr/bx/n/10 Figure 35: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
-y of random effects for experimental_column1_(Intercept)
- []
-
-
-Underfull \hbox (badness 1609) in paragraph at lines 2109--2115
-\TU/lmr/m/n/10 (natural scale): sample_number. Expectation is that the black po
-ints lie on or close to the
- []
-
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots6-4.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots6-4.pdf>
-
-
 [53]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots6-5.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots6-5.pdf>
-
 
 [54]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots7-1.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots7-1.pdf>
-
 
 [55]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots7-2.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots7-2.pdf>
-
 
 [56]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots7-3.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots7-3.pdf>
+File: Tutorial_files/figure-latex/output-plots6-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots6-1.pdf>
+File: Tutorial_files/figure-latex/output-plots6-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots6-2.pdf>
 
 
 [57]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 2191--2197
+File: Tutorial_files/figure-latex/output-plots6-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots6-3.pdf>
+
+
+[58]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 2166--2172
 []\TU/lmr/bx/n/10 Figure 40: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
 y of random effects for experimental_column1_(Intercept)
  []
 
 
-Underfull \hbox (badness 1043) in paragraph at lines 2191--2197
-\TU/lmr/m/n/10 to the solid red diaganol line. Check the Normal Q-Q plots for g
-ood and bad examples here:
+Underfull \hbox (badness 1609) in paragraph at lines 2166--2172
+\TU/lmr/m/n/10 (natural scale): sample_number. Expectation is that the black po
+ints lie on or close to the
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots7-4.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots7-4.pdf>
-
-
-[58]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots7-5.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots7-5.pdf>
+File: Tutorial_files/figure-latex/output-plots6-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots6-4.pdf>
 
 
 [59]
+File: Tutorial_files/figure-latex/output-plots6-5.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots6-5.pdf>
+
 
 [60]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-53-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-53-1.pdf>
+File: Tutorial_files/figure-latex/output-plots7-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots7-1.pdf>
 
 
 [61]
-Overfull \hbox (65.74498pt too wide) in paragraph at lines 2308--2308
-[]\TU/lmtt/m/n/10 ## [1] "_________________________________Effect size of the c
-ondition_column is now 0.693147180559945"[] 
- []
-
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-55-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-55-1.pdf>
-
-Overfull \hbox (8.30135pt too wide) in paragraph at lines 2310--2312
-[]\TU/lmr/m/n/10 [[1]] [] 
- []
-
+File: Tutorial_files/figure-latex/output-plots7-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots7-2.pdf>
 
 
 [62]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-1.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-1.pdf>
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-2.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-2.pdf>
+File: Tutorial_files/figure-latex/output-plots7-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots7-3.pdf>
 
 
 [63]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-3.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-3.pdf>
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 2248--2254
+[]\TU/lmr/bx/n/10 Figure 45: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
+y of random effects for experimental_column1_(Intercept)
+ []
+
+
+Underfull \hbox (badness 1043) in paragraph at lines 2248--2254
+\TU/lmr/m/n/10 to the solid red diagonal line. Check the Normal Q-Q plots for g
+ood and bad examples here:
+ []
+
+File: Tutorial_files/figure-latex/output-plots7-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots7-4.pdf>
 
 
 [64]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-4.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-4.pdf>
+File: Tutorial_files/figure-latex/output-plots7-5.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots7-5.pdf>
 
 
 [65]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 2409--2414
-[]\TU/lmr/bx/n/10 Figure 48: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
-y of random effects for experimental_column2_(Intercept)
- []
-
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-5.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-5.pdf>
-
 
 [66]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 2417--2422
-[]\TU/lmr/bx/n/10 Figure 49: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
-y of random effects for experimental_column1_(Intercept)
- []
-
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-6.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-6.pdf>
+File: Tutorial_files/figure-latex/unnamed-chunk-53-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-53-1.pdf>
 
 
 [67]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-7.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots8-7.pdf>
+File: Tutorial_files/figure-latex/unnamed-chunk-55-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-55-1.pdf>
 
-
-[68]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-1.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-1.pdf>
-
-
-[69]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-2.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-2.pdf>
-
-
-[70]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-3.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-3.pdf>
-
-
-[71]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-4.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-4.pdf>
-
-
-[72]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 2509--2514
-[]\TU/lmr/bx/n/10 Figure 55: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
-y of random effects for experimental_column2_(Intercept)
- []
-
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-5.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-5.pdf>
-
-
-[73]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 2517--2522
-[]\TU/lmr/bx/n/10 Figure 56: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
-y of random effects for experimental_column1_(Intercept)
- []
-
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-6.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-6.pdf>
-
-
-[74]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-7.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-7.pdf>
-
-
-[75]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-8.pdf Graphic fil
-e (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots9-8.pdf>
-
-
-[76]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-1.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-1.pdf>
-
-
-[77]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-2.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-2.pdf>
-
-
-[78]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-3.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-3.pdf>
-
-
-[79]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-4.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-4.pdf>
-
-
-[80]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 2615--2621
-[]\TU/lmr/bx/n/10 Figure 63: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
-y of random effects for experimental_column2_(Intercept)
- []
-
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-5.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-5.pdf>
-
-
-[81]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 2624--2630
-[]\TU/lmr/bx/n/10 Figure 64: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
-y of random effects for experimental_column1_(Intercept)
- []
-
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-6.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-6.pdf>
-
-
-[82]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-7.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots10-7.pdf>
-
-
-[83]
-
-[84]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-60-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-60-1.pdf>
-
-
-[85]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-62-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-62-1.pdf>
-
-Overfull \hbox (10.30885pt too wide) in paragraph at lines 2748--2750
+Overfull \hbox (8.30135pt too wide) in paragraph at lines 2367--2369
 []\TU/lmr/m/n/10 [[1]] [] 
  []
 
 
+
+[68]
+File: Tutorial_files/figure-latex/output-plots8-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots8-1.pdf>
+File: Tutorial_files/figure-latex/output-plots8-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots8-2.pdf>
+
+
+[69]
+File: Tutorial_files/figure-latex/output-plots8-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots8-3.pdf>
+
+
+[70]
+File: Tutorial_files/figure-latex/output-plots8-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots8-4.pdf>
+
+
+[71]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 2461--2466
+[]\TU/lmr/bx/n/10 Figure 53: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
+y of random effects for experimental_column2_(Intercept)
+ []
+
+File: Tutorial_files/figure-latex/output-plots8-5.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots8-5.pdf>
+
+
+[72]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 2469--2474
+[]\TU/lmr/bx/n/10 Figure 54: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
+y of random effects for experimental_column1_(Intercept)
+ []
+
+File: Tutorial_files/figure-latex/output-plots8-6.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots8-6.pdf>
+
+
+[73]
+File: Tutorial_files/figure-latex/output-plots8-7.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots8-7.pdf>
+
+
+[74]
+File: Tutorial_files/figure-latex/output-plots9-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots9-1.pdf>
+
+
+[75]
+File: Tutorial_files/figure-latex/output-plots9-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots9-2.pdf>
+
+
+[76]
+File: Tutorial_files/figure-latex/output-plots9-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots9-3.pdf>
+
+
+[77]
+File: Tutorial_files/figure-latex/output-plots9-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots9-4.pdf>
+
+
+[78]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 2561--2566
+[]\TU/lmr/bx/n/10 Figure 60: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
+y of random effects for experimental_column2_(Intercept)
+ []
+
+File: Tutorial_files/figure-latex/output-plots9-5.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots9-5.pdf>
+
+
+[79]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 2569--2574
+[]\TU/lmr/bx/n/10 Figure 61: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
+y of random effects for experimental_column1_(Intercept)
+ []
+
+File: Tutorial_files/figure-latex/output-plots9-6.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots9-6.pdf>
+
+
+[80]
+File: Tutorial_files/figure-latex/output-plots9-7.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots9-7.pdf>
+
+
+[81]
+File: Tutorial_files/figure-latex/output-plots9-8.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots9-8.pdf>
+
+
+[82]
+
+[83]
+File: Tutorial_files/figure-latex/unnamed-chunk-60-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-60-1.pdf>
+
+
+[84]
+File: Tutorial_files/figure-latex/unnamed-chunk-62-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-62-1.pdf>
+
+Overfull \hbox (10.30885pt too wide) in paragraph at lines 2699--2701
+[]\TU/lmr/m/n/10 [[1]] [] 
+ []
+
+
+
+[85]
 
 [86]
 
 [87]
+File: Tutorial_files/figure-latex/output-plots11-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots11-1.pdf>
+
 
 [88]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-1.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-1.pdf>
+File: Tutorial_files/figure-latex/output-plots11-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots11-2.pdf>
 
 
 [89]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-2.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-2.pdf>
+File: Tutorial_files/figure-latex/output-plots11-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots11-3.pdf>
 
 
 [90]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-3.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-3.pdf>
+File: Tutorial_files/figure-latex/output-plots11-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots11-4.pdf>
 
 
 [91]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-4.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-4.pdf>
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 2906--2912
+[]\TU/lmr/bx/n/10 Figure 70: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
+y of random effects for experimental_column2_(Intercept)
+ []
+
+File: Tutorial_files/figure-latex/output-plots11-5.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots11-5.pdf>
 
 
 [92]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 2955--2961
-[]\TU/lmr/bx/n/10 Figure 72: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
-y of random effects for experimental_column2_(Intercept)
- []
-
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-5.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-5.pdf>
-
-
-[93]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 2964--2969
-[]\TU/lmr/bx/n/10 Figure 73: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 2915--2920
+[]\TU/lmr/bx/n/10 Figure 71: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
 y of random effects for experimental_column1_(Intercept)
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-6.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-6.pdf>
+File: Tutorial_files/figure-latex/output-plots11-6.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots11-6.pdf>
+
+
+[93]
+File: Tutorial_files/figure-latex/output-plots11-7.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots11-7.pdf>
 
 
 [94]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-7.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-7.pdf>
+File: Tutorial_files/figure-latex/output-plots11-8.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots11-8.pdf>
 
 
 [95]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-8.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots11-8.pdf>
+File: Tutorial_files/figure-latex/output-plots12-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots12-1.pdf>
 
 
 [96]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-1.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-1.pdf>
+File: Tutorial_files/figure-latex/output-plots12-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots12-2.pdf>
 
 
 [97]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-2.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-2.pdf>
+File: Tutorial_files/figure-latex/output-plots12-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots12-3.pdf>
 
 
 [98]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-3.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-3.pdf>
+File: Tutorial_files/figure-latex/output-plots12-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots12-4.pdf>
 
 
 [99]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-4.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-4.pdf>
-
-
-[100]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 3062--3068
-[]\TU/lmr/bx/n/10 Figure 80: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 3013--3019
+[]\TU/lmr/bx/n/10 Figure 78: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
 y of random effects for experimental_column2_(Intercept)
  []
 
 
-Underfull \hbox (badness 1033) in paragraph at lines 3062--3068
+Underfull \hbox (badness 1033) in paragraph at lines 3013--3019
 \TU/lmr/m/n/10 (natural scale wo outliers): slice_number. Expectation is that t
 he black points lie on or close
  []
 
 
-Underfull \hbox (badness 1043) in paragraph at lines 3062--3068
-\TU/lmr/m/n/10 to the solid red diaganol line. Check the Normal Q-Q plots for g
+Underfull \hbox (badness 1043) in paragraph at lines 3013--3019
+\TU/lmr/m/n/10 to the solid red diagonal line. Check the Normal Q-Q plots for g
 ood and bad examples here:
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-5.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-5.pdf>
+File: Tutorial_files/figure-latex/output-plots12-5.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots12-5.pdf>
 
 
-[101]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 3071--3077
-[]\TU/lmr/bx/n/10 Figure 81: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
+[100]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 3022--3028
+[]\TU/lmr/bx/n/10 Figure 79: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
 y of random effects for experimental_column1_(Intercept)
  []
 
 
-Underfull \hbox (badness 1102) in paragraph at lines 3071--3077
+Underfull \hbox (badness 1102) in paragraph at lines 3022--3028
 \TU/lmr/m/n/10 (natural scale wo outliers): Mice. Expectation is that the black
  points lie on or close to the
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-6.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-6.pdf>
+File: Tutorial_files/figure-latex/output-plots12-6.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots12-6.pdf>
+
+
+[101]
+File: Tutorial_files/figure-latex/output-plots12-7.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots12-7.pdf>
 
 
 [102]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-7.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots12-7.pdf>
+File: Tutorial_files/figure-latex/output-plots13-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots13-1.pdf>
 
 
 [103]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-1.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-1.pdf>
+File: Tutorial_files/figure-latex/output-plots13-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots13-2.pdf>
 
 
 [104]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-2.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-2.pdf>
+File: Tutorial_files/figure-latex/output-plots13-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots13-3.pdf>
 
 
 [105]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-3.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-3.pdf>
+File: Tutorial_files/figure-latex/output-plots13-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots13-4.pdf>
 
 
 [106]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-4.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-4.pdf>
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 3113--3119
+[]\TU/lmr/bx/n/10 Figure 85: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
+y of random effects for experimental_column2_(Intercept)
+ []
+
+File: Tutorial_files/figure-latex/output-plots13-5.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots13-5.pdf>
 
 
 [107]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 3162--3168
-[]\TU/lmr/bx/n/10 Figure 87: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
-y of random effects for experimental_column2_(Intercept)
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 3122--3127
+[]\TU/lmr/bx/n/10 Figure 86: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
+y of random effects for experimental_column1_(Intercept)
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-5.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-5.pdf>
+File: Tutorial_files/figure-latex/output-plots13-6.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots13-6.pdf>
 
 
 [108]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 3171--3176
-[]\TU/lmr/bx/n/10 Figure 88: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
-y of random effects for experimental_column1_(Intercept)
- []
-
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-6.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-6.pdf>
+File: Tutorial_files/figure-latex/output-plots13-7.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots13-7.pdf>
 
 
 [109]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-7.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots13-7.pdf>
-
 
 [110]
+File: Tutorial_files/figure-latex/output-plots14-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots14-1.pdf>
+File: Tutorial_files/figure-latex/output-plots14-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots14-2.pdf>
+
 
 [111]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-1.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-1.pdf>
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-2.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-2.pdf>
+File: Tutorial_files/figure-latex/output-plots14-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots14-3.pdf>
 
 
 [112]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-3.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-3.pdf>
+File: Tutorial_files/figure-latex/output-plots14-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots14-4.pdf>
 
 
 [113]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-4.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-4.pdf>
-
-
-[114]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 3307--3313
-[]\TU/lmr/bx/n/10 Figure 94: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 3258--3264
+[]\TU/lmr/bx/n/10 Figure 92: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
 y of random effects for experimental_column2_(Intercept)
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-5.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-5.pdf>
+File: Tutorial_files/figure-latex/output-plots14-5.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots14-5.pdf>
 
 
-[115]
-Overfull \hbox (11.01334pt too wide) in paragraph at lines 3316--3321
-[]\TU/lmr/bx/n/10 Figure 95: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
+[114]
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 3267--3272
+[]\TU/lmr/bx/n/10 Figure 93: \TU/lmr/m/n/10 random_effects_QQ_2. Check normalit
 y of random effects for experimental_column1_(Intercept)
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-6.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-6.pdf>
+File: Tutorial_files/figure-latex/output-plots14-6.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots14-6.pdf>
+
+
+[115]
+File: Tutorial_files/figure-latex/output-plots14-7.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots14-7.pdf>
 
 
 [116]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-7.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots14-7.pdf>
+File: Tutorial_files/figure-latex/output-plots15-1.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots15-1.pdf>
 
 
 [117]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-1.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-1.pdf>
+File: Tutorial_files/figure-latex/output-plots15-2.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots15-2.pdf>
 
 
 [118]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-2.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-2.pdf>
+File: Tutorial_files/figure-latex/output-plots15-3.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots15-3.pdf>
 
 
 [119]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-3.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-3.pdf>
+File: Tutorial_files/figure-latex/output-plots15-4.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots15-4.pdf>
 
 
 [120]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-4.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-4.pdf>
+Overfull \hbox (11.01334pt too wide) in paragraph at lines 3357--3363
+[]\TU/lmr/bx/n/10 Figure 99: \TU/lmr/m/n/10 random_effects_QQ_1. Check normalit
+y of random effects for experimental_column2_(Intercept)
+ []
+
+File: Tutorial_files/figure-latex/output-plots15-5.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots15-5.pdf>
 
 
 [121]
-Overfull \hbox (16.76334pt too wide) in paragraph at lines 3406--3412
-[]\TU/lmr/bx/n/10 Figure 101: \TU/lmr/m/n/10 random_effects_QQ_1. Check normali
-ty of random effects for experimental_column2_(Intercept)
- []
-
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-5.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-5.pdf>
-
-
-[122]
-Overfull \hbox (16.76334pt too wide) in paragraph at lines 3415--3420
-[]\TU/lmr/bx/n/10 Figure 102: \TU/lmr/m/n/10 random_effects_QQ_2. Check normali
+Overfull \hbox (16.76334pt too wide) in paragraph at lines 3366--3371
+[]\TU/lmr/bx/n/10 Figure 100: \TU/lmr/m/n/10 random_effects_QQ_2. Check normali
 ty of random effects for experimental_column1_(Intercept)
  []
 
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-6.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-6.pdf>
+File: Tutorial_files/figure-latex/output-plots15-6.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots15-6.pdf>
+
+
+[122]
+File: Tutorial_files/figure-latex/output-plots15-7.pdf Graphic file (type pdf)
+<use Tutorial_files/figure-latex/output-plots15-7.pdf>
 
 
 [123]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-7.pdf Graphic fi
-le (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/output-plots15-7.pdf>
-
 
 [124]
+File: Tutorial_files/figure-latex/unnamed-chunk-69-1.pdf Graphic file (type pdf
+)
+<use Tutorial_files/figure-latex/unnamed-chunk-69-1.pdf>
+
 
 [125]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-69-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-69-1.pdf>
+File: ../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resource
+s/library/RMeDPower2/figures/Part5.png Graphic file (type bmp)
+<../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib
+rary/RMeDPower2/figures/Part5.png>
 
-
-[126]
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-71-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-71-1.pdf>
-
-Overfull \hbox (8.30135pt too wide) in paragraph at lines 3529--3531
-[]\TU/lmr/m/n/10 [[1]] [] 
- []
-
-File: /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previ
-ew-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-73-1.pdf Graphic 
-file (type pdf)
-<use /private/var/folders/_r/t_6nglyn5xb4f5byb88r19n00000gr/T/RtmpJOKSrI/previe
-w-d03f7f7c1566.dir/Tutorial_files/figure-latex/unnamed-chunk-73-1.pdf>
-
-Overfull \hbox (8.30135pt too wide) in paragraph at lines 3546--3548
-[]\TU/lmr/m/n/10 [[1]] [] 
- []
-
-
-
-[127]
-File: ../../../Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final
-_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503
-_Part5.png Graphic file (type bmp)
-<../../../Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_pape
-r_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part
-5.png>
-
-Overfull \hbox (2090.04823pt too wide) in paragraph at lines 3569--3570
+Overfull \hbox (2090.04823pt too wide) in paragraph at lines 3516--3517
  [][] 
  []
 
 
-LaTeX Warning: Float too large for page by 2734.34074pt on input line 3574.
+LaTeX Warning: Float too large for page by 2734.34074pt on input line 3521.
 
 
+
+[126]
+
+[127]
 
 [128]
 
@@ -2116,70 +1785,93 @@ LaTeX Warning: Float too large for page by 2734.34074pt on input line 3574.
 [131]
 
 [132]
-Overfull \hbox (13.24498pt too wide) in paragraph at lines 3847--3847
-[]\TU/lmtt/m/n/10 ## [1] "_________________________________Effect size of the c
-ondition_column is now 0.03072"[] 
+File: ../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resource
+s/library/RMeDPower2/figures/Part7.png Graphic file (type bmp)
+<../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib
+rary/RMeDPower2/figures/Part7.png>
+
+Overfull \hbox (2090.04823pt too wide) in paragraph at lines 3947--3948
+ [][] 
  []
+
+
+LaTeX Warning: Float too large for page by 2708.40074pt on input line 3952.
+
+File: ../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resource
+s/library/RMeDPower2/figures/Part9.png Graphic file (type bmp)
+<../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib
+rary/RMeDPower2/figures/Part9.png>
+
+Overfull \hbox (2090.04823pt too wide) in paragraph at lines 3961--3962
+ [][] 
+ []
+
+
+LaTeX Warning: Float too large for page by 2708.40074pt on input line 3966.
+
+File: ../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resource
+s/library/RMeDPower2/figures/Part10.png Graphic file (type bmp)
+<../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib
+rary/RMeDPower2/figures/Part10.png>
+
+Overfull \hbox (2090.04823pt too wide) in paragraph at lines 3974--3975
+ [][] 
+ []
+
+
+LaTeX Warning: Float too large for page by 2710.35074pt on input line 3979.
+
+File: ../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resource
+s/library/RMeDPower2/figures/Part8.png Graphic file (type bmp)
+<../../../../../Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib
+rary/RMeDPower2/figures/Part8.png>
+
+Overfull \hbox (2090.04823pt too wide) in paragraph at lines 3993--3994
+ [][] 
+ []
+
+
+LaTeX Warning: Float too large for page by 2710.35074pt on input line 3998.
 
 
 
 [133]
 
 [134]
-File: ../../../Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final
-_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503
-_Part7.png Graphic file (type bmp)
-<../../../Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_pape
-r_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part
-7.png>
 
-Overfull \hbox (2090.04823pt too wide) in paragraph at lines 4013--4014
- [][] 
+[135]
+
+[136]
+
+[137]
+
+[138]
+Overfull \hbox (13.24498pt too wide) in paragraph at lines 4177--4177
+[]\TU/lmtt/m/n/10 ## BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64
+/Resources/lib/libRblas.0.dylib[] 
  []
 
 
-LaTeX Warning: Float too large for page by 2708.40074pt on input line 4018.
-
-File: ../../../Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final
-_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503
-_Part9.png Graphic file (type bmp)
-<../../../Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_pape
-r_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part
-9.png>
-
-Overfull \hbox (2090.04823pt too wide) in paragraph at lines 4027--4028
- [][] 
+Overfull \hbox (139.24498pt too wide) in paragraph at lines 4177--4177
+[]\TU/lmtt/m/n/10 ## LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64
+/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1[] 
  []
 
 
-LaTeX Warning: Float too large for page by 2708.40074pt on input line 4032.
 
-File: ../../../Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final
-_paper_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503
-_Part10.png Graphic file (type bmp)
-<../../../Gladstone Dropbox/Reuben Thomas/calcPower f1000_manuscript/Final_pape
-r_materials/Revisions/Older Version_Figures/Figures/J-Kaye_M-Shin 20222503_Part
-10.png>
-
-Overfull \hbox (2090.04823pt too wide) in paragraph at lines 4040--4041
- [][] 
- []
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.4044 ...lue assigned to the parameter max_size.}
-                                                  \label{fig:lineCell}
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
- 
+[139] (./Tutorial.aux)
+ ***********
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+ ***********
+ ) 
 Here is how much of TeX's memory you used:
- 20534 strings out of 473832
- 505167 string characters out of 5729482
- 945061 words of memory out of 5000000
- 43215 multiletter control sequences out of 15000+600000
+ 20569 strings out of 473832
+ 420617 string characters out of 5729482
+ 950364 words of memory out of 5000000
+ 43248 multiletter control sequences out of 15000+600000
  565312 words of font info for 92 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 90i,7n,114p,1098b,587s stack positions out of 10000i,1000n,20000p,200000b,200000s
-Output written on Tutorial.pdf (134 pages).
+ 90i,7n,114p,1005b,581s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+Output written on Tutorial.pdf (139 pages).

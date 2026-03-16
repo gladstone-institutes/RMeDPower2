@@ -1,6 +1,4 @@
 #' @title calculate_power_covariate
-#'
-#'
 #' @description This function uses simulation to perform power analysis. It is designed to explore the power of biological experiments and to suggest an optimal number of experimental variables with reasonable power. The backbone of the function is based on simr package, which fits a fixed effect or mixed effect model based on the observed data and simulates response variables. Users can test the power of different combinations of experimental variables and parameters.
 #'
 #' Note: The current version does not accept categorical response variables, sample size parameters smaller than the observed samples size
@@ -241,7 +239,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
       formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
       lmerFit <- lme4::lmer(formula_str, data = Data)
       ##base model fixed formula when there is an interaction term
-      if(include_interaction){
+      if(!is.null(covariate)){
         formula_str0 <<- as.formula(paste0("response_column ~ covariate"))
       }
     } else if (!is.null(family_p) && family_p$family == "binomial" && !is.null(total_column)) {
@@ -250,7 +248,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
                                        fixed_formula, "+", random_formula))
       lmerFit <- lme4::glmer(formula_str, data = Data, family = family_p)
       ##base model fixed formula when there is an interaction term
-      if(include_interaction){
+      if(!is.null(covariate)){
         formula_str0 <<- as.formula(paste0("cbind(response_column, (total_column - response_column)) ~ covariate"))
       }
 
@@ -260,7 +258,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
                                        "+ offset(log(total_column))"))
       lmerFit <- lme4::glmer.nb(formula_str, data = Data, family = family_p)
       ##base model fixed formula when there is an interaction term
-      if(include_interaction){
+      if(!is.null(covariate)){
         formula_str0 <<- as.formula(paste0("response_column ~ covariate"))
       }
     } else if (!is.null(family_p) && family_p$family == "poisson" && !is.null(total_column)) {
@@ -269,7 +267,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
                                        "+ offset(log(total_column))"))
       lmerFit <- lme4::glmer(formula_str, data = Data, family = family_p)
       ##base model fixed formula when there is an interaction term
-      if(include_interaction){
+      if(!is.null(covariate)){
         formula_str0 <<- as.formula(paste0("response_column ~ covariate"))
       }
     }
@@ -278,7 +276,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
       formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
       lmerFit <- lme4::glmer.nb(formula_str, data = Data, family = family_p)
       ##base model fixed formula when there is an interaction term
-      if(include_interaction){
+      if(!is.null(covariate)){
         formula_str0 <<- as.formula(paste0("response_column ~ covariate"))
       }
     }
@@ -287,7 +285,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
       formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
       lmerFit <- lme4::glmer(formula_str, data = Data, family = family_p)
       ##base model fixed formula when there is an interaction term
-      if(include_interaction){
+      if(!is.null(covariate)){
         formula_str0 <<- as.formula(paste0("response_column ~ covariate"))
       }
     }
@@ -581,7 +579,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
     lmerFit=artificial_lmer
 
     ##base model fixed formula when there is an interaction term
-    if(include_interaction){
+    if(!is.null(covariate)){
       formula_str0 <<- as.formula(paste0("response_column ~ covariate"))
     }
 
@@ -750,7 +748,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
     ###### power simulation
 
-    if(include_interaction)
+    if(!is.null(covariate))
       ps=simr::powerSim(extended_target_columns, test=simr::fcompare(formula_str0), nsim=nsimn, progress = FALSE)
     else
       ps=simr::powerSim(extended_target_columns, test=simr::fixed("condition_column"), nsim=nsimn, progress = FALSE)
@@ -859,7 +857,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
           # pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"),along=target_columns_renamed[i], nsim=nsimn,
           #                   breaks=seq(1,max_size[i],breaks[i]), progress = FALSE   )
-          if(include_interaction)
+          if(!is.null(covariate))
             pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fcompare(formula_str0),along=target_columns_renamed[i], nsim=nsimn, breaks=seq(1,max_size[i],breaks[i]), progress = FALSE)
           else
             pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"), along=target_columns_renamed[i], nsim=nsimn, breaks=seq(1,max_size[i],breaks[i]), progress = FALSE)
@@ -868,7 +866,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
           # pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"),within=target_columns_renamed[i], nsim=nsimn,
           #                   breaks=seq(1,max_size[i],breaks[i]), progress = FALSE   )
 
-          if(include_interaction)
+          if(!is.null(covariate))
             pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fcompare(formula_str0),within=target_columns_renamed[i], nsim=nsimn, breaks=seq(1,max_size[i],breaks[i]), progress = FALSE)
           else
             pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"), within=target_columns_renamed[i], nsim=nsimn, breaks=seq(1,max_size[i],breaks[i]), progress = FALSE)
@@ -892,14 +890,14 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
           geom_errorbar(aes(ymin = lower, ymax = upper)) +
           geom_hline(yintercept = 80, lty=2) +
           labs(title = "Sample size calculations",
-               subtitle = paste0("Statistical power estimates expressed as percentages as a functions of different levels of ", target_columns[i]),
+               subtitle = paste0("Statistical power estimates expressed as a function of different numbers of ", target_columns[i]),
                x = paste0("Number of ", target_columns[i]),
                y = "Statistical power") +
           theme_minimal() +
           theme(plot.title = element_text(size = 12, face = "bold"))+
           theme(plot.subtitle  = element_textbox_simple())
 
-        captions[i] <- paste0("Statistical power estimates expressed as percentages as a functions of different levels of ", target_columns[i])
+        captions[i] <- paste0("Statistical power estimates expressed as a function of different numbers of ", target_columns[i])
       }else{
         png(paste0(output[i],".png"))
         print(plots[[i]] + ggtitle(captions[i]) + theme(plot.title = element_textbox_simple()))

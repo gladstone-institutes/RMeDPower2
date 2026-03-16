@@ -1,0 +1,13 @@
+{
+  "response_column": "number_of_cells_per_sample_in_cluster",
+  "covariate": "Sex",
+  "condition_column": "Hippocampus_Vol_mm",
+  "experimental_columns": ["animal_model", "sample_id"],
+  "condition_is_categorical": false,
+  "covariate_is_categorical": true,
+  "crossed_columns": null,
+  "include_interaction": false,
+  "total_column": "total_numbers_of_cells_per_sample",
+  "outlier_alpha": 0.05,
+  "na_action": "complete"
+}

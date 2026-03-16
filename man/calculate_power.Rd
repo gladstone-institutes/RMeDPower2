@@ -64,7 +64,7 @@ calculate_power(
 
 \item{breaks}{Levels /sample sizes of the variable to be specified along the power curve. Default: max(1, round( the number of current levels / 5 ))}
 
-\item{effect_size}{If you know the effect size of your condition variable, the effect size can be provided as a parameter. If the effect size is not provided, it will be estimated from your data}
+\item{effect_size}{A 3 dimensional numeric vector given the proposed effect sizes/parameter estimates for the condition_column, covariate and interaction term between these two variables, respectively in that order. Depending on the model not all elements of the effect_size would make sense. For example, in situations, where there is only the condition column, the second and third elements of effect_size should be equal to NA. If you know the effect size of your condition variable, the effect size can be provided as a parameter. If the effect size is not provided, it will be estimated from your data}
 
 \item{ICC}{Intra-Class Coefficients (ICC) for each parameter}
 

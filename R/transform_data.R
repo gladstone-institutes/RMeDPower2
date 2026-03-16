@@ -341,7 +341,7 @@ generate_qc_plots <-  function(lms,
       stat_qq() +
       stat_qq_line(color = "red") +
       labs(title = paste0("Q-Q Plot: Residuals", description_suffix),
-           subtitle = paste0("Check normality of residuals", ". Expectation is that the black points lie on or close to the solid red diaganol line"),
+           subtitle = paste0("Check normality of residuals", ". Expectation is that the black points lie on or close to the solid red diagonal line"),
            x = "Theoretical Quantiles",
            y = "Sample Quantiles") +
       theme_minimal() +
@@ -350,7 +350,7 @@ generate_qc_plots <-  function(lms,
 
     names(plots)[plot_index+1] <- "residuals_QQ"
 
-    captions[plot_index+1] <- paste0("Check normality of residuals ", description_suffix, ". Expectation is that the black points lie on or close to the solid red diaganol line. Check the Normal Q-Q plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots ")
+    captions[plot_index+1] <- paste0("Check normality of residuals ", description_suffix, ". Expectation is that the black points lie on or close to the solid red diagonal line. Check the Normal Q-Q plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots ")
 
 
 
@@ -394,7 +394,7 @@ generate_qc_plots <-  function(lms,
 
     plots[[plot_index + 1]] <- ggplot_QQunif(simulationOutput, description_suffix = description_suffix)
     names(plots)[plot_index+1] <- "residuals_QQ"
-    captions[plot_index + 1] <- paste0("Q-Q Plot for Uniform Distribution", ". Expectation is that the black points lie on or close to the solid red diaganol line. Check the Q-Q plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots ")
+    captions[plot_index + 1] <- paste0("Q-Q Plot for Uniform Distribution", ". Expectation is that the black points lie on or close to the solid red diagonal line. Check the Q-Q plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots ")
 
     plots[[plot_index + 2]] <- ggplot_residuals_vs_predictor(simulationOutput, description_suffix = description_suffix)
     names(plots)[plot_index+2] <- "residuals_vs_predicted"
@@ -416,7 +416,7 @@ generate_qc_plots <-  function(lms,
         stat_qq() +
         stat_qq_line(color = "red") +
         labs(title = paste0("Q-Q Plot: Random effects for ", exp_factor),
-             subtitle = paste0(description_suffix, ": Check normality of random effects for ", names(random_effects)[c], "_", colnames(random_effects[[c]][j]), " ", ": ", exp_factor, ". Expectation is that the black points lie on or close to the solid red diaganol line"),
+             subtitle = paste0(description_suffix, ": Check normality of random effects for ", names(random_effects)[c], "_", colnames(random_effects[[c]][j]), " ", ": ", exp_factor, ". Expectation is that the black points lie on or close to the solid red diagonal line"),
              x = "Theoretical Quantiles",
              y = "Sample Quantiles") +
         theme_minimal() +
@@ -424,7 +424,7 @@ generate_qc_plots <-  function(lms,
         theme(plot.subtitle  = element_textbox_simple())
 
       names(plots)[plot_index+1] <- paste0("random_effects_QQ_",temp_count)
-      captions[plot_index+1] <- paste0("Check normality of random effects for ", names(random_effects)[c], "_", colnames(random_effects[[c]][j]), " ", description_suffix, ": ", exp_factor, ". Expectation is that the black points lie on or close to the solid red diaganol line. Check the Normal Q-Q plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots ")
+      captions[plot_index+1] <- paste0("Check normality of random effects for ", names(random_effects)[c], "_", colnames(random_effects[[c]][j]), " ", description_suffix, ": ", exp_factor, ". Expectation is that the black points lie on or close to the solid red diagonal line. Check the Normal Q-Q plots for good and bad examples here: https://library.virginia.edu/data/articles/diagnostic-plots ")
 
       plot_index <- plot_index + 1
       temp_count <- temp_count + 1
@@ -613,7 +613,7 @@ ggplot_QQunif <- function(dharma_obj,
     geom_point(alpha = 0.6, size = 1.5) +
     geom_abline(intercept = 0, slope = 1, color = "red",  linewidth = 1) +
     labs(title = paste(title, description_suffix),
-         subtitle = paste0("Q-Q Plot for Uniform Distribution", ". Expectation is that the black points lie on or close to the solid red diaganol line."),
+         subtitle = paste0("Q-Q Plot for Uniform Distribution", ". Expectation is that the black points lie on or close to the solid red diagonal line."),
          x = "Expected (Uniform)",
          y = "Observed Residuals") +
     theme_minimal() +
@@ -673,7 +673,7 @@ ggplot_residuals_vs_predictor <- function(dharma_obj,
     x_label <- predictor_name
   }
 
-  if(is.factor(plot_data$predictor) | length(unique(plot_data$predictor)) < 10){
+  if(is.factor(plot_data$predictor) | (length(unique(plot_data$predictor)) < 10) & (length(plot_data$predictor) >= 10)){
     plot_data$predictor <- as.factor(plot_data$predictor)
     p <- ggplot(plot_data, aes(x = predictor, y = residuals)) +
       geom_boxplot() +

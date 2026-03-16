@@ -56,3 +56,6 @@ A list of the linear mixed model result, original data, experimental column name
 \description{
 This function performs a linear mixed model analysis using lmer.
 }
+\examples{
+result=calculatePower(data=data, design=design, model=model, power_param=power_param)
+}

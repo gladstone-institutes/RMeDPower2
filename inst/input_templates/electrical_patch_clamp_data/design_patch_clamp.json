@@ -1,0 +1,11 @@
+{
+  "response_column": "negative_action_potential_mV",
+  "covariate": null,
+  "condition_column": "Genotype",
+  "experimental_columns": ["Mice", "slice_number"],
+  "condition_is_categorical": true,
+  "crossed_columns":  null,
+  "total_column": null,
+  "outlier_alpha": 0.05,
+  "na_action": "complete"
+}

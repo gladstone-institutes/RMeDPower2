@@ -1,0 +1,4 @@
+This directory is installed with the package and is intended to hold
+JSON template files used in the simulation examples in the
+RMeDPower2 vignette (tutorial_session3).
+

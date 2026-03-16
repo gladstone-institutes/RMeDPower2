@@ -1,9 +1,5 @@
-#' @title calculate_lmer_estimates_covariate
-#'
-#'
+#' @title calculate_lmer_estimates
 #' @description This function performs a (generalized) linear mixed model analysis using (g)lmer.
-#'
-#' Note: The current version does not accept categorical response variables, sample size parameters smaller than the observed samples size
 #'
 #' @import multtest
 #' @import simr

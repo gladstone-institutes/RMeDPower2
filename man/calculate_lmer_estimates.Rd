@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculate_lmer_estimates.R
 \name{calculate_lmer_estimates}
 \alias{calculate_lmer_estimates}
-\title{calculate_lmer_estimates_covariate}
+\title{calculate_lmer_estimates}
 \usage{
 calculate_lmer_estimates(
   data,
@@ -55,8 +55,6 @@ A linear mixed model result
 }
 \description{
 This function performs a (generalized) linear mixed model analysis using (g)lmer.
-
-Note: The current version does not accept categorical response variables, sample size parameters smaller than the observed samples size
 }
 \examples{
 result=calculate_lmer_estimates(data=plate_assay_pilot_data,

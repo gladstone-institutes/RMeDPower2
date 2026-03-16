@@ -1,0 +1,3 @@
+This directory is installed with the package and is intended to hold
+JSON template files and example input data for cell assay examples
+used in the RMeDPower2 vignette.

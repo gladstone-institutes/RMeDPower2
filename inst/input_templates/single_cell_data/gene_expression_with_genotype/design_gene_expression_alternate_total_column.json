@@ -1,0 +1,11 @@
+{
+  "response_column": "y",
+  "covariate": "sex",
+  "condition_column": "genotype",
+  "experimental_columns": ["sample_number"],
+  "condition_is_categorical": true,
+  "crossed_columns": null,
+  "total_column": "constant_size",
+  "outlier_alpha": 0.05,
+  "na_action": "complete"
+}

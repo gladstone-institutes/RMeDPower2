@@ -1,6 +1,4 @@
 #' @title get_model_and_data
-#'
-#'
 #' @description This function performs a linear mixed model analysis using lmer.
 #'
 #'
@@ -28,7 +26,7 @@
 #' @return A list of the linear mixed model result, original data, experimental column names, and residual values
 #'
 #' @export
-#' @examples
+#' @examples result=calculatePower(data=data, design=design, model=model, power_param=power_param)
 
 
 
