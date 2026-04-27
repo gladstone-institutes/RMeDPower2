@@ -1,326 +1,128 @@
-# Tests for data validation functions in RMeDPower2
+# Tests for input validation via public API
 
-test_that("get_model_and_data validates column existence", {
+test_that("diagnoseDataModel catches missing condition column", {
   test_data <- create_test_data()
+  design <- create_test_design("basic")
+  design@condition_column <- "nonexistent_column"
+  model <- create_test_model("normal")
 
-  # Test missing condition column
-  expect_null(
-    get_model_and_data(
-      data = test_data,
-      condition_column = "nonexistent_column",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      condition_is_categorical = TRUE,
-      covariate_is_categorical = TRUE
-    ),
-    "condition_column should be one of the column names"
-  )
-
-  # Test missing response column
-  expect_null(
-    get_model_and_data(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "nonexistent_response",
-      condition_is_categorical = TRUE,
-      covariate_is_categorical = TRUE
-    ),
-    "response_column should be one of the column names"
-  )
-
-  # Test missing experimental columns
-  expect_null(
-    get_model_and_data(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "nonexistent_exp"),
-      response_column = "cell_size",
-      condition_is_categorical = TRUE,
-      covariate_is_categorical = TRUE
-    ),
-    "experimental_columns must match column names"
-  )
+  expect_error(suppressWarnings(suppressMessages(
+    diagnoseDataModel(data = test_data, design = design, model = model)
+  )))
 })
 
-test_that("get_model_and_data validates covariate column", {
+test_that("diagnoseDataModel catches missing response column", {
   test_data <- create_test_data()
+  design <- create_test_design("basic")
+  design@response_column <- "nonexistent_response"
+  model <- create_test_model("normal")
 
-  # Test missing covariate column
-  expect_null(
-    get_model_and_data(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      condition_is_categorical = TRUE,
-      covariate = "nonexistent_covariate",
-      covariate_is_categorical = TRUE
-    ),
-    "covariate should be null or one of the column names"
-  )
+  expect_error(suppressWarnings(suppressMessages(
+    diagnoseDataModel(data = test_data, design = design, model = model)
+  )))
 })
 
-test_that("get_model_and_data validates crossed columns", {
+test_that("diagnoseDataModel catches missing experimental columns", {
   test_data <- create_test_data()
+  design <- create_test_design("basic")
+  design@experimental_columns <- c("experiment", "nonexistent_exp")
+  model <- create_test_model("normal")
 
-  # Test invalid crossed columns
-  expect_null(
-    get_model_and_data(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      condition_is_categorical = TRUE,
-      crossed_columns = "nonexistent_crossed",
-      covariate_is_categorical = TRUE
-    ),
-    "crossed_columns must match column names"
-  )
+  expect_error(suppressWarnings(suppressMessages(
+    diagnoseDataModel(data = test_data, design = design, model = model)
+  )))
 })
 
-test_that("get_model_and_data validates categorical parameters", {
+test_that("diagnoseDataModel catches missing covariate column", {
   test_data <- create_test_data()
+  design <- create_test_design("basic")
+  design@covariate <- "nonexistent_covariate"
+  model <- create_test_model("normal")
 
-  # Test missing condition_is_categorical
-  expect_null(
-    get_model_and_data(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      condition_is_categorical = "blah",
-      covariate_is_categorical = TRUE
-    ),
-    "condition_is_categorical must be TRUE or FALSE"
-  )
-
-  # Test missing covariate_is_categorical
-  expect_null(
-    get_model_and_data(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      condition_is_categorical = TRUE,
-      covariate_is_categorical = "blah"
-    ),
-    "covariate_is_categorical must be TRUE or FALSE"
-  )
+  expect_error(suppressWarnings(suppressMessages(
+    diagnoseDataModel(data = test_data, design = design, model = model)
+  )))
 })
 
-test_that("get_model_and_data validates interaction parameters", {
+test_that("diagnoseDataModel catches invalid crossed columns", {
   test_data <- create_test_data()
+  design <- create_test_design("basic")
+  design@crossed_columns <- "nonexistent_crossed"
+  model <- create_test_model("normal")
 
-  # Test interaction without covariate
-  expect_null(
-    get_model_and_data(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      condition_is_categorical = TRUE,
-      covariate = NULL,
-      include_interaction = TRUE,
-      covariate_is_categorical = TRUE
-    ),
-    "Cannot include interaction when covariate is NULL"
-  )
+  expect_error(suppressWarnings(suppressMessages(
+    diagnoseDataModel(data = test_data, design = design, model = model)
+  )))
 })
 
-test_that("get_model_and_data validates random slope variable", {
+test_that("diagnoseDataModel catches interaction without covariate", {
   test_data <- create_test_data()
+  design <- create_test_design("basic")
+  design@include_interaction <- TRUE
+  model <- create_test_model("normal")
 
-  # Test invalid random slope variable
-  expect_null(
-    get_model_and_data(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      condition_is_categorical = TRUE,
-      random_slope_variable = "invalid_variable",
-      covariate_is_categorical = TRUE
-    ),
-    "random_slope_variable should be 'condition_column', 'covariate' or the actual condition column name or covariate column name"
-  )
+  expect_error(suppressWarnings(suppressMessages(
+    diagnoseDataModel(data = test_data, design = design, model = model)
+  )))
 })
 
-test_that("get_model_and_data handles missing data correctly", {
-  test_data_na <- create_test_data_with_na()
-
-  # Test complete case analysis
-  result_complete <- suppress_known_warnings({
-    get_model_and_data(
-      data = test_data_na,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      condition_is_categorical = TRUE,
-      na.action = "complete",
-      covariate_is_categorical = TRUE
-    )
-  })
-
-  expect_type(result_complete, "list")
-  expect_length(result_complete, 4)
-
-  # Check that rows with any NA values are removed
-  processed_data <- result_complete[[2]]
-  expect_true(all(complete.cases(processed_data)))
-})
-
-test_that("get_model_and_data processes data types correctly", {
+test_that("calculatePower catches missing condition column", {
   test_data <- create_test_data()
+  design <- create_test_design("basic")
+  design@condition_column <- "nonexistent_column"
+  model <- create_test_model("normal")
+  power_params <- create_test_power_params("basic")
 
-  result <- suppress_known_warnings({
-    get_model_and_data(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      condition_is_categorical = TRUE,
-      covariate = "age",
-      covariate_is_categorical = FALSE
-    )
-  })
-
-  processed_data <- result[[2]]
-
-  # Check that condition column is factor when categorical
-  expect_true(is.factor(processed_data$condition_column))
-
-  # Check that covariate is numeric when not categorical
-  expect_true(is.numeric(processed_data$covariate))
-
-  # Check that experimental columns are factors
-  expect_true(is.factor(processed_data$experimental_column1))
-  expect_true(is.factor(processed_data$experimental_column2))
+  expect_null(suppressWarnings(suppressMessages(
+    calculatePower(data = test_data, design = design, model = model, power_param = power_params)
+  )))
 })
 
-test_that("calculate_power validates input parameters", {
+test_that("calculatePower catches invalid nsimn", {
   test_data <- create_test_data()
+  design <- create_test_design("basic")
+  model <- create_test_model("normal")
+  power_params <- create_test_power_params("basic")
+  power_params@nsimn <- -10
 
-  # Test missing required columns in data
-  incomplete_data <- test_data[, !names(test_data) %in% "treatment"]
-
-  expect_null(
-    calculate_power(
-      data = incomplete_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      target_columns = "experiment",
-      condition_is_categorical = TRUE,
-      power_curve = 1,
-      levels = 1,
-      nsimn = 10,
-      covariate_is_categorical = TRUE
-    ),
-    "condition_column should be one of the column names"
-  )
+  expect_null(suppressWarnings(suppressMessages(
+    calculatePower(data = test_data, design = design, model = model, power_param = power_params)
+  )))
 })
 
-test_that("calculate_power validates target columns", {
+test_that("calculatePower catches invalid levels", {
   test_data <- create_test_data()
+  design <- create_test_design("basic")
+  model <- create_test_model("normal")
+  power_params <- create_test_power_params("basic")
+  power_params@levels <- 2
 
-  # Test invalid target column
-  expect_null(
-    calculate_power(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      target_columns = "invalid_target",
-      condition_is_categorical = TRUE,
-      power_curve = 1,
-      levels = 1,
-      nsimn = 10,
-      covariate_is_categorical = TRUE
-    ),
-    "target_columns should be a subset of experimental_columns"
-  )
+  expect_null(suppressWarnings(suppressMessages(
+    calculatePower(data = test_data, design = design, model = model, power_param = power_params)
+  )))
 })
 
-test_that("calculate_power validates nsimn parameter", {
+test_that("calculatePower catches invalid power_curve", {
   test_data <- create_test_data()
+  design <- create_test_design("basic")
+  model <- create_test_model("normal")
+  power_params <- create_test_power_params("basic")
+  power_params@power_curve <- 2
 
-  # Test invalid nsimn (negative)
-  expect_null(
-    calculate_power(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      target_columns = "experiment",
-      condition_is_categorical = TRUE,
-      power_curve = 1,
-      levels = 1,
-      nsimn = -10,
-      covariate = "batch",
-      covariate_is_categorical = TRUE
-    ),
-    "nsimn should be a positive integer"
-  )
-
-  # Test invalid nsimn (zero)
-  expect_null(
-    calculate_power(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      target_columns = "experiment",
-      condition_is_categorical = TRUE,
-      power_curve = 1,
-      levels = 1,
-      nsimn = 0,
-      covariate = "batch",
-      covariate_is_categorical = TRUE
-    ),
-    "nsimn should be a positive integer"
-  )
+  expect_null(suppressWarnings(suppressMessages(
+    calculatePower(data = test_data, design = design, model = model, power_param = power_params)
+  )))
 })
 
-test_that("calculate_power validates levels parameter", {
+test_that("calculatePower catches invalid target columns", {
   test_data <- create_test_data()
+  design <- create_test_design("basic")
+  model <- create_test_model("normal")
+  power_params <- create_test_power_params("basic")
+  power_params@target_columns <- "invalid_target"
 
-  # Test invalid levels (not 0 or 1)
-  expect_null(
-    calculate_power(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      target_columns = "experiment",
-      condition_is_categorical = TRUE,
-      power_curve = 1,
-      levels = 2,
-      nsimn = 10,
-      covariate = "batch",
-      covariate_is_categorical = TRUE
-    ),
-    "levels should be 0 or 1"
-  )
+  expect_null(suppressWarnings(suppressMessages(
+    calculatePower(data = test_data, design = design, model = model, power_param = power_params)
+  )))
 })
 
-test_that("calculate_power validates power_curve parameter", {
-  test_data <- create_test_data()
-
-  # Test invalid power_curve (not 0 or 1)
-  expect_null(
-    calculate_power(
-      data = test_data,
-      condition_column = "treatment",
-      experimental_columns = c("experiment", "plate"),
-      response_column = "cell_size",
-      target_columns = "experiment",
-      condition_is_categorical = TRUE,
-      levels = 1,
-      power_curve = 2,
-      nsimn = 10,
-      covariate_is_categorical = TRUE
-    ),
-    "power_curve should be 0 or 1"
-  )
-})

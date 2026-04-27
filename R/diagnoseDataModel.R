@@ -26,7 +26,14 @@
 #'
 #' @export
 #'
-#' @examples result=diagnoseDataModel(data=data, design=design, model=model)
+#' @examples
+#' \donttest{
+#' template_dir <- system.file("input_templates/cell_assay_data", package = "RMeDPower2")
+#' data <- plate_assay_pilot_data
+#' design <- readDesign(file.path(template_dir,"design_cell_assay.json"))
+#' model <- readProbabilityModel(file.path(template_dir,"prob_model.json"))
+#' diagnose_res <- diagnoseDataModel(data, design, model)
+#' }
 
 diagnoseDataModel <- function(data, design, model) {
   transform_data(data,

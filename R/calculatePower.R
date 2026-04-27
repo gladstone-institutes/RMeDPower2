@@ -11,7 +11,15 @@
 #'
 #' @export
 #'
-#' @examples result=calculatePower(data=data, design=design, model=model, power_param=power_param)
+#' @examples
+#' \donttest{
+#' template_dir <- system.file("input_templates/cell_assay_data", package = "RMeDPower2")
+#' data <- plate_assay_pilot_data
+#' design <- readDesign(file.path(template_dir,"design_cell_assay.json"))
+#' model <- readProbabilityModel(file.path(template_dir,"prob_model.json"))
+#' power_param <- readPowerParams(file.path(template_dir,"power_param.json"))
+#' power_res <- calculatePower(data, design, model, power_param)
+#' }
 
 calculatePower <- function(data, design, model, power_param) {
   calculate_power(data = data,

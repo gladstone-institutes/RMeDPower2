@@ -1,14 +1,57 @@
-exportPattern("^[[:alpha:]]+")
+# Public functions
+export(calculatePower)
+export(getEstimatesOfInterest)
+export(diagnoseDataModel)
+export(readDesign)
+export(readProbabilityModel)
+export(readPowerParams)
+
+# S4 classes
+exportClasses(RMeDesign, ProbabilityModel, PowerParams)
+
+# Core package imports
 import(lme4)
 import(dplyr)
 import(ggplot2)
 import(magrittr)
-import(simr)
 import(methods)
-importFrom(stats, poisson, binomial, Gamma, as.formula, median, qqnorm, qqline, cooks.distance)
-importFrom(lme4, fixef)
-importFrom(simr, "fixef<-")
+
+# Selective simr imports to avoid getData conflict with lme4
+importFrom(simr, makeLmer, makeGlmer, extend, powerSim, powerCurve, fcompare, fixed, "fixef<-", doSim, doFit, doTest)
+
+# ggtext for element_textbox_simple
+importFrom(ggtext, element_textbox_simple)
+
+# quantreg for rq method in geom_smooth
+importFrom(quantreg, rq)
+
+# tibble for rownames_to_column
+importFrom(tibble, rownames_to_column)
+
+# stats functions
+importFrom(stats, poisson, binomial, Gamma, as.formula, median, qqnorm, qqline,
+           cooks.distance, fitted, mad, predict, qnorm, residuals, formula)
+
+# lme4 specific imports
+importFrom(lme4, fixef, ranef, VarCorr, lmer, glmer, getME)
+
+# grDevices
 importFrom(grDevices, png, dev.off)
+
+# graphics
 importFrom(graphics, mtext)
+
+# EnvStats
 importFrom(EnvStats, rosnerTest)
+
+# jsonlite
 importFrom(jsonlite, fromJSON)
+
+# lmerTest
+importFrom(lmerTest, lmer)
+
+# DHARMa
+importFrom(DHARMa, simulateResiduals, outliers)
+
+# influence.ME
+importFrom(influence.ME, influence)

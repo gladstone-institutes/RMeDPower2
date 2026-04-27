@@ -24,5 +24,11 @@ with 3 elements. 1. The updated input data with an additional column with the mo
 This function performs the estimations of interest and also visualizes the resulting association
 }
 \examples{
-result=diagnoseDataModel(data=data, design=design, model=model)
+\donttest{
+template_dir <- system.file("input_templates/cell_assay_data", package = "RMeDPower2")
+data <- plate_assay_pilot_data
+design <- readDesign(file.path(template_dir,"design_cell_assay.json"))
+model <- readProbabilityModel(file.path(template_dir,"prob_model.json"))
+res <- getEstimatesOfInterest(data, design, model)
+}
 }

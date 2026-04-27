@@ -37,11 +37,8 @@
 #' QC plots output
 #' 5) cooks_plots: is a list of plots is named list of the same length as the number of models evaluated. Each element of the cooks_plot is another list of bar plots of cooks distance plots for each of the experimental columns. The title of the plot indicate the model and experimental factor while the subtitle indicates the identified outliers if any using the 4/n threshold
 #'
-#' @export
-#'
-#' @examples result=transform_data2(data=data, condition_column="classif", experimental_columns=c("experiment","line"), response_column="feature", condition_is_categorical=TRUE, error_is_non_normal=FALSE, alpha=0.05, crossed_columns = "line", method="cook", na.action="complete")
-#' @examples result=transform_data2(data=data, condition_column="classif", experimental_columns=c("experiment","line"), response_column="feature", condition_is_categorical=TRUE, error_is_non_normal=FALSE, alpha=0.05, crossed_columns = "line", method="cook", na.action="complete")
-#' @examples result=transform_data2(data=data, condition_column="classif", experimental_columns=c("experiment","line"), response_column="feature", condition_is_categorical=TRUE, error_is_non_normal=TRUE, family_p="poisson", alpha=0.05, crossed_columns = "line", method="cook", na.action="complete")
+#' @keywords internal
+#' @noRd
 
 transform_data<-function(data, condition_column, experimental_columns, response_column, total_column=NULL, condition_is_categorical=TRUE, covariate=NULL,
                          crossed_columns = NULL, error_is_non_normal=FALSE, family_p=NULL, alpha=0.05, na.action="complete", include_interaction = NA, random_slope_variable = NULL, covariate_is_categorical = NA){
@@ -91,7 +88,6 @@ transform_data<-function(data, condition_column, experimental_columns, response_
   cutoffs=rosner_test(trait=residual, response_column=response_column, alpha=alpha, hist_text = "raw residual")
 
   #run cook
-  fixed_global_variable_data<<-lms[[2]]
 
   choose_cols <- vector(mode = "character")
   temp_count <- 0
@@ -103,7 +99,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
   }
 
   if(temp_count > 0) {
-    cooks_result[[model_no]]=cooks_test(lms[[1]], lms[[2]], choose_cols, response_column="response_column", hist_text="raw")
+    cooks_result[[model_no]]=cooks_test(lms[[1]], family_p, lms[[2]], choose_cols, response_column="response_column", hist_text="raw")
     names(cooks_result[[model_no]]) <- paste0(names(cooks_result[[model_no]]), "_raw")
 
   }
@@ -141,12 +137,10 @@ transform_data<-function(data, condition_column, experimental_columns, response_
     names(plots_info)[model_no] <- "natural_scale_wo_outliers"
 
     #run cook
-    fixed_global_variable_data<<-lms[[2]]
-    #family_p<<-family_p
 
 
     if(length(choose_cols) > 0) {
-      cooks_result[[model_no]]=cooks_test(lms[[1]], lms[[2]], choose_cols, response_column="response_column", hist_text="raw wo outliers")
+      cooks_result[[model_no]]=cooks_test(lms[[1]], family_p, lms[[2]], choose_cols, response_column="response_column", hist_text="raw wo outliers")
       names(cooks_result[[model_no]]) <- paste0(names(cooks_result[[model_no]]), "_raw_wo_outliers")
 
     }
@@ -206,12 +200,10 @@ transform_data<-function(data, condition_column, experimental_columns, response_
     names(plots_info)[model_no] <- "log_scale"
 
     #run cook
-    fixed_global_variable_data<<-lms[[2]]
-    #family_p<<-family_p
 
 
     if(length(choose_cols) > 0) {
-      cooks_result[[model_no]]=cooks_test(lms[[1]], lms[[2]], choose_cols, response_column="response_column", hist_text="log transform")
+      cooks_result[[model_no]]=cooks_test(lms[[1]], family_p, lms[[2]], choose_cols, response_column="response_column", hist_text="log transform")
       names(cooks_result[[model_no]]) <- paste0(names(cooks_result[[model_no]]), "_logTransformed")
     }
     else {
@@ -259,12 +251,10 @@ transform_data<-function(data, condition_column, experimental_columns, response_
       names(plots_info)[model_no] <- "log_scale_wo_outliers"
 
       #run cook
-      fixed_global_variable_data<<-lms[[2]]
-      #family_p<<-family_p
 
 
       if(length(choose_cols) > 0) {
-        cooks_result[[model_no]]=cooks_test(lms[[1]], lms[[2]], choose_cols, response_column="response_column", hist_text="log transform wo outliers")
+        cooks_result[[model_no]]=cooks_test(lms[[1]], family_p, lms[[2]], choose_cols, response_column="response_column", hist_text="log transform wo outliers")
         names(cooks_result[[model_no]]) <- paste0(names(cooks_result[[model_no]]), "_logTransformed_wo_outliers")
       }
       else {
@@ -377,7 +367,7 @@ generate_qc_plots <-  function(lms,
       labs(title = paste0("Scale-Location Plot ", description_suffix),
            subtitle = paste0("Check for homoscedasticity", ". Expectation is that the best fit solid red line is horizontal or close to being so"),
            x = "Fitted Values",
-           y = "√|Standardized Residuals|") +
+           y = "\u221a|Standardized Residuals|") +
       theme_minimal() +
       theme(plot.title = element_text(size = 12, face = "bold"))+
       theme(plot.subtitle  = element_textbox_simple())
@@ -509,7 +499,7 @@ rosner_test<- function (trait, response_column, alpha, hist_text) {
   return(c(cutoff2,cutoff1))
 }
 
-cooks_test<- function (model, fixed_global_variable_data, experimental_columns, response_column, hist_text) {
+cooks_test<- function (model, family_p, fixed_global_variable_data, experimental_columns, response_column, hist_text) {
 
   n_cols_2_test <- length(experimental_columns)
   perform_test <- TRUE
@@ -526,7 +516,6 @@ cooks_test<- function (model, fixed_global_variable_data, experimental_columns, 
       }
     }
   }
-
 
 
   if(perform_test) {
@@ -547,14 +536,14 @@ cooks_test<- function (model, fixed_global_variable_data, experimental_columns, 
 
                             levels=setdiff(fixed_global_variable_data[,experimental_columns[i]],not2exclude)
                             for(level2test in levels ){
-                              alt.est <- influence.ME::influence(model, group=experimental_columns[i], select=level2test)
+                              alt.est <- influence2(model, family_p, group=experimental_columns[i], select=level2test)
                               cd=rbind(cd, cooks.distance(alt.est))
                             }
-                              rownames(cd)=levels
-                              cd
+                            rownames(cd)=levels
+                            cd
 
                           }else{
-                            alt.est <- influence.ME::influence(model, group=experimental_columns[i] )
+                            alt.est <- influence2(model, family_p, group=experimental_columns[i] )
                             cooks.distance(alt.est)
                           }
 
@@ -788,346 +777,515 @@ checkDots <- function(name, default, ...) {
 }
 
 
+## adapted from influence.ME to work with binomial glmer and avoid the need to declare global variables
+influence2 <-
+  function(model, family_p, group=NULL, select=NULL, obs=FALSE, gf="single", count = FALSE, delete=TRUE, ...)
+  {
+
+    fixef <- NA
+    rm(fixef)
+
+    ## Checks, errors, and warnings
+    # obs=TRUE cannot be used with delete=FALSE, group, gf,  parameters
+
+    if(is.null(group) & !obs)
+    {
+      stop("Please specify either the 'group' parameter, or specify 'obs=TRUE'")
+    }
+
+    if(!is.null(group) & obs)
+    {
+      stop("Either specify the 'group' parameter, or specify 'obs=TRUE', but not both.")
+    }
 
 
-# # ==============================================================================
-# # 2. GGPLOT VERSION OF plotResiduals()
-# # ==============================================================================
-#
-# ggplot_residuals <- function(dharma_obj,
-#                              form = NULL,
-#                              rank = TRUE,
-#                              quantreg = NULL,
-#                              title = "Residuals vs Predicted",
-#                              quantiles = c(0.25, 0.5, 0.75),
-#                              smooth_scatter = FALSE) {
-#
-#   # Extract data
-#   plot_data <- extract_dharma_data(dharma_obj)
-#
-#   # Determine predictor variable
-#   if (is.null(form)) {
-#     x_var <- ifelse(rank, "rank_predicted", "predicted")
-#     x_label <- ifelse(rank, "Predicted (Rank Transformed)", "Predicted")
-#   } else {
-#     # If form is provided, use it (this would need additional handling for custom predictors)
-#     x_var <- ifelse(rank, "rank_predicted", "predicted")
-#     x_label <- ifelse(rank, "Predicted (Rank Transformed)", "Predicted")
-#   }
-#
-#   # Determine if quantile regression should be used
-#   if (is.null(quantreg)) {
-#     quantreg <- nrow(plot_data) < 2000
-#   }
-#
-#   # Base plot
-#   if (smooth_scatter && nrow(plot_data) > 10000) {
-#     # Use density-based scatter plot for large datasets
-#     p <- ggplot(plot_data, aes_string(x = x_var, y = "residuals")) +
-#       geom_hex(bins = 30, alpha = 0.7) +
-#       scale_fill_gradient(low = "lightblue", high = "darkblue")
-#   } else {
-#     # Regular scatter plot
-#     p <- ggplot(plot_data, aes_string(x = x_var, y = "residuals")) +
-#       geom_point(aes(color = outliers), alpha = 0.6, size = 1.5) +
-#       scale_color_manual(values = c("FALSE" = "black", "TRUE" = "red"),
-#                          guide = "none")
-#   }
-#
-#   # Add quantile regression lines or smooth spline
-#   if (quantreg) {
-#     # Add quantile regression lines
-#     for (q in quantiles) {
-#       p <- p + geom_smooth(method = "rq", method.args = list(tau = q),
-#                            se = FALSE, color = "blue", linewidth = 0.8, alpha = 0.7)
-#     }
-#     # Add theoretical expectation lines (should be horizontal at quantile values)
-#     for (q in quantiles) {
-#       p <- p + geom_hline(yintercept = q, linetype = "dashed",
-#                           color = "black", alpha = 0.6)
-#     }
-#   } else {
-#     # Add smooth spline around mean
-#     p <- p + geom_smooth(method = "gam", se = TRUE, color = "blue", alpha = 0.7)
-#     # Add horizontal line at 0.5 (expected mean for uniform distribution)
-#     p <- p + geom_hline(yintercept = 0.5, linetype = "dashed",
-#                         color = "black", alpha = 0.6)
-#   }
-#
-#   p <- p +
-#     labs(title = title,
-#          x = x_label,
-#          y = "DHARMa Residuals",
-#          subtitle = ifelse(quantreg,
-#                            paste("Blue lines = quantile regression (", paste(quantiles, collapse = ", "), "), Black dashed = expected"),
-#                            "Blue line = GAM smooth, Black dashed = expected (0.5)")) +
-#     theme_minimal() +
-#     theme(plot.title = element_text(size = 12, face = "bold")) +
-#     ylim(0, 1)
-#
-#   # Perform and display tests
-#   if (quantreg) {
-#     tryCatch({
-#       quant_test <- DHARMa::testQuantiles(dharma_obj, plot = FALSE)
-#       p <- p + labs(caption = paste("Quantile test p-value:", round(quant_test$p.value, 4)))
-#     }, error = function(e) {
-#       # If quantile test fails, just continue without it
-#     })
-#   }
-#
-#   return(p)
-# }
+    # Defining Internal Variables
+    # Thanks to Kevin Darras for suggestion on how to extend functionality to binomial models and functions inside the model call
 
-# # ==============================================================================
-# # 3. GGPLOT VERSION OF DHARMa HISTOGRAM
-# # ==============================================================================
-#
-# ggplot_dharma_hist <- function(dharma_obj,
-#                                title = "Distribution of DHARMa Residuals",
-#                                bins = 20) {
-#
-#   residuals <- dharma_obj$scaledResiduals
-#
-#   # Create histogram with theoretical uniform distribution overlay
-#   p <- ggplot(data.frame(residuals = residuals), aes(x = residuals)) +
-#     geom_histogram(aes(y = ..density..), bins = bins,
-#                    fill = "lightblue", color = "black", alpha = 0.7) +
-#     # Add theoretical uniform distribution line
-#     geom_hline(yintercept = 1, color = "red", linetype = "dashed", linewidth = 1) +
-#     labs(title = title,
-#          subtitle = "Red dashed line = theoretical uniform distribution (density = 1)",
-#          x = "DHARMa Residuals",
-#          y = "Density") +
-#     theme_minimal() +
-#     theme(plot.title = element_text(size = 12, face = "bold")) +
-#     xlim(0, 1)
-#
-#   # Add test result
-#   unif_test <- DHARMa::testUniformity(dharma_obj, plot = FALSE)
-#   p <- p + labs(caption = paste("Uniformity test p-value:", round(unif_test$p.value, 4)))
-#
-#   return(p)
-# }
+    ifelse(as.character(model@call)[3]=="data.update",
+           data.adapted <- model.frame(model),
+           data.adapted <- get(as.character(model@call)[3]))
 
-# plotResiduals_ggplot <- function(simulationOutput, form = NULL, quantreg = NULL, rank = TRUE,
-#                                  asFactor = NULL, smoothScatter = NULL, quantiles = c(0.25, 0.5, 0.75),
-#                                  absoluteDeviation = FALSE, ...) {
-#
-#   # Handle additional arguments
-#   dots <- list(...)
-#
-#   # Set up axis labels
-#   yAxis <- ifelse(absoluteDeviation == TRUE, "Residual spread [2*abs(res - 0.5)]", "DHARMa residual")
-#   ylab <- checkDots("ylab", yAxis, ...)
-#   xlab <- checkDots("xlab", ifelse(is.null(form), "Model predictions",
-#                                    gsub(".*[$]", "", deparse(substitute(form)))), ...)
-#
-#   if (rank == TRUE) {
-#     xlab <- paste(xlab, "(rank transformed)")
-#   }
-#
-#   # Ensure DHARMa object and extract residuals
-#   simulationOutput <- ensureDHARMa(simulationOutput, convert = TRUE)
-#   res <- simulationOutput$scaledResiduals
-#
-#   if (absoluteDeviation == TRUE) {
-#     res <- 2 * abs(res - 0.5)
-#   }
-#
-#   # Check form argument
-#   if (inherits(form, "DHARMa")) {
-#     stop("DHARMa::plotResiduals > argument form cannot be of class DHARMa. Note that the syntax of plotResiduals has changed since DHARMa 0.3.0. See ?plotResiduals.")
-#   }
-#
-#   # Get predictor values
-#   pred <- ensurePredictor(simulationOutput, form)
-#
-#   # Handle continuous predictors
-#   if (!is.factor(pred)) {
-#     if (rank == TRUE) {
-#       pred <- rank(pred, ties.method = "average")
-#       pred <- pred / max(pred)
-#     }
-#
-#     nuniq <- length(unique(pred))
-#     ndata <- length(pred)
-#
-#     if (is.null(asFactor)) {
-#       asFactor <- (nuniq == 1) | (nuniq < 10 & ndata/nuniq > 10)
-#     }
-#
-#     if (asFactor) {
-#       pred <- factor(pred)
-#     }
-#   }
-#
-#   # Set quantreg default
-#   if (is.null(quantreg)) {
-#     quantreg <- ifelse(length(res) > 2000, FALSE, TRUE)
-#   }
-#
-#   # Set smoothScatter default
-#   switchScatter <- 10000
-#   if (is.null(smoothScatter)) {
-#     smoothScatter <- ifelse(length(res) > switchScatter, TRUE, FALSE)
-#   }
-#
-#   # Create data frame for plotting
-#   plot_data <- data.frame(
-#     predictor = pred,
-#     residuals = res,
-#     is_extreme = (res == 0 | res == 1)
-#   )
-#
-#   # Set up main title
-#   main_title <- ifelse("main" %in% names(dots), dots$main,
-#                        ifelse(is.null(form), paste(yAxis, "vs. predicted"),
-#                               paste(yAxis, "Residual vs. predictor")))
-#
-#   # Create the base plot
-#   if (is.factor(pred)) {
-#     # Categorical predictor - boxplot style
-#     p <- ggplot(plot_data, aes(x = predictor, y = residuals)) +
-#       geom_boxplot(alpha = 0.7, outlier.shape = NA) +
-#       geom_jitter(aes(color = is_extreme), width = 0.2, alpha = 0.6) +
-#       scale_color_manual(values = c("FALSE" = "black", "TRUE" = "red"), guide = "none") +
-#       scale_y_continuous(limits = c(0, 1), breaks = c(0, quantiles, 1)) +
-#       labs(x = xlab, y = ylab, title = main_title) +
-#       theme_minimal() +
-#       theme(
-#         panel.grid.minor = element_blank(),
-#         plot.title = element_text(size = 10)
-#       )
-#
-#     # Add quantile lines
-#     for (q in quantiles) {
-#       p <- p + geom_hline(yintercept = q, linetype = "dashed", alpha = 0.5)
-#     }
-#
-#     # Note: testCategorical would need to be implemented separately
-#     # For now, we'll just return NULL as the original function does for continuous predictors
-#     out <- NULL
-#
-#   } else {
-#     # Continuous predictor
-#     alpha_val <- max(0.1, 1 - 3 * length(res) / switchScatter)
-#
-#     if (smoothScatter == TRUE) {
-#       # Use density-based coloring for many points
-#       p <- ggplot(plot_data, aes(x = predictor, y = residuals)) +
-#         stat_density_2d_filled(alpha = 0.6, show.legend = FALSE) +
-#         scale_fill_grey(start = 1, end = 0.3) +
-#         geom_point(data = subset(plot_data, is_extreme),
-#                    aes(color = is_extreme), size = 0.5) +
-#         scale_color_manual(values = c("TRUE" = "red"), guide = "none") +
-#         scale_y_continuous(limits = c(0, 1), breaks = c(0, quantiles, 1)) +
-#         labs(x = xlab, y = ylab, title = main_title) +
-#         theme_minimal() +
-#         theme(
-#           panel.grid.minor = element_blank(),
-#           plot.title = element_text(size = 10)
-#         )
-#     } else {
-#       # Regular scatter plot
-#       p <- ggplot(plot_data, aes(x = predictor, y = residuals)) +
-#         geom_point(aes(color = is_extreme, shape = is_extreme),
-#                    alpha = alpha_val, size = 1) +
-#         scale_color_manual(values = c("FALSE" = "black", "TRUE" = "red"), guide = "none") +
-#         scale_shape_manual(values = c("FALSE" = 16, "TRUE" = 8), guide = "none") +
-#         scale_y_continuous(limits = c(0, 1), breaks = c(0, quantiles, 1)) +
-#         labs(x = xlab, y = ylab, title = main_title) +
-#         theme_minimal() +
-#         theme(
-#           panel.grid.minor = element_blank(),
-#           plot.title = element_text(size = 10)
-#         )
-#     }
-#
-#     # Add quantile lines and smoothers
-#     for (q in quantiles) {
-#       p <- p + geom_hline(yintercept = q, linetype = "dashed", alpha = 0.5)
-#     }
-#
-#     out <- NULL
-#
-#     if (quantreg == FALSE) {
-#       # Add smooth spline and median line
-#       p <- p +
-#         geom_smooth(method = "loess", se = FALSE, color = "red", linewidth = 1) +
-#         geom_hline(yintercept = 0.5, color = "red", linewidth = 1)
-#
-#     } else {
-#       # Perform quantile regression tests
-#       # Note: This would require the testQuantiles function from DHARMa
-#       # For now, we'll create a placeholder that assumes no significant deviations
-#       out <- list(
-#         p.value = 0.5,  # placeholder
-#         pvals = rep(0.5, length(quantiles)),  # placeholder
-#         predictions = data.frame(
-#           pred = seq(min(pred), max(pred), length.out = 50)
-#         )
-#       )
-#       # Add placeholder quantile predictions
-#       for (i in 1:length(quantiles)) {
-#         out$predictions[, 2*i] <- quantiles[i]  # quantile line
-#         out$predictions[, 2*i + 1] <- 0.05      # confidence interval width
-#       }
-#
-#       if (is.na(out$p.value)) {
-#         main_title <- paste(main_title, "Some quantile regressions failed", sep = "\n")
-#         title_color <- "red"
-#       } else {
-#         if (any(out$pvals < 0.05, na.rm = TRUE)) {
-#           main_title <- paste(main_title, "Quantile deviations detected (red curves)", sep = "\n")
-#           if (out$p.value <= 0.05) {
-#             main_title <- paste(main_title, "Combined adjusted quantile test significant", sep = "\n")
-#           } else {
-#             main_title <- paste(main_title, "Combined adjusted quantile test n.s.", sep = "\n")
-#           }
-#           title_color <- "red"
-#         } else {
-#           main_title <- paste(main_title, "No significant problems detected", sep = "\n")
-#           title_color <- "black"
-#         }
-#       }
-#
-#       # Update plot with new title
-#       p <- p + labs(title = main_title) +
-#         theme(plot.title = element_text(color = title_color, size = 9))
-#
-#       # Add quantile regression lines and confidence bands
-#       for (i in 1:length(quantiles)) {
-#         line_color <- ifelse(out$pvals[i] <= 0.05 & !is.na(out$pvals[i]), "red", "black")
-#         fill_color <- ifelse(out$pvals[i] <= 0.05 & !is.na(out$pvals[i]),
-#                              alpha("red", 0.25), alpha("black", 0.125))
-#
-#         # Create ribbon data for confidence bands
-#         ribbon_data <- data.frame(
-#           x = out$predictions$pred,
-#           y = out$predictions[, 2*i],
-#           ymin = out$predictions[, 2*i] - out$predictions[, 2*i + 1],
-#           ymax = out$predictions[, 2*i] + out$predictions[, 2*i + 1]
-#         )
-#
-#         p <- p +
-#           geom_ribbon(data = ribbon_data,
-#                       aes(x = x, ymin = ymin, ymax = ymax),
-#                       fill = fill_color, alpha = 0.5, inherit.aes = FALSE) +
-#           geom_line(data = ribbon_data,
-#                     aes(x = x, y = y),
-#                     color = line_color, linewidth = 1, inherit.aes = FALSE)
-#       }
-#     }
-#   }
-#
-#   # Apply x-axis limits if rank transformation was used
-#   if (rank == TRUE && !is.factor(pred)) {
-#     xlim <- ifelse("xlim" %in% names(dots), list(dots$xlim), list(c(0, 1)))[[1]]
-#     p <- p + coord_cartesian(xlim = xlim)
-#   }
-#
-#   # Return the plot and any test results
-#   print(p)
-#   invisible(out)
-# }
-#
+
+    if("glmerMod" %in% class(model)) {
+      if(summary(model)$family == "binomial") {
+        success_failures <- data.adapted[,1]
+        data.adapted[,1] <- success_failures[,1]
+        colnames(data.adapted)[1] <- "response_column"
+        data.adapted[,(ncol(data.adapted)+1)] <- success_failures[,1] + success_failures[,2]
+        colnames(data.adapted)[ncol(data.adapted)] <- "total_column"
+      }
+      if((grepl("Negative",summary(model)$family) | grepl("poisson",summary(model)$family)) & any(grepl("offset", colnames(data.adapted)))) {
+          offset_col <- grep("offset", colnames(data.adapted))
+          data.adapted[, offset_col] <- exp(data.adapted[, offset_col])
+          colnames(data.adapted)[offset_col] <- "total_column"
+      }
+      if(!grepl("Negative",summary(model)$family))
+        family_p=switch(family_p,
+                        "poisson" = poisson(link="log"),
+                        "binomial" = binomial(link="logit"),
+                        "bionomial_log" = binomial(link="log"),
+                        "Gamma_log" = Gamma(link = "log"),
+                        "Gamma" = Gamma(link = "inverse"))
+
+
+
+    }
+
+
+    original.no.estex <- which(substr(names(fixef(model)), 1,6) != "estex.")
+    n.pred <- length(fixef(model)[original.no.estex])
+
+
+    ####
+    # Code kindly provided by Jennifer Bufford
+    if("(weights)" %in% names(data.adapted)) {
+      names(data.adapted)[names(data.adapted)=="(weights)"] <-
+        as.character(model@call$weights)}
+    if("(offset)" %in% names(data.adapted)) {
+      names(data.adapted)[names(data.adapted)=="(offset)"] <-
+        as.character(model@call$offset)}
+    if(sum(grepl("offset", names(data.adapted)))>0) {
+      names(data.adapted)[grep("offset", names(data.adapted))] <-
+        gsub('offset\\(|\\)',"",names(data.adapted)[grep("offset", names(data.adapted))])}
+    ####
+
+
+
+    if(!obs)
+    {
+      grouping.names <- grouping.levels(model, group)
+      n.groups <- length(grouping.names)
+    }
+
+    if(obs)
+    {
+      n.obs <- nrow(data.adapted)
+    }
+
+    ###
+    # Defining and naming the output elements for the original models
+    ###
+    # These apply to all
+    ###
+
+    # Fixed Estimates of the original model
+    or.fixed <- matrix(ncol = n.pred , nrow = 1, data = fixef(model)[original.no.estex])
+    dimnames(or.fixed) <- list(NULL, names(fixef(model))[original.no.estex])
+
+    # Standard Error of the original model
+    or.se <- matrix(ncol = n.pred , nrow = 1, data = se.fixef(model)[original.no.estex])
+    dimnames(or.se) <- list(NULL, names(fixef(model))[original.no.estex])
+
+    # Variance / Covariance Matrix of the original model
+    or.vcov <- as.matrix(vcov(model)[original.no.estex, original.no.estex])
+    dimnames(or.vcov) <- list(
+      names(fixef(model)[original.no.estex]),
+      names(fixef(model)[original.no.estex]))
+
+    # Test statistic of the original model
+    or.test <- coef(summary(model))[original.no.estex,3]
+
+
+    ###
+    # Defining and naming the output elements for the adapted models
+    ###
+    # These procedures vary
+    ###
+
+
+    if(!obs)
+    {
+
+      if(is.null(select))
+      {
+
+        # Fixed Estimates of the modified model(s)
+        alt.fixed <- matrix(ncol = n.pred, nrow = n.groups, data = NA)
+        dimnames(alt.fixed) <- list(grouping.names, names(fixef(model))[original.no.estex])
+
+        # Standard Error of the modified model(s)
+        alt.se <- matrix(ncol = n.pred , nrow = n.groups, data = NA)
+        dimnames(alt.se) <- list(grouping.names, names(fixef(model))[original.no.estex])
+
+        # Variance / Covariance Matrix of the modified model(s)
+        alt.vcov <- list()
+
+        # Test statistic of the modified model(s)
+        alt.test <- matrix(ncol = n.pred , nrow = n.groups, data = NA)
+        dimnames(alt.test) <- list(grouping.names, names(fixef(model))[original.no.estex])
+
+        for (i in 1:n.groups)
+        {
+
+          if(count == TRUE) {print(n.groups + 1 - i)}
+
+          model.updated <- exclude.influence2(model=model, family_p, grouping=group, level=grouping.names[i], gf=gf, delete=delete)
+
+          altered.no.estex <- which(substr(names(fixef(model.updated)), 1,6) != "estex.")
+
+          alt.fixed[i,] 	<- as.matrix(fixef(model.updated)[altered.no.estex])
+          alt.se[i,] 		<- as.matrix(se.fixef(model.updated)[altered.no.estex])
+          alt.vcov[[i]] 	<- as.matrix(vcov(model.updated)[altered.no.estex, altered.no.estex])
+          alt.test[i,] 		<- as.matrix(coef(summary(model.updated))[,3][altered.no.estex])
+        }
+
+
+
+      }
+
+      if(!is.null(select))
+      {
+
+        model.updated <- exclude.influence2(model, family_p, group, select, gf=gf, delete=delete)
+        altered.no.estex <- which(substr(names(fixef(model.updated)), 1,6) != "estex.")
+
+        # Fixed Estimates of the modified model(s)
+        alt.fixed <- matrix(ncol = n.pred, nrow = 1, data = fixef(model.updated)[altered.no.estex])
+        dimnames(alt.fixed) <- list(
+          "Altered model",
+          names(fixef(model.updated))[altered.no.estex])
+
+        # Standard Error of the modified model(s)
+        alt.se <- matrix(ncol = n.pred , nrow = 1, data = se.fixef(model.updated)[altered.no.estex])
+        dimnames(alt.se) <- list("Altered model", names(fixef(model.updated))[altered.no.estex])
+
+        # Variance / Covariance Matrix of the modified model(s)
+        alt.vcov <- list()
+        alt.vcov[[1]] <- as.matrix(vcov(model.updated)[altered.no.estex, altered.no.estex])
+        dimnames(alt.vcov[[1]]) <- list(
+          names(fixef(model.updated)[altered.no.estex]),
+          names(fixef(model.updated)[altered.no.estex]))
+
+        # Test statistic of the modified model(s)
+        alt.test <- matrix(ncol = n.pred , nrow = 1, data = coef(summary(model.updated))[,3][altered.no.estex])
+        dimnames(alt.test) <- list("Altered model", names(fixef(model.updated))[altered.no.estex])
+
+      }
+    }
+
+
+    if(obs)
+    {
+
+      if(is.null(select))
+      {
+        # Fixed Estimates of the modified model(s)
+        alt.fixed <- matrix(ncol = n.pred, nrow = n.obs, data = NA)
+        dimnames(alt.fixed) <- list(1:n.obs, names(fixef(model))[original.no.estex])
+
+        # Standard Error of the modified model(s)
+        alt.se <- matrix(ncol = n.pred , nrow = n.obs, data = NA)
+        dimnames(alt.se) <- list(1:n.obs, names(fixef(model))[original.no.estex])
+
+        # Variance / Covariance Matrix of the modified model(s)
+        alt.vcov <- list()
+
+        # Test statistic of the modified model(s)
+        alt.test <- matrix(ncol = n.pred , nrow = n.obs, data = NA)
+        dimnames(alt.test) <- list(1:n.obs, names(fixef(model))[original.no.estex])
+
+        for (i in 1:n.obs)
+        {
+
+          if(count == TRUE) {print(n.obs + 1 - i)}
+
+          model.updated <- exclude.influence2(model, family_p, obs=i)
+          altered.no.estex <- which(substr(names(fixef(model.updated)), 1,6) != "estex.")
+
+          alt.fixed[i,] 	<- as.matrix(fixef(model.updated)[altered.no.estex])
+          alt.se[i,] 		<- as.matrix(se.fixef(model.updated)[altered.no.estex])
+          alt.vcov[[i]] 	<- as.matrix(vcov(model.updated)[altered.no.estex, altered.no.estex])
+          alt.test[i,]	 	<- as.matrix(coef(summary(model.updated))[,3][altered.no.estex])
+        }
+
+
+      }
+
+      if(!is.null(select))
+      {
+        model.updated <- exclude.influence2(model, family_p, obs=select)
+        altered.no.estex <- which(substr(names(fixef(model.updated)), 1,6) != "estex.")
+
+        # Fixed Estimates of the modified model(s)
+        alt.fixed <- matrix(ncol = n.pred, nrow = 1, data = fixef(model.updated)[altered.no.estex])
+        dimnames(alt.fixed) <- list(
+          "Altered model",
+          names(fixef(model.updated))[altered.no.estex])
+
+        # Standard Error of the modified model(s)
+        alt.se <- matrix(ncol = n.pred , nrow = 1, data = se.fixef(model.updated)[altered.no.estex])
+        dimnames(alt.se) <- list("Altered model", names(fixef(model.updated))[altered.no.estex])
+
+        # Variance / Covariance Matrix of the modified model(s)
+        alt.vcov <- list()
+        alt.vcov[[1]] <- as.matrix(vcov(model.updated)[altered.no.estex, altered.no.estex])
+        dimnames(alt.vcov[[1]]) <- list(
+          names(fixef(model.updated)[altered.no.estex]),
+          names(fixef(model.updated)[altered.no.estex]))
+
+        # Test statistic of the modified model(s)
+        alt.test <- matrix(ncol = n.pred , nrow = 1, data = coef(summary(model.updated))[,3][altered.no.estex])
+        dimnames(alt.test) <- list("Altered model", names(fixef(model.updated))[altered.no.estex])
+
+      }
+
+
+
+    }
+
+
+    estex <- list(
+      or.fixed = or.fixed,
+      or.se = or.se,
+      or.vcov = or.vcov,
+      or.test = or.test,
+      alt.fixed = alt.fixed,
+      alt.se = alt.se,
+      alt.vcov = alt.vcov,
+      alt.test = alt.test)
+
+    class(estex) <- "estex"
+    return(estex)
+
+  }
+
+## adapted from influence.ME to work with binomial glmer and avoid the need to declare global variables
+exclude.influence2 <-
+  function(model, family_p, grouping=NULL, level=NULL, obs=NULL, gf="single", delete=TRUE)
+  {
+
+    # Thanks to Kevin Darras for suggestion on how to extend functionality to binomial models and functions inside the model call
+
+    ifelse(as.character(model@call)[3]=="data.update",
+           data.adapted <- model.frame(model),
+           data.adapted <- get(as.character(model@call)[3]))
+
+    if("glmerMod" %in% class(model)) {
+      if(summary(model)$family == "binomial") {
+        success_failures <- data.adapted[,1]
+        data.adapted[,1] <- success_failures[,1]
+        colnames(data.adapted)[1] <- "response_column"
+        data.adapted[,(ncol(data.adapted)+1)] <- success_failures[,1] + success_failures[,2]
+        colnames(data.adapted)[ncol(data.adapted)] <- "total_column"
+      }
+      if((grepl("Negative",summary(model)$family) | grepl("poisson",summary(model)$family)) & any(grepl("offset", colnames(data.adapted)))) {
+        offset_col <- grep("offset", colnames(data.adapted))
+        data.adapted[, offset_col] <- exp(data.adapted[, offset_col])
+        colnames(data.adapted)[offset_col] <- "total_column"
+      }
+
+
+    }
+
+    added.variables <- character()
+    ranef <- NA
+    rm(ranef)
+
+    ####
+    # Code kindly provided by Jennifer Bufford
+    if("(weights)" %in% names(data.adapted)) {
+      names(data.adapted)[names(data.adapted)=="(weights)"] <-
+        as.character(model@call$weights)}
+    if("(offset)" %in% names(data.adapted)) {
+      names(data.adapted)[names(data.adapted)=="(offset)"] <-
+        as.character(model@call$offset)}
+    if(sum(grepl("offset", names(data.adapted)))>0) {
+      names(data.adapted)[grep("offset", names(data.adapted))] <-
+        gsub('offset\\(|\\)',"",names(data.adapted)[grep("offset", names(data.adapted))])}
+    ####
+
+
+    if(!is.null(obs))
+    {
+
+      if(!is.null(grouping) | !is.null(level))
+      {
+        warning("Specification of the 'obs' parameter overrules specification of the 'grouping' and 'level' parameters.")
+      }
+
+      data.adapted <- data.adapted[-obs,]
+      # For some reason, update() can not find the data.adapted within the function without the line below.
+      data.update <- data.adapted
+      # It can find data.update
+
+      model.updated <- update(model, data=data.update)
+      return(model.updated)
+    }
+
+
+
+
+
+
+    if(delete==TRUE)
+    {
+
+      ## Only works when length(level) == 1, this needs to be enhanced
+      group.var <- which(names(data.adapted) == grouping)
+
+      for (i in 1:length(level))
+      {
+        data.adapted <- subset(data.adapted, data.adapted[,group.var]!=level[i])
+      }
+
+      # For some reason, update() can not find the data.adapted within the function without the line below.
+      data.update <- data.adapted
+      # It can find data.update
+
+      model.updated <- update(model, data=data.update)
+
+      return(model.updated)
+
+    }
+
+
+
+
+
+
+    if(names(data.adapted)[2] != "intercept.alt")
+    {
+
+      data.adapted$intercept.alt <- ifelse(model@flist[[grouping]]==level[1], 0, 1)
+
+      data.adapted[, ncol(data.adapted)+1] <-
+        ifelse(model@flist[[grouping]]==level[1], 1, 0)
+
+      added.variables <- make.names(paste("estex.", as.character(level[1]), sep=""))
+      colnames(data.adapted)[ncol(data.adapted)] <- added.variables
+
+
+      if(length(level) > 1)
+      {
+        for (i in 2:length(level))
+        {
+
+          data.adapted$intercept.alt[model@flist[[grouping]]==level[i]] <- 0
+
+          data.adapted[, ncol(data.adapted)+1] <-
+            ifelse(model@flist[[grouping]]==level[i], 1, 0)
+
+          added.variables <- append(added.variables, values = make.names(paste("estex.", as.character(level[i]), sep="")))
+
+          colnames(data.adapted)[ncol(data.adapted)] <- added.variables[length(added.variables)]
+
+        }
+      }
+
+      if(gf=="single")
+      {
+        # grnr refers to "grouping number"
+        grnr <- which(names(ranef(model))==grouping)
+
+        if (length(names(ranef(model)[[grnr]])) == 1)
+        {
+          model.updated <- update(model,
+                                  formula = as.formula(paste(". ~ 0 + intercept.alt +",
+                                                             paste(added.variables, collapse="+"),
+                                                             "+ .",
+                                                             "- (1 |", grouping, ") + (0 + intercept.alt |", grouping, ")")),
+                                  data = data.adapted)
+
+        }
+
+        if (length(names(ranef(model)[[grnr]])) > 1)
+        {
+          model.updated <- update(model,
+                                  formula = as.formula(paste(". ~ 0 + intercept.alt + ",
+                                                             paste(added.variables, collapse="+"),
+                                                             " + .",
+                                                             paste(" - (", paste(names(ranef(model)[[grnr]])[-1], collapse="+"), "|", grouping, ")"),
+                                                             " + (0 + intercept.alt +", paste(names(ranef(model)[[grnr]])[-1], collapse="+"), "|", grouping, ")")),
+                                  data = data.adapted)
+        }
+      }
+
+      if(gf=="all")
+      {
+        delete.gf <- vector()
+        for (i in 1:length(ranef(model)))
+        {
+          if(length(names(ranef(model)[[i]])) > 1)
+          {
+            delete.gf[i] <- paste(
+              "- (",
+              paste(names(ranef(model)[[i]][-1]), collapse="+"),
+              "|",
+              names(ranef(model))[i],
+              ")")
+          }
+
+          if(length(names(ranef(model)[[i]])) == 1)
+          {
+            delete.gf[i] <- paste(
+              "- ( 1 |",
+              names(ranef(model))[i],
+              ")")
+          }
+        }
+        delete.gf <- paste(delete.gf, collapse=" ")
+
+        new.gf <- vector()
+        for (i in 1:length(ranef(model)))
+        {
+          if(length(names(ranef(model)[[i]])) > 1)
+          {
+            new.gf[i] <- paste(
+              "+ (0 + intercept.alt +",
+              paste(names(ranef(model)[[i]][-1]), collapse="+"),
+              "|",
+              names(ranef(model))[i],
+              ")")
+          }
+
+          if(length(names(ranef(model)[[i]])) == 1)
+          {
+            new.gf[i] <- paste(
+              "+ (0 + intercept.alt |",
+              names(ranef(model))[i],
+              ")")
+          }
+        }
+        new.gf <- paste(new.gf, collapse=" ")
+
+        model.updated <- update(model,
+                                formula = as.formula(
+                                  paste(
+                                    ". ~ 0 + intercept.alt + ",
+                                    paste(added.variables, collapse="+"),
+                                    "+ . ",
+                                    delete.gf,
+                                    new.gf)),
+                                data=data.adapted)
+
+      }
+    }
+
+
+    if(names(data.adapted)[2] == "intercept.alt")
+    {
+
+      for (i in 1:length(level))
+      {
+        data.adapted$intercept.alt[model@flist[[grouping]]==level[i]] <- 0
+
+        data.adapted[, ncol(data.adapted)+1] <-
+          ifelse(model@flist[[grouping]]==level[i], 1, 0)
+
+        added.variables <- append(added.variables, values = make.names(paste("estex.", as.character(level[i]), sep="")))
+
+        colnames(data.adapted)[ncol(data.adapted)] <- added.variables[length(added.variables)]
+      }
+
+      model.updated <- update(model,
+                              formula = as.formula(paste(
+                                ". ~ 0 + intercept.alt + ",
+                                paste(added.variables, collapse="+"),
+                                "+ .")),
+                              data = data.adapted)
+    }
+
+    return(model.updated)
+
+  }

@@ -135,7 +135,7 @@ test_that("PowerParams class can be created with multiple target columns", {
     alpha = 0.01,
     max_size = c(10, 20),
     breaks = c(5, 10, 15),
-    effect_size = 0.5,
+    effect_size = c(0.5,NA,NA),
     icc = c(0.1, 0.05)
   )
 
@@ -145,7 +145,7 @@ test_that("PowerParams class can be created with multiple target columns", {
   expect_equal(power_params@alpha, 0.01)
   expect_equal(power_params@max_size, c(10, 20))
   expect_equal(power_params@breaks, c(5, 10, 15))
-  expect_equal(power_params@effect_size, 0.5)
+  expect_equal(power_params@effect_size[1], 0.5)
   expect_equal(power_params@icc, c(0.1, 0.05))
 })
 
@@ -158,7 +158,7 @@ test_that("PowerParams class handles single values correctly", {
     alpha = 0.1,
     max_size = 50,
     breaks = NULL,
-    effect_size = 1.2,
+    effect_size = c(1.2,NA,NA),
     icc = 0.2
   )
 
@@ -166,7 +166,7 @@ test_that("PowerParams class handles single values correctly", {
   expect_equal(power_params@levels, 0)
   expect_equal(power_params@power_curve, 0)
   expect_equal(power_params@max_size, 50)
-  expect_equal(power_params@effect_size, 1.2)
+  expect_equal(power_params@effect_size[1], 1.2)
   expect_equal(power_params@icc, 0.2)
 })
 
@@ -194,3 +194,4 @@ test_that("Class slots have correct types", {
   expect_type(power_params@nsimn, "double")
   expect_type(power_params@alpha, "double")
 })
+

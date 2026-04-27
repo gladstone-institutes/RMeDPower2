@@ -1,35 +1,47 @@
 Package: RMeDPower2
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Min-Gyoung Shin and Reuben Thomas
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Title: Design and Modeling for Repeated Measures Studies
+Version: 1.0.0
+Authors@R: c(
+    person("Min-Gyoung", "Shin",
+           email = "mingyoung.shin@gladstone.ucsf.edu",
+           role = c("aut")),
+    person("Reuben", "Thomas",
+           email = "reuben.thomas@gladstone.ucsf.edu",
+           role = c("aut", "cre"))
+    )
+Description: Provides complete functionality to analyse data from repeated
+    measures experiments with hierarchical or crossed experimental designs.
+    Supports testing modeling assumptions, identifying outlier observations
+    and experimental units, estimating statistical power, and performing
+    sample size calculations. Uses linear mixed effects models via 'lme4'
+    and simulation-based power analysis via 'simr'. Handles both normal and
+    non-normal error distributions including binomial and Poisson families.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
-Depends: 
-    R (>= 4.0),
+Depends:
+    R (>= 4.0)
+Imports:
     lme4,
     dplyr,
     simr,
     magrittr,
     ggplot2,
     ggtext,
-    quantreg
-biocViews:
-Imports: 
-    tidyr,
+    quantreg,
+    tibble,
     lmerTest,
     DHARMa,
     influence.ME,
-    magick,
     EnvStats,
     jsonlite,
-    methods
+    methods,
+    stats,
+    grDevices,
+    graphics
 Suggests:
     knitr,
     rmarkdown,

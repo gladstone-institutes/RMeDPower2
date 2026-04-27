@@ -8,7 +8,9 @@
 #' @return an object of class ProbabilityModel
 #' @export
 #'
-#' @examples design=readPowerParams(jsonfile)
+#' @examples
+#' template_dir <- system.file("input_templates/cell_assay_data", package = "RMeDPower2")
+#' model <- readProbabilityModel(file.path(template_dir,"prob_model.json"))
 
 readProbabilityModel <- function(jsonfile) {
   Prob_Model_data <- jsonlite::fromJSON(jsonfile)

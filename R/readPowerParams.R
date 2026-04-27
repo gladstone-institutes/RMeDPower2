@@ -8,7 +8,9 @@
 #' @return an object of class PowerParams
 #' @export
 #'
-#' @examples design=readPowerParams(jsonfile)
+#' @examples
+#' template_dir <- system.file("input_templates/cell_assay_data", package = "RMeDPower2")
+#' power_param <- readPowerParams(file.path(template_dir,"power_param.json"))
 
 readPowerParams <- function(jsonfile) {
   Power_Param_data <- jsonlite::fromJSON(jsonfile)
