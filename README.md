@@ -2,13 +2,11 @@
 ![image](https://user-images.githubusercontent.com/18338399/186777298-189fb773-d89b-4557-85c4-b22546f566e5.png)
 
 ## Description
-RMeDPower2 Provides complete functionality to analyse data from repeated
-    measures experiments with hierarchical or crossed experimental designs.
-    Supports testing modeling assumptions, identifying outlier observations
-    and experimental units, estimating statistical power, and performing
-    sample size calculations. Uses linear mixed effects models via 'lme4'
-    and simulation-based power analysis via 'simr'. Handles both normal and
-    non-normal error distributions including binomial and Poisson families.
+Biomedical research very often involves data generated from repeated measures experiments. RMeDPower2 is an R package that provides complete functionality to analyse data coming from repeated measures experiments, i.e., where one has repeated measures from the same biological/independent units or samples.
+
+RMeDPower2 helps test the modeling assumptions one makes, identify outlier observations, outlier units at different levels of the design, estimates statistical power or perform sample size calculations, estimate parameters of interest and also to visualize the association being tested. The functionality is limited to testing associations of one predictor (continuous or categorical, e.g., disease status or brain pathology) along with one another covariate (e.g., gender status) in the context of hierarchical or crossed experimental designs.
+
+RMeDPower2 defines the experimental design for the data, probability model of the data generating distribution and necessary parameters required for sample size calculation using convenient S4 class objects. It uses these objects in one framework that brings together the functionality implemented in multiple R packages - lme4 (implementation of linear mixed effects models), influence.ME (identification of outlier units), EnvStats EnvStats (identification of outlier observations), DHARMa (testing of modeling assumptions for non-normal distributions), simr (sample-size calculations) and tidyverse (data manipulation and visualization).
 
 ## How to install
 ```
