@@ -16,5 +16,6 @@ an object of class ProbabilityModel
 This functions reads the underlying design for the data
 }
 \examples{
-design=readPowerParams(jsonfile)
+template_dir <- system.file("input_templates/cell_assay_data", package = "RMeDPower2")
+model <- readProbabilityModel(file.path(template_dir,"prob_model.json"))
 }

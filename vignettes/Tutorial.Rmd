@@ -17,6 +17,10 @@ output:
     toc: true
     toc_float: true
     number_sections: true
+vignette: >
+  %\VignetteIndexEntry{RMeDPower2 Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 abstract: "Biomedical research very often involves data generated from repeated measures
   experiments. RMeDPower2 is an R package that provides complete functionality to
   analyse data coming from repeated measures experiments, i.e., where one has repeated

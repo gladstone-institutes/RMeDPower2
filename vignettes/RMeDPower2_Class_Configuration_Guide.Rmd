@@ -12,6 +12,10 @@ output:
   pdf_document:
     toc: true
     number_sections: true
+vignette: >
+  %\VignetteIndexEntry{RMeDPower2 Class Configuration Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}

@@ -25,8 +25,8 @@
 #'
 #' @return A list of the linear mixed model result, original data, experimental column names, and residual values
 #'
-#' @export
-#' @examples result=calculatePower(data=data, design=design, model=model, power_param=power_param)
+#' @keywords internal
+#' @noRd
 
 
 
@@ -76,7 +76,6 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
     }
   }
 
-  family_p<<-family_p
 
   if(na.action=="complete"){
 
@@ -185,114 +184,6 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
                                 total_column)
 
 
-  # ####### run the formula
-  # if(is.null(covariate)){
-  #   if(error_is_non_normal==FALSE){
-  #     if(length(experimental_columns)==1){
-  #       lmerFit <- lmerTest::lmer(response_column ~ condition_column + (1 | experimental_column1), data=fixed_global_variable_data)
-  #     }else if(length(experimental_columns)==2){
-  #       lmerFit <- lmerTest::lmer(response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2), data=fixed_global_variable_data)
-  #     }else if(length(experimental_columns)==3){
-  #       lmerFit <- lmerTest::lmer(response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3), data=fixed_global_variable_data)
-  #     }else if(length(experimental_columns)==4){
-  #       lmerFit <- lmerTest::lmer(response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4), data=fixed_global_variable_data)
-  #     }else if(length(experimental_columns)==5){
-  #       lmerFit <- lmerTest::lmer(response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4) + (1 | experimental_column5), data=fixed_global_variable_data)
-  #     }
-  #   }else if(family_p$family == "binomial" & !is.null(total_column)){
-  #     if(length(experimental_columns)==1){
-  #       lmerFit <- lme4::glmer(cbind(response_column, (total_column - response_column)) ~ condition_column + (1 | experimental_column1), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==2){
-  #       lmerFit <- lme4::glmer(cbind(response_column, (total_column - response_column)) ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==3){
-  #       lmerFit <- lme4::glmer(cbind(response_column, total_column - response_column) ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==4){
-  #       lmerFit <- lme4::glmer(cbind(response_column, total_column - response_column) ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==5){
-  #       lmerFit <- lme4::glmer(cbind(response_column, total_column - response_column) ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4) + (1 | experimental_column5), data=fixed_global_variable_data, family=family_p)
-  #     }
-  #   }else if(family_p$family == "negative_binomial" & !is.null(total_column)){
-  #     if(length(experimental_columns)==1){
-  #       lmerFit <- lme4::glmer.nb(response_column ~ condition_column + (1 | experimental_column1) + offset(log(total_column)), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==2){
-  #       lmerFit <- lme4::glmer.nb(response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + offset(log(total_column)), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==3){
-  #       lmerFit <- lme4::glmer.nb(response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + offset(log(total_column)) , data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==4){
-  #       lmerFit <- lme4::glmer.nb(response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4) + offset(log(total_column)), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==5){
-  #       lmerFit <- lme4::glmer.nb(response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4) + (1 | experimental_column5) + offset(log(total_column)) , data=fixed_global_variable_data, family=family_p)
-  #     }
-  #   }else{
-  #     if(length(experimental_columns)==1){
-  #       lmerFit <- lme4::glmer(response_column ~ condition_column + (1 | experimental_column1), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==2){
-  #       lmerFit <- lme4::glmer(response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==3){
-  #       lmerFit <- lme4::glmer(response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==4){
-  #       lmerFit <- lme4::glmer(response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==5){
-  #       lmerFit <- lme4::glmer(response_column ~ condition_column + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4) + (1 | experimental_column5), data=fixed_global_variable_data, family=family_p)
-  #     }
-  #   }
-  # }else{
-  #   if(error_is_non_normal==FALSE){
-  #     if(length(experimental_columns)==1){
-  #       lmerFit <- lmerTest::lmer(response_column ~ condition_column + covariate + (1 | experimental_column1), data=fixed_global_variable_data)
-  #     }else if(length(experimental_columns)==2){
-  #       lmerFit <- lmerTest::lmer(response_column ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2), data=fixed_global_variable_data)
-  #     }else if(length(experimental_columns)==3){
-  #       lmerFit <- lmerTest::lmer(response_column ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3), data=fixed_global_variable_data)
-  #     }else if(length(experimental_columns)==4){
-  #       lmerFit <- lmerTest::lmer(response_column ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4), data=fixed_global_variable_data)
-  #     }else if(length(experimental_columns)==5){
-  #       lmerFit <- lmerTest::lmer(response_column ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4) + (1 | experimental_column5), data=fixed_global_variable_data)
-  #     }
-  #   }else if(family_p$family == "binomial" & !is.null(total_column)){
-  #     if(length(experimental_columns)==1){
-  #       lmerFit <- lme4::glmer(cbind(response_column, (total_column - response_column)) ~ condition_column + covariate + (1 | experimental_column1), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==2){
-  #       lmerFit <- lme4::glmer(cbind(response_column, (total_column - response_column)) ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==3){
-  #       lmerFit <- lme4::glmer(cbind(response_column, total_column - response_column) ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==4){
-  #       lmerFit <- lme4::glmer(cbind(response_column, total_column - response_column) ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==5){
-  #       lmerFit <- lme4::glmer(cbind(response_column, total_column - response_column) ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4) + (1 | experimental_column5), data=fixed_global_variable_data, family=family_p)
-  #     }
-  #   }else if(family_p$family == "negative_binomial" & !is.null(total_column)){
-  #     if(length(experimental_columns)==1){
-  #       lmerFit <- lme4::glmer.nb(response_column ~ condition_column + covariate + (1 | experimental_column1) + offset(log(total_column)), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==2){
-  #       lmerFit <- lme4::glmer.nb(response_column ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + offset(log(total_column)), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==3){
-  #       lmerFit <- lme4::glmer.nb(response_column ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + offset(log(total_column)) , data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==4){
-  #       lmerFit <- lme4::glmer.nb(response_column ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4) + offset(log(total_column)), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==5){
-  #       lmerFit <- lme4::glmer.nb(response_column ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4) + (1 | experimental_column5) + offset(log(total_column)) , data=fixed_global_variable_data, family=family_p)
-  #     }
-  #   }else{
-  #     if(length(experimental_columns)==1){
-  #       lmerFit <- lme4::glmer(response_column ~ condition_column + covariate + (1 | experimental_column1), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==2){
-  #       lmerFit <- lme4::glmer(response_column ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==3){
-  #       lmerFit <- lme4::glmer(response_column ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==4){
-  #       lmerFit <- lme4::glmer(response_column ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4), data=fixed_global_variable_data, family=family_p)
-  #     }else if(length(experimental_columns)==5){
-  #       lmerFit <- lme4::glmer(response_column ~ condition_column + covariate + (1 | experimental_column1) + (1 | experimental_column2) + (1 | experimental_column3) + (1 | experimental_column4) + (1 | experimental_column5), data=fixed_global_variable_data, family=family_p)
-  #     }
-  #   }
-  # }
-  #
-  #
-  #
-
-
-
 
   slmerFit <- summary(lmerFit)
 
@@ -360,37 +251,38 @@ generate_model_fit <- function(data, fixed_formula, random_formula,
 
   if (error_is_non_normal == FALSE) {
     # Linear mixed effects model
-    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
+    formula_str <- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
     lmerFit <- lmerTest::lmer(formula_str, data = data)
   } else if (!is.null(family_p) && family_p$family == "binomial" && !is.null(total_column)) {
     # Binomial with total column
-    formula_str <<- as.formula(paste("cbind(response_column, (total_column - response_column)) ~",
-                         fixed_formula, "+", random_formula))
+    formula_str <- as.formula(paste("cbind(response_column, (total_column - response_column)) ~",
+                                     fixed_formula, "+", random_formula))
     lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
   } else if (!is.null(family_p) && family_p$family == "negative_binomial" && !is.null(total_column)) {
     # Negative binomial with offset
-    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
-                         "+ offset(log(total_column))"))
+    formula_str <- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
+                                     "+ offset(log(total_column))"))
     lmerFit <- lme4::glmer.nb(formula_str, data = data, family = family_p)
   } else if (!is.null(family_p) && family_p$family == "poisson" && !is.null(total_column)) {
     # poisson with offset
-    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
-                         "+ offset(log(total_column))"))
+    formula_str <- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
+                                     "+ offset(log(total_column))"))
+
     lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
   }
   else if (!is.null(family_p) && family_p$family == "negative_binomial" && is.null(total_column)) {
-    # Negative binomial with offset
-    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
+    # Negative binomial without offset
+    formula_str <- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
     lmerFit <- lme4::glmer.nb(formula_str, data = data, family = family_p)
   }
   else {
     # Other GLMMs
-    formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
+    formula_str <- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
     lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
   }
 
   lmerFit@call$formula = formula_str
-  lmerFit@call$data = as.name("fixed_global_variable_data")
+  lmerFit@call$data = as.name("data.update")
   return(lmerFit)
 }
 
@@ -416,8 +308,8 @@ generate_model_fit0 <- function(data,  random_formula,
     lmerFit <- lme4::glmer(as.formula(formula_str), data = data, family = family_p)
   }
   else if (!is.null(family_p) && family_p$family == "negative_binomial" && is.null(total_column)) {
-    # Negative binomial with offset
-    formula_str <<- as.formula(paste("response_column ~",  random_formula))
+    # Negative binomial without offset
+    formula_str <- as.formula(paste("response_column ~",  random_formula))
     lmerFit <- lme4::glmer.nb(formula_str, data = data, family = family_p)
   }
   else {
@@ -428,41 +320,7 @@ generate_model_fit0 <- function(data,  random_formula,
 
 
   lmerFit@call$formula = formula_str
-  lmerFit@call$data = as.name("fixed_global_variable_data")
+  lmerFit@call$data = as.name("data.update")
   return(lmerFit)
 }
 
-# generate_model_fit_4_power_estimates <- function(data, fixed_formula, random_formula,
-#                                error_is_non_normal = FALSE, family_p = NULL,
-#                                total_column = NULL) {
-#
-#   if (error_is_non_normal == FALSE) {
-#     # Linear mixed effects model
-#     formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
-#     lmerFit <- lme4::lmer(formula_str, data = data)
-#   } else if (!is.null(family_p) && family_p$family == "binomial" && !is.null(total_column)) {
-#     # Binomial with total column
-#     formula_str <<- as.formula(paste("cbind(response_column, (total_column - response_column)) ~",
-#                                      fixed_formula, "+", random_formula))
-#     lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
-#   } else if (!is.null(family_p) && family_p$family == "negative_binomial" && !is.null(total_column)) {
-#     # Negative binomial with offset
-#     formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
-#                                      "+ offset(log(total_column))"))
-#     lmerFit <- lme4::glmer.nb(formula_str, data = data, family = family_p)
-#   } else if (!is.null(family_p) && family_p$family == "poisson" && !is.null(total_column)) {
-#     # Negative binomial with offset
-#     formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula,
-#                                      "+ offset(log(total_column))"))
-#     lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
-#   }
-#   else {
-#     # Other GLMMs
-#     formula_str <<- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
-#     lmerFit <- lme4::glmer(formula_str, data = data, family = family_p)
-#   }
-#
-#   lmerFit@call$formula = formula_str
-#   lmerFit@call$data = as.name("Data")
-#   return(lmerFit)
-# }

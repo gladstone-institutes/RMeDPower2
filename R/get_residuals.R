@@ -26,16 +26,8 @@
 #'
 #' @return A list with 3 elements. 1. The updated input data with an additional column with the model residuals of the individual observations. 2. A plot representing the purported association between the response column and the condition column. 3. The corresponding caption for this figure.
 #'
-#' @export
-#'
-#' @examples result=get_residuals_covariate(data=plate_assay_pilot_data,
-#' @examples condition_column="classification",
-#' @examples experimental_columns=c("experiment", "line"),
-#' @examples response_column="cell_size1",
-#' @examples condition_is_categorical=TRUE,
-#' @examples covariate="covariate",
-#' @examples crossed_columns = "line",
-#' @examples error_is_non_normal=FALSE)
+#' @keywords internal
+#' @noRd
 
 
 get_residuals <- function(data, condition_column, experimental_columns, response_column,  condition_is_categorical, covariate=NULL,

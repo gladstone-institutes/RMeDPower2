@@ -16,5 +16,6 @@ an object of class PowerParams
 This functions reads the underlying design for the data
 }
 \examples{
-design=readPowerParams(jsonfile)
+template_dir <- system.file("input_templates/cell_assay_data", package = "RMeDPower2")
+power_param <- readPowerParams(file.path(template_dir,"power_param.json"))
 }

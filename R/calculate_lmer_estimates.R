@@ -24,16 +24,8 @@
 #'
 #' @return A linear mixed model result
 #'
-#' @export
-#' @examples result=calculate_lmer_estimates(data=plate_assay_pilot_data,
-#' @examples condition_column="classification",
-#' @examples experimental_columns=c("experiment", "line"),
-#' @examples response_column="cell_size1",
-#' @examples condition_is_categorical=TRUE,
-#' @examples covariate="covariate",
-#' @examples crossed_columns = "line",
-#' @examples family_p=NULL,
-#' @examples error_is_non_normal=FALSE)
+#' @keywords internal
+#' @noRd
 
 
 

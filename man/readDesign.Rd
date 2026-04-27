@@ -16,5 +16,6 @@ an object of class RMeDesign
 This functions reads the underlying design for the data
 }
 \examples{
-design=readDesign(jsonfile)
+template_dir <- system.file("input_templates/cell_assay_data", package = "RMeDPower2")
+design <- readDesign(file.path(template_dir,"design_cell_assay.json"))
 }

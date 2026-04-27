@@ -1,2 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^RMeDPower2\.Rcheck$
+^.*\.tar\.gz$
+^shiny_config_app$
