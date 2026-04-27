@@ -9,18 +9,18 @@ author:
   email: reuben.thomas@gladstone.ucsf.edu
 package: RMeDPower2
 output:
-  pdf_document:
-    latex_engine: xelatex
-    toc: true
-    number_sections: true
   html_document:
     toc: true
     toc_float: true
     number_sections: true
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+    number_sections: true
 vignette: >
   %\VignetteIndexEntry{RMeDPower2 Tutorial}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 abstract: "Biomedical research very often involves data generated from repeated measures
   experiments. RMeDPower2 is an R package that provides complete functionality to
   analyse data coming from repeated measures experiments, i.e., where one has repeated
@@ -41,7 +41,6 @@ abstract: "Biomedical research very often involves data generated from repeated 
   of outlier observations), DHARMa (testing of modeling assumptions for non-normal
   distributions), simr (sample-size calculations) and tidyverse (data manipulation
   and visualization).\n"
-vignette: "%\\VignetteIndexEntry{Vignette Title}\n%\\VignetteEngine{knitr::rmarkdown}\n%\\VignetteEncoding{UTF-8}\n"
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
@@ -69,6 +68,9 @@ The first step is to load RMeDPower2 and read-in the input data as a data frame.
 
 ```{r results='hide'}
 suppressPackageStartupMessages(library(RMeDPower2))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(magrittr))
 options(warn = -1)
 data <- plate_assay_pilot_data
 ```
@@ -480,7 +482,7 @@ The following commands load data and set parameters to specify the experimental 
 The first few lines of data display cell meta information.
 
 ```{r}
-template_dir <- system.file("input_templates/single_cell_data/celltype_proportions_with_genotype", package = "RMeDPower2")
+template_dir <- system.file("input_templates/single_cell_data/celltype_genotype", package = "RMeDPower2")
 data <- snRNAseq_cluster_count_data
 head(data)
 ```
@@ -589,7 +591,7 @@ Next, we can first ask the question whether or not the proportion of nuclei deri
 
 ```{r}
 ##Associations of cell-type proportions with hippocampus volume
-template_dir <- system.file("input_templates/single_cell_data/celltype_proportions_with_hippocampus_vol", package = "RMeDPower2")
+template_dir <- system.file("input_templates/single_cell_data/celltype_hippocampus", package = "RMeDPower2")
 
 design <- readDesign(file.path(template_dir, "design_celltype.json"))
 
@@ -647,7 +649,7 @@ cat("\n\n\n")
 And calculate the statistical power to estimate this association for different numbers of animals per group.
 
 ```{r eval=TRUE}
-power_plots <- calculatePower(data, design, model, power_param)
+power_res <- calculatePower(data, design, model, power_param)
 ```
 
 ```{r,results="asis", echo = FALSE}
@@ -661,7 +663,7 @@ cat("\n\n\n")
 We will now estimate the association of the expression levels of the Snhg11 gene with genotype among cells in cluster 7 in the same data set. We will now load the raw counts for this gene and create the relevant RMeDesign, ProbabilityModel and PowerParams objects.
 
 ```{r}
-template_dir <- system.file("input_templates/single_cell_data/gene_expression_with_genotype", package = "RMeDPower2")
+template_dir <- system.file("input_templates/single_cell_data/gene_expression", package = "RMeDPower2")
 
 data <- snRNAseq_gene_count_data
 head(data)
@@ -751,7 +753,7 @@ cat("\n\n\n")
 We can also perform a power analyses to detect a log(2) fold-change in this gene.
 
 ```{r}
-power_param@effect_size <- log(2)
+power_param@effect_size <- c(log(2),0.14)
 power_res <- calculatePower(data, design, model, power_param)
 ```
 
@@ -856,7 +858,7 @@ knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
 plot_no <- plot_no + 1
 cat("\n\n\n")
 ```
-We will also perform sample-size calculations for the number of mice needed per cohort.
+We will also perform sample-size calculations for the number of mice needed per cohort. 
 ```{r}
 power_param@target_columns <- "MouseID"
 power_res <- calculatePower(data_update, design_update, model, power_param)
@@ -869,6 +871,21 @@ plot_no <- plot_no + 1
 cat("\n\n\n")
 ```
 
+One can alternatively attempt, a random slope change in latency to reach the target over learning trial using the `random_slope_variable` attribute for the design class.
+
+```{r}
+design_update@random_slope_variable <- "Trial"
+
+estimate_res <- getEstimatesOfInterest(data_update, design_update, model, print_plots = F)
+print(estimate_res[[1]])
+```
+
+```{r}
+print(estimate_res[[2]]$plots)
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+plot_no <- plot_no + 1
+cat("\n\n\n")
+```
 ## Brain electrical signal assays
 Patch clamp is a technique that can be used to measure membrane action potential in excitable cells like neurons. We will work with (simulated) data from two sets of mice - one representing a Alzheimer's Disease model (hAPP) and the other representing control or wild-type mice. In each of these mice, multiple brain tissue slices are isolated and the membrane action potential for at least one neuronal cell in each slice is recorded.
 
@@ -1046,12 +1063,12 @@ plot_no <- plot_no + 1
 cat("\n\n\n")
 ```
 
-This is not significant at all. How many mice do we need to have 80% power to estimate the observed difference?
+This is not significant at all. How many mice do we need to have 80% power to estimate the observed difference? We will also try and specify a larger effect size we want to detect. Note, this is specified by a 3-dimensional numeric vector. The first element reflects the change associated with the `condition_column`, the second with the `covariate` while the third element with the interaction effect if specified. When there is no `covariate` or `include_interaction` specified the corresponding elements of this `effect_size` vector is set to NA.
 
 ```{r}
 
 power_param@target_columns <- "Mice"
-power_param@effect_size <- c(7, NA, NA)
+power_param@effect_size <- c(-7, NA, NA)
 power_res <- calculatePower(data, design, model, power_param)
 ```
 

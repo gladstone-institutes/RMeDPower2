@@ -3,11 +3,6 @@
 #'
 #'
 #'
-#' @import multtest
-#' @import simr
-#' @import lme4
-#' @import lmerTest
-#' @import readxl
 #'
 #' @param data Input data
 #' @param condition_column The name of the condition variable (ex a variable with values such as control/case). The input file has to have a corresponding column name
@@ -44,7 +39,7 @@
 
 
 
-calculate_power <- function(data, condition_column, experimental_columns, response_column, total_column = NULL, target_columns, power_curve, condition_is_categorical, covariate=NA,
+calculate_power <- function(data, condition_column, experimental_columns, response_column, total_column = NULL, target_columns, power_curve, condition_is_categorical, covariate=NULL,
                             crossed_columns = NULL, error_is_non_normal=FALSE, nsimn=1000, family_p=NULL,
                             levels=NULL, max_size=NULL, breaks=NULL, effect_size=NULL, ICC=NULL, na.action="complete", output=NULL, alpha =0.05,
                             include_interaction = NA,
@@ -67,15 +62,15 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   if(!is.na(condition_is_categorical) && !condition_is_categorical%in%c(TRUE,FALSE)){ print("condition_is_categorical must be TRUE or FALSE");return(NULL) }
   if(!is.na(covariate_is_categorical) && !covariate_is_categorical%in%c(TRUE,FALSE)){ print("covariate_is_categorical must be TRUE or FALSE");return(NULL) }
 
-  if(!is.null(covariate))
+  if(!is.null(covariate)) {
     if(!covariate%in%colnames(data))
-    { print("covariate should be NA or one of the column names");return(NULL) }
+    { print("covariate should be NA or one of the column names");return(NULL) }}
   if(! (is.numeric(nsimn)&&nsimn>0) ){ print("nsimn should be a positive integer");return(NULL) }
   if(sum(target_columns%in%colnames(data))!=length(target_columns) ){ print("target_columns must match column names");return(NULL) }
   if(sum(levels%in%c(0,1))!=length(levels)){ print("levels must be 0 or 1");return(NULL) }
   if(!( is.null(max_size) | (is.numeric(max_size)&&sum(max_size>0)==length(max_size)) ) ){print("max_size a positive integer");return(NULL) }
   if(!( is.null(breaks) | (is.numeric(breaks)&&breaks>0) ) ){ print("breaks must be a positive integer");return(NULL) }
-  if(!( is.null(effect_size) | (is.numeric(effect_size)  & length(effect_size) < 3))){ print("effect_size must be a 3 element numeric vector");return(NULL) }
+  if(!(is.null(effect_size) | (is.numeric(effect_size)  & length(effect_size) == 3))){ print("effect_size must be a 3 element numeric vector");return(NULL) }
   if(!is.null(ICC) & error_is_non_normal==TRUE ){ print("ICC-based simulations are not supported when the response is non-normal");return(NULL) }
   if(!is.null(ICC)){if(length(ICC) != length(experimental_columns)) {print("The ICC vector should be of the same dimension as the number of experimental columns");return(NULL)}}
   # Validation for new parameters
@@ -140,7 +135,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {
-    if(class(Data[,random_slope_variable]) != "numeric") {
+    if(!inherits(Data[,random_slope_variable], "numeric")) {
       print("random_slope_variable should be a numeric variable")
       return(NULL)
     }
@@ -233,7 +228,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
     if (error_is_non_normal == FALSE) {
       # Linear mixed effects model
       formula_str <- as.formula(paste("response_column ~", fixed_formula, "+", random_formula))
-      lmerFit <- lme4::lmer(formula_str, data = Data)
+      lmerFit <- lmer(formula_str, data = Data)
       ##base model fixed formula when there is an interaction term
       if(!is.null(covariate)){
         formula_str0 <- as.formula(paste0("response_column ~ covariate"))
@@ -306,7 +301,14 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   }
 
 
-
+  if(error_is_non_normal == FALSE & multiple_levels_for_each_random_effect){
+    lmerFit <- as(lmerFit, "lmerMod")
+    lmerFit@call[[2]] <- formula_str
+  }
+  if(error_is_non_normal == TRUE) {
+    if(family_p$family != "negative_binomial")
+      lmerFit@call[[4]] <- family_p
+  }
   slmerFit <- summary(lmerFit)
   # cat("\n")
   # print("__________________________________________________________________Model statistics:")
@@ -406,28 +408,29 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   ##### Assign known effect sizes
   if(length(effect_size)>0){
 
-    if(is.na(effect_size[1])){
+    if(!is.na(effect_size[1])){
       fixef(lmerFit)[2] <- effect_size[1]
       cat("\n")
       print(paste0("_________________________________Effect size of the condition_column is now ",effect_size[1]))
       cat("\n")
 
     }
-    if(is.na(effect_size[2]) & !is.null(covariate)){
+    if(!is.na(effect_size[2]) & !is.null(covariate)){
       fixef(lmerFit)[3] <- effect_size[2]
       cat("\n")
       print(paste0("_________________________________Effect size of the covariate is now ",effect_size[2]))
       cat("\n")
 
     }
-    if(is.na(effect_size[3]) & include_interaction){
-      fixef(lmerFit)[4] <- effect_size[3]
-      cat("\n")
-      print(paste0("_________________________________Effect size of the interaction term is now ",effect_size[3]))
-      cat("\n")
+    if(!is.null(include_interaction)) {
+      if(!is.na(effect_size[3]) & include_interaction){
+        fixef(lmerFit)[4] <- effect_size[3]
+        cat("\n")
+        print(paste0("_________________________________Effect size of the interaction term is now ",effect_size[3]))
+        cat("\n")
 
+      }
     }
-
 
   }
 
@@ -643,8 +646,6 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
             pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"), along=target_columns_renamed[i], nsim=nsimn, breaks=seq(1,max_size[i],breaks[i]), progress = FALSE)
 
       }else{
-          # pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fixed("condition_column"),within=target_columns_renamed[i], nsim=nsimn,
-          #                   breaks=seq(1,max_size[i],breaks[i]), progress = FALSE   )
 
           if(!is.null(covariate))
             pc=simr::powerCurve(extended_target_columns[[i]], test=simr::fcompare(formula_str0),within=target_columns_renamed[i], nsim=nsimn, breaks=seq(1,max_size[i],breaks[i]), progress = FALSE)

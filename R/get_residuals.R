@@ -4,9 +4,6 @@
 #'
 #' Note: The current version does not accept categorical response variables, sample size parameters smaller than the observed samples size
 #'
-#' @import multtest
-#' @import lme4
-#' @import lmerTest
 #'
 #' @param data Input data
 #' @param condition_column Name of the condition variable (ex variable with values such as control/case). The input file has to have a corresponding column name
@@ -106,7 +103,7 @@ get_residuals <- function(data, condition_column, experimental_columns, response
 
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {
-    if(class(Data[,random_slope_variable]) != "numeric") {
+    if(!inherits(Data[,random_slope_variable], "numeric")) {
       print("random_slope_variable should be a numeric variable")
       return(NULL)
     }
@@ -337,7 +334,7 @@ get_residuals <- function(data, condition_column, experimental_columns, response
   if(condition_is_categorical==TRUE){
 
     if(!is.null(covariate)) {
-       if(class(Data[["covariate"]]) == "factor" | class(Data[["covariate"]]) == "character") {
+       if(inherits(Data[["covariate"]], "factor") | inherits(Data[["covariate"]], "character")) {
         gp=ggplot2::ggplot(Data_sum, aes(x=condition_column, y=med_residual1, color = covariate)) +
           geom_boxplot(position = position_dodge(width = 0.7), outlier.shape = NA) +
           geom_point(position = position_jitterdodge(jitter.width = 0.1,dodge.width = 0.7)) +
@@ -350,7 +347,7 @@ get_residuals <- function(data, condition_column, experimental_columns, response
           theme(plot.subtitle  = element_textbox_simple())
         captions = paste0("Box plot of the median residuals across all observations within each level of experimental column = ", experimental_columns[1], " as a function of ", condition_column, " and separated by levels of ", covariate)
       }
-      else if(class(Data[["covariate"]]) == "numeric") {
+      else if(inherits(Data[["covariate"]], "numeric")) {
         gp=ggplot2::ggplot(Data_sum, aes(x=covariate, y=med_residual1, color = condition_column)) +
           geom_smooth(method = "lm", se = T) +
           geom_point() +

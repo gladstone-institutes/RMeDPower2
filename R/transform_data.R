@@ -276,6 +276,8 @@ transform_data<-function(data, condition_column, experimental_columns, response_
   return(result)
 }
 
+#' @keywords internal
+#' @noRd
 generate_cooks_results_plots <- function(cooks_result, models, experimental_columns) {
   cooks_plots <- list()
   inferred_outliers <- list()
@@ -309,6 +311,8 @@ generate_cooks_results_plots <- function(cooks_result, models, experimental_colu
   return(list(cooks_plots=cooks_plots, inferred_outliers=inferred_outliers))
 }
 
+#' @keywords internal
+#' @noRd
 generate_qc_plots <-  function(lms,
                                error_is_non_normal,
                                description_suffix,
@@ -447,6 +451,8 @@ generate_qc_plots <-  function(lms,
   return(list(plots = plots, captions = captions, residual = residual))
 }
 
+#' @keywords internal
+#' @noRd
 rosner_test<- function (trait, response_column, alpha, hist_text) {
 
   cutoff1=NA
@@ -499,6 +505,8 @@ rosner_test<- function (trait, response_column, alpha, hist_text) {
   return(c(cutoff2,cutoff1))
 }
 
+#' @keywords internal
+#' @noRd
 cooks_test<- function (model, family_p, fixed_global_variable_data, experimental_columns, response_column, hist_text) {
 
   n_cols_2_test <- length(experimental_columns)
@@ -537,14 +545,14 @@ cooks_test<- function (model, family_p, fixed_global_variable_data, experimental
                             levels=setdiff(fixed_global_variable_data[,experimental_columns[i]],not2exclude)
                             for(level2test in levels ){
                               alt.est <- influence2(model, family_p, group=experimental_columns[i], select=level2test)
-                              cd=rbind(cd, cooks.distance(alt.est))
+                              cd=rbind(cd, influence.ME::cooks.distance.estex(alt.est))
                             }
                             rownames(cd)=levels
                             cd
 
                           }else{
                             alt.est <- influence2(model, family_p, group=experimental_columns[i] )
-                            cooks.distance(alt.est)
+                            influence.ME::cooks.distance.estex(alt.est)
                           }
 
 
@@ -562,6 +570,8 @@ cooks_test<- function (model, family_p, fixed_global_variable_data, experimental
 }
 
 # Function to extract DHARMa residuals and create ggplot-ready data
+#' @keywords internal
+#' @noRd
 extract_dharma_data <- function(dharma_obj) {
   data.frame(
     residuals = dharma_obj$scaledResiduals,
@@ -577,6 +587,8 @@ extract_dharma_data <- function(dharma_obj) {
 # 1. GGPLOT VERSION OF plotQQunif()
 # ==============================================================================
 
+#' @keywords internal
+#' @noRd
 ggplot_QQunif <- function(dharma_obj,
                           title = "Q-Q Plot vs. Uniform Distribution",
                           test_uniformity = FALSE,
@@ -637,6 +649,8 @@ ggplot_QQunif <- function(dharma_obj,
 
 
 # Plot residuals against custom predictor with DHARMa-style formatting
+#' @keywords internal
+#' @noRd
 ggplot_residuals_vs_predictor <- function(dharma_obj,
                                           predictor = NULL,
                                           predictor_name = "predictions",   #or "predictions"
@@ -682,7 +696,7 @@ ggplot_residuals_vs_predictor <- function(dharma_obj,
       # Add quantile regression lines
       quantiles <- c(0.25, 0.5, 0.75)
       for (q in quantiles) {
-        p <- p + geom_smooth(formula = y ~ poly(x,2), method = "rq", method.args = list(tau = q),
+        p <- p + geom_smooth(formula = y ~ poly(x,2), method = quantreg::rq, method.args = list(tau = q),
                              se = FALSE, color = "red", linewidth = 0.8, alpha = 0.7)
       }
       # Add expected horizontal lines
@@ -713,6 +727,8 @@ ggplot_residuals_vs_predictor <- function(dharma_obj,
   return(p)
 }
 
+#' @keywords internal
+#' @noRd
 ensureDHARMa <- function(simulationOutput, convert = TRUE) {
   # Check if it's already a DHARMa object
   if (inherits(simulationOutput, "DHARMa")) {
@@ -743,6 +759,8 @@ ensureDHARMa <- function(simulationOutput, convert = TRUE) {
 }
 
 # Helper function to ensure predictor
+#' @keywords internal
+#' @noRd
 ensurePredictor <- function(simulationOutput, form = NULL) {
   if (is.null(form)) {
     # Use fitted predictions from DHARMa object
@@ -767,6 +785,8 @@ ensurePredictor <- function(simulationOutput, form = NULL) {
 }
 
 # Helper function to check dots (simplified version)
+#' @keywords internal
+#' @noRd
 checkDots <- function(name, default, ...) {
   dots <- list(...)
   if (name %in% names(dots)) {
@@ -778,6 +798,9 @@ checkDots <- function(name, default, ...) {
 
 
 ## adapted from influence.ME to work with binomial glmer and avoid the need to declare global variables
+## https://github.com/cran/influence.ME
+#' @keywords internal
+#' @noRd
 influence2 <-
   function(model, family_p, group=NULL, select=NULL, obs=FALSE, gf="single", count = FALSE, delete=TRUE, ...)
   {
@@ -854,7 +877,7 @@ influence2 <-
 
     if(!obs)
     {
-      grouping.names <- grouping.levels(model, group)
+      grouping.names <- influence.ME::grouping.levels(model, group)
       n.groups <- length(grouping.names)
     }
 
@@ -874,7 +897,7 @@ influence2 <-
     dimnames(or.fixed) <- list(NULL, names(fixef(model))[original.no.estex])
 
     # Standard Error of the original model
-    or.se <- matrix(ncol = n.pred , nrow = 1, data = se.fixef(model)[original.no.estex])
+    or.se <- matrix(ncol = n.pred , nrow = 1, data = influence.ME::se.fixef(model)[original.no.estex])
     dimnames(or.se) <- list(NULL, names(fixef(model))[original.no.estex])
 
     # Variance / Covariance Matrix of the original model
@@ -925,7 +948,7 @@ influence2 <-
           altered.no.estex <- which(substr(names(fixef(model.updated)), 1,6) != "estex.")
 
           alt.fixed[i,] 	<- as.matrix(fixef(model.updated)[altered.no.estex])
-          alt.se[i,] 		<- as.matrix(se.fixef(model.updated)[altered.no.estex])
+          alt.se[i,] 		<- as.matrix(influence.ME::se.fixef(model.updated)[altered.no.estex])
           alt.vcov[[i]] 	<- as.matrix(vcov(model.updated)[altered.no.estex, altered.no.estex])
           alt.test[i,] 		<- as.matrix(coef(summary(model.updated))[,3][altered.no.estex])
         }
@@ -947,7 +970,7 @@ influence2 <-
           names(fixef(model.updated))[altered.no.estex])
 
         # Standard Error of the modified model(s)
-        alt.se <- matrix(ncol = n.pred , nrow = 1, data = se.fixef(model.updated)[altered.no.estex])
+        alt.se <- matrix(ncol = n.pred , nrow = 1, data = influence.ME::se.fixef(model.updated)[altered.no.estex])
         dimnames(alt.se) <- list("Altered model", names(fixef(model.updated))[altered.no.estex])
 
         # Variance / Covariance Matrix of the modified model(s)
@@ -994,7 +1017,7 @@ influence2 <-
           altered.no.estex <- which(substr(names(fixef(model.updated)), 1,6) != "estex.")
 
           alt.fixed[i,] 	<- as.matrix(fixef(model.updated)[altered.no.estex])
-          alt.se[i,] 		<- as.matrix(se.fixef(model.updated)[altered.no.estex])
+          alt.se[i,] 		<- as.matrix(influence.ME::se.fixef(model.updated)[altered.no.estex])
           alt.vcov[[i]] 	<- as.matrix(vcov(model.updated)[altered.no.estex, altered.no.estex])
           alt.test[i,]	 	<- as.matrix(coef(summary(model.updated))[,3][altered.no.estex])
         }
@@ -1014,7 +1037,7 @@ influence2 <-
           names(fixef(model.updated))[altered.no.estex])
 
         # Standard Error of the modified model(s)
-        alt.se <- matrix(ncol = n.pred , nrow = 1, data = se.fixef(model.updated)[altered.no.estex])
+        alt.se <- matrix(ncol = n.pred , nrow = 1, data = influence.ME::se.fixef(model.updated)[altered.no.estex])
         dimnames(alt.se) <- list("Altered model", names(fixef(model.updated))[altered.no.estex])
 
         # Variance / Covariance Matrix of the modified model(s)
@@ -1051,6 +1074,9 @@ influence2 <-
   }
 
 ## adapted from influence.ME to work with binomial glmer and avoid the need to declare global variables
+## https://github.com/cran/influence.ME
+#' @keywords internal
+#' @noRd
 exclude.influence2 <-
   function(model, family_p, grouping=NULL, level=NULL, obs=NULL, gf="single", delete=TRUE)
   {
