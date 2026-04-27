@@ -2,11 +2,6 @@
 #' @description This function performs a linear mixed model analysis using lmer.
 #'
 #'
-#' @import multtest
-#' @import simr
-#' @import lme4
-#' @import lmerTest
-#' @import readxl
 #'
 #' @param data Input data
 #' @param condition_column Name of the condition variable (ex variable with values such as control/case). The input file has to have a corresponding column name
@@ -115,7 +110,7 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
   }
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {
-    if(class(fixed_global_variable_data[,random_slope_variable]) != "numeric") {
+    if(!inherits(fixed_global_variable_data[,random_slope_variable], "numeric")) {
       print("random_slope_variable should be a numeric variable")
       return(NULL)
     }
@@ -197,7 +192,8 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
   return(list(lmerFit, fixed_global_variable_data, colnames(fixed_global_variable_data)[experimental_columns_index], slmerFit$residuals))
 }
 
-# Helper function to build fixed effects formula
+#' @keywords internal
+#' @noRd
 build_fixed_formula <- function(covariate = NULL, include_interaction = FALSE) {
   if (is.null(covariate)) {
     return("condition_column")
@@ -210,7 +206,8 @@ build_fixed_formula <- function(covariate = NULL, include_interaction = FALSE) {
   }
 }
 
-# Helper function to build random effects formula
+#' @keywords internal
+#' @noRd
 build_random_formula <- function(experimental_columns, random_slope_variable = NULL) {
   random_parts <- c()
 
@@ -232,6 +229,8 @@ build_random_formula <- function(experimental_columns, random_slope_variable = N
   return(paste(random_parts, collapse = " + "))
 }
 
+#' @keywords internal
+#' @noRd
 build_random_formula0 <- function(experimental_columns) {
   random_parts <- c()
 
@@ -245,6 +244,8 @@ build_random_formula0 <- function(experimental_columns) {
 }
 
 
+#' @keywords internal
+#' @noRd
 generate_model_fit <- function(data, fixed_formula, random_formula,
                                     error_is_non_normal = FALSE, family_p = NULL,
                                     total_column = NULL) {
@@ -286,6 +287,8 @@ generate_model_fit <- function(data, fixed_formula, random_formula,
   return(lmerFit)
 }
 
+#' @keywords internal
+#' @noRd
 generate_model_fit0 <- function(data,  random_formula,
                                error_is_non_normal = FALSE, family_p = NULL,
                                total_column = NULL) {

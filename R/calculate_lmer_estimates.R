@@ -1,11 +1,6 @@
 #' @title calculate_lmer_estimates
 #' @description This function performs a (generalized) linear mixed model analysis using (g)lmer.
 #'
-#' @import multtest
-#' @import simr
-#' @import lme4
-#' @import lmerTest
-#' @import readxl
 #'
 #' @param data Input data
 #' @param condition_column Name of the condition variable (ex variable with values such as control/case). The input file has to have a corresponding column name
@@ -110,7 +105,7 @@ calculate_lmer_estimates <- function(data, condition_column, experimental_column
 
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {
-    if(class(Data[,random_slope_variable]) != "numeric") {
+    if(!inherits(Data[,random_slope_variable], "numeric")) {
       print("random_slope_variable should be a numeric variable")
       return(NULL)
     }

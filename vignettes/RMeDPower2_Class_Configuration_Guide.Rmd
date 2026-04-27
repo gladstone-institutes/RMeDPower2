@@ -404,9 +404,9 @@ Use the built-in example datasets (`RMeDPower_data1` through `RMeDPower_data7`) 
 ```{r load_example_data, eval=TRUE}
 # Load and examine example data
 library(RMeDPower2)
-data(RMeDPower_data1)
-head(RMeDPower_data1)
-str(RMeDPower_data1)
+data("plate_assay_pilot_data")
+head(plate_assay_pilot_data)
+str(plate_assay_pilot_data)
 ```
 
 This framework ensures your class objects accurately represent your experimental design and analysis goals, leading to meaningful and reliable power analysis results.
