@@ -18,10 +18,10 @@ library(RMeDPower2)
 
 ## Website
 Please visit https://gladstone-institutes.github.io/RMeDPower2/index.html for a detailed description of the package and tutorials.
-1. Quick Start Guide: https://gladstone-institutes.github.io/RMeDPower2/articles/getting-started.html
-2. For a RMeDPower2 Class Configuration Guide: https://gladstone-institutes.github.io/RMeDPower2/articles/RMeDPower2_Class_Configuration_Guide.html
-3. To help create the objects of required classes using an Rshiny app: https://gladstone-institutes.github.io/RMeDPower2/articles/RMeDPower2_Class_Configuration_Guide.html#interactive-configuration-with-shiny-app
-4. For a complete tutorial with multiple use cases in biomedical research: https://gladstone-institutes.github.io/RMeDPower2/articles/Tutorial.html
+1. (Quick Start Guide)[https://gladstone-institutes.github.io/RMeDPower2/articles/getting-started.html]
+2. (RMeDPower2 Class Configuration Guide)[https://gladstone-institutes.github.io/RMeDPower2/articles/RMeDPower2_Class_Configuration_Guide.html]
+3. (Create the objects of required classes using an Rshiny app)[https://gladstone-institutes.github.io/RMeDPower2/articles/RMeDPower2_Class_Configuration_Guide.html#interactive-configuration-with-shiny-app]
+4. (Complete tutorial with multiple use cases in biomedical research)[https://gladstone-institutes.github.io/RMeDPower2/articles/Tutorial.html]
 
 ## AI Disclosure Statement
 
