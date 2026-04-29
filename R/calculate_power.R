@@ -52,39 +52,37 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
 
   ######input error handler
-  if(length(levels)!=length(target_columns)){ print("User should specify levels of all target parameters") }
-  if(length(power_curve)==0 | !power_curve%in%c(0,1)){ print("power_curve must be 0 or 1");return(NULL) }
-  if(!condition_column %in% colnames(data)){ print("condition_column should be one of the column names");return(NULL) }
-  if(sum(experimental_columns%in%colnames(data))!=length(experimental_columns) ){ print("experimental_columns must match column names");return(NULL) }
-  if(!is.null(crossed_columns)){if(sum(crossed_columns%in%colnames(data))!=length(crossed_columns) ){ print("crossed_columns must match column names");return(NULL) }}
-  if(!response_column%in%colnames(data)){  print("response_column should be one of the column names");return(NULL) }
+  if(length(levels)!=length(target_columns)) stop("User should specify levels of all target parameters")
+  if(length(power_curve)==0 | !power_curve%in%c(0,1)) stop("power_curve must be 0 or 1")
+  if(!condition_column %in% colnames(data)) stop("condition_column should be one of the column names")
+  if(sum(experimental_columns%in%colnames(data))!=length(experimental_columns)) stop("experimental_columns must match column names")
+  if(!is.null(crossed_columns)){if(sum(crossed_columns%in%colnames(data))!=length(crossed_columns)) stop("crossed_columns must match column names")}
+  if(!response_column%in%colnames(data)) stop("response_column should be one of the column names")
 
-  if(!is.na(condition_is_categorical) && !condition_is_categorical%in%c(TRUE,FALSE)){ print("condition_is_categorical must be TRUE or FALSE");return(NULL) }
-  if(!is.na(covariate_is_categorical) && !covariate_is_categorical%in%c(TRUE,FALSE)){ print("covariate_is_categorical must be TRUE or FALSE");return(NULL) }
+  if(!is.na(condition_is_categorical) && !condition_is_categorical%in%c(TRUE,FALSE)) stop("condition_is_categorical must be TRUE or FALSE")
+  if(!is.na(covariate_is_categorical) && !covariate_is_categorical%in%c(TRUE,FALSE)) stop("covariate_is_categorical must be TRUE or FALSE")
 
   if(!is.null(covariate)) {
     if(!covariate%in%colnames(data))
-    { print("covariate should be NA or one of the column names");return(NULL) }}
-  if(! (is.numeric(nsimn)&&nsimn>0) ){ print("nsimn should be a positive integer");return(NULL) }
-  if(sum(target_columns%in%colnames(data))!=length(target_columns) ){ print("target_columns must match column names");return(NULL) }
-  if(sum(levels%in%c(0,1))!=length(levels)){ print("levels must be 0 or 1");return(NULL) }
-  if(!( is.null(max_size) | (is.numeric(max_size)&&sum(max_size>0)==length(max_size)) ) ){print("max_size a positive integer");return(NULL) }
-  if(!( is.null(breaks) | (is.numeric(breaks)&&breaks>0) ) ){ print("breaks must be a positive integer");return(NULL) }
-  if(!(is.null(effect_size) | (is.numeric(effect_size)  & length(effect_size) == 3))){ print("effect_size must be a 3 element numeric vector");return(NULL) }
-  if(!is.null(ICC) & error_is_non_normal==TRUE ){ print("ICC-based simulations are not supported when the response is non-normal");return(NULL) }
-  if(!is.null(ICC)){if(length(ICC) != length(experimental_columns)) {print("The ICC vector should be of the same dimension as the number of experimental columns");return(NULL)}}
+      stop("covariate should be NA or one of the column names")}
+  if(! (is.numeric(nsimn)&&nsimn>0)) stop("nsimn should be a positive integer")
+  if(sum(target_columns%in%colnames(data))!=length(target_columns)) stop("target_columns must match column names")
+  if(sum(levels%in%c(0,1))!=length(levels)) stop("levels must be 0 or 1")
+  if(!( is.null(max_size) | (is.numeric(max_size)&&sum(max_size>0)==length(max_size)) )) stop("max_size a positive integer")
+  if(!( is.null(breaks) | (is.numeric(breaks)&&breaks>0) )) stop("breaks must be a positive integer")
+  if(!(is.null(effect_size) | (is.numeric(effect_size) & length(effect_size) == 3))) stop("effect_size must be a 3 element numeric vector")
+  if(!is.null(ICC) & error_is_non_normal==TRUE) stop("ICC-based simulations are not supported when the response is non-normal")
+  if(!is.null(ICC)){if(length(ICC) != length(experimental_columns)) stop("The ICC vector should be of the same dimension as the number of experimental columns")}
   # Validation for new parameters
   if(!is.na(include_interaction)) {
     if (include_interaction && is.null(covariate)) {
-      print("Cannot include interaction when covariate is NULL")
-      return(NULL)
+      stop("Cannot include interaction when covariate is NULL")
     }
   }
 
   if (!is.null(random_slope_variable) &&
       !random_slope_variable %in% c("condition_column", condition_column, "covariate", covariate)) {
-    print("random_slope_variable should be 'condition_column', 'covariate' or the actual condition column name or covariate column name")
-    return(NULL)
+    stop("random_slope_variable should be 'condition_column', 'covariate' or the actual condition column name or covariate column name")
   }
 
   if(error_is_non_normal==TRUE){
@@ -136,8 +134,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {
     if(!inherits(Data[,random_slope_variable], "numeric")) {
-      print("random_slope_variable should be a numeric variable")
-      return(NULL)
+      stop("random_slope_variable should be a numeric variable")
     }
   }
 
@@ -179,8 +176,7 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
     else if(random_slope_variable == covariate)
       random_slope_variable = "covariate"
     else{
-      print("random_slope_variable can only be 'condition_column', 'covariate' or the actual condition column name or covariate column name")
-      return(NULL)
+      stop("random_slope_variable can only be 'condition_column', 'covariate' or the actual condition column name or covariate column name")
     }
 
   }
@@ -410,25 +406,16 @@ calculate_power <- function(data, condition_column, experimental_columns, respon
 
     if(!is.na(effect_size[1])){
       fixef(lmerFit)[2] <- effect_size[1]
-      cat("\n")
-      print(paste0("_________________________________Effect size of the condition_column is now ",effect_size[1]))
-      cat("\n")
-
+      message("Effect size of the condition_column is now ", effect_size[1])
     }
     if(!is.na(effect_size[2]) & !is.null(covariate)){
       fixef(lmerFit)[3] <- effect_size[2]
-      cat("\n")
-      print(paste0("_________________________________Effect size of the covariate is now ",effect_size[2]))
-      cat("\n")
-
+      message("Effect size of the covariate is now ", effect_size[2])
     }
     if(!is.null(include_interaction)) {
       if(!is.na(effect_size[3]) & include_interaction){
         fixef(lmerFit)[4] <- effect_size[3]
-        cat("\n")
-        print(paste0("_________________________________Effect size of the interaction term is now ",effect_size[3]))
-        cat("\n")
-
+        message("Effect size of the interaction term is now ", effect_size[3])
       }
     }
 

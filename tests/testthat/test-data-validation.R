@@ -73,7 +73,7 @@ test_that("calculatePower catches missing condition column", {
   model <- create_test_model("normal")
   power_params <- create_test_power_params("basic")
 
-  expect_null(suppressWarnings(suppressMessages(
+  expect_error(suppressWarnings(suppressMessages(
     calculatePower(data = test_data, design = design, model = model, power_param = power_params)
   )))
 })
@@ -85,7 +85,7 @@ test_that("calculatePower catches invalid nsimn", {
   power_params <- create_test_power_params("basic")
   power_params@nsimn <- -10
 
-  expect_null(suppressWarnings(suppressMessages(
+  expect_error(suppressWarnings(suppressMessages(
     calculatePower(data = test_data, design = design, model = model, power_param = power_params)
   )))
 })
@@ -97,7 +97,7 @@ test_that("calculatePower catches invalid levels", {
   power_params <- create_test_power_params("basic")
   power_params@levels <- 2
 
-  expect_null(suppressWarnings(suppressMessages(
+  expect_error(suppressWarnings(suppressMessages(
     calculatePower(data = test_data, design = design, model = model, power_param = power_params)
   )))
 })
@@ -109,7 +109,7 @@ test_that("calculatePower catches invalid power_curve", {
   power_params <- create_test_power_params("basic")
   power_params@power_curve <- 2
 
-  expect_null(suppressWarnings(suppressMessages(
+  expect_error(suppressWarnings(suppressMessages(
     calculatePower(data = test_data, design = design, model = model, power_param = power_params)
   )))
 })
@@ -121,7 +121,7 @@ test_that("calculatePower catches invalid target columns", {
   power_params <- create_test_power_params("basic")
   power_params@target_columns <- "invalid_target"
 
-  expect_null(suppressWarnings(suppressMessages(
+  expect_error(suppressWarnings(suppressMessages(
     calculatePower(data = test_data, design = design, model = model, power_param = power_params)
   )))
 })

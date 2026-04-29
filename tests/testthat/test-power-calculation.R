@@ -130,7 +130,9 @@ test_that("calculatePower handles max_size parameter", {
 test_that("calculatePower handles random slopes", {
   test_data <- create_test_data()
   design <- create_test_design("basic")
-  design@random_slope_variable <- "treatment"
+  design@condition_column <- "age"
+  design@condition_is_categorical <- FALSE
+  design@random_slope_variable <- "age"
   model <- create_test_model("normal")
   power_params <- create_test_power_params("basic")
 

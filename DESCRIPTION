@@ -16,7 +16,7 @@ Description: Provides complete functionality to analyse data from repeated
     and experimental units, estimating statistical power, and performing
     sample size calculations. Uses linear mixed effects models via 'lme4'
     and simulation-based power analysis via 'simr'. Handles both normal and
-    non-normal error distributions including binomial and Poisson families.
+    non-normal error distributions including binomial and Poisson families. For more details see Shin et. al (2022) <https://doi.org/10.1101/2022.07.18.500490>, Bates et. al (2015) <https://doi.org/10.18637/jss.v067.i01>, Green and MacLeod (2016) <doi:10.1111/2041-210X.12504>, Hartig F (2024) <https://doi.org/10.32614/CRAN.package.DHARMa>, Nieuwenhuis R et. al (2012) <doi:10.32614/RJ-2012-011>, Millard SP (2013) <doi:10.1007/978-1-4614-8456-1> and Kuzenetsova A et. al (2017) <https://doi.org/10.18637/jss.v082.i13>.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -104,7 +104,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
 
   }
   else {
-    print(paste("_________________________________Not enough grouping levels to perform the cook analyses on the experimental factors", sep=""))
+    message("Not enough grouping levels to perform the cook analyses on the experimental factors")
     return()
   }
 
@@ -145,7 +145,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
 
     }
     else {
-      print(paste("_________________________________Not enough grouping levels to perform the cook analyses on the experimental factors", sep=""))
+      message("Not enough grouping levels to perform the cook analyses on the experimental factors")
       return()
     }
 
@@ -207,7 +207,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
       names(cooks_result[[model_no]]) <- paste0(names(cooks_result[[model_no]]), "_logTransformed")
     }
     else {
-      print(paste("_________________________________Not enough grouping levels to perform the cook analyses on the experimental factors", sep=""))
+      message("Not enough grouping levels to perform the cook analyses on the experimental factors")
       return()
     }
 
@@ -258,7 +258,7 @@ transform_data<-function(data, condition_column, experimental_columns, response_
         names(cooks_result[[model_no]]) <- paste0(names(cooks_result[[model_no]]), "_logTransformed_wo_outliers")
       }
       else {
-        print(paste("_________________________________Not enough grouping levels to perform the cook analyses on the experimental factors", sep=""))
+        message("Not enough grouping levels to perform the cook analyses on the experimental factors")
         return()
       }
 
@@ -458,7 +458,7 @@ rosner_test<- function (trait, response_column, alpha, hist_text) {
   cutoff1=NA
   cutoff2=NA
 
-  options(warn=-1)
+  #options(warn=-1)
   upper_bound <- median(trait) + 3 * mad(trait)
   upper_bound
 
@@ -494,12 +494,12 @@ rosner_test<- function (trait, response_column, alpha, hist_text) {
 
 
     }else{
-      print("No outlier detected from the raw Data")
+      message("No outlier detected from the raw Data")
     }
 
 
   }else{
-    print("No outlier detected from the raw Data")
+    message("No outlier detected from the raw Data")
   }
 
   return(c(cutoff2,cutoff1))
@@ -518,7 +518,7 @@ cooks_test<- function (model, family_p, fixed_global_variable_data, experimental
       if("experimental_column1" %in% experimental_columns)
         experimental_columns = "experimental_column1"
       else{
-        print("Not enough levels to perform cooks test for experimental_column1 with the assumed binomial distribution")
+        message("Not enough levels to perform cooks test for experimental_column1 with the assumed binomial distribution")
         cooks_result <- NA
         perform_test <- FALSE
       }
