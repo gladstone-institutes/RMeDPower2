@@ -44,7 +44,6 @@ abstract: "Biomedical research very often involves data generated from repeated 
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-options(warn = -1)
 ```
 
 # Getting started

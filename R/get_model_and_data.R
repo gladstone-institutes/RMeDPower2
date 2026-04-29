@@ -36,26 +36,24 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
   ######input error handler
   if(!is.null(covariate) )
     if(!covariate%in%colnames(data))
-      { print("covariate should be null or one of the column names");return(NULL) }
-  if(!condition_column%in%colnames(data)){ print("condition_column should be one of the column names");return(NULL) }
-  if(sum(experimental_columns%in%colnames(data))!=length(experimental_columns) ){ print("experimental_columns must match column names");return(NULL) }
-  if(!response_column%in%colnames(data)){  print("response_column should be one of the column names");return(NULL) }
-  if(!is.na(condition_is_categorical) && !condition_is_categorical%in%c(TRUE,FALSE)){ print("condition_is_categorical must be TRUE or FALSE");return(NULL) }
-  if(!is.null(crossed_columns)){if(sum(crossed_columns%in%colnames(data))!=length(crossed_columns) ){ print("crossed_columns must match column names");return(NULL) }}
-  if(!is.na(covariate_is_categorical) && !covariate_is_categorical%in%c(TRUE,FALSE)){ print("covariate_is_categorical must be TRUE or FALSE");return(NULL) }
+      stop("covariate should be null or one of the column names")
+  if(!condition_column%in%colnames(data)) stop("condition_column should be one of the column names")
+  if(sum(experimental_columns%in%colnames(data))!=length(experimental_columns)) stop("experimental_columns must match column names")
+  if(!response_column%in%colnames(data)) stop("response_column should be one of the column names")
+  if(!is.na(condition_is_categorical) && !condition_is_categorical%in%c(TRUE,FALSE)) stop("condition_is_categorical must be TRUE or FALSE")
+  if(!is.null(crossed_columns)){if(sum(crossed_columns%in%colnames(data))!=length(crossed_columns)) stop("crossed_columns must match column names")}
+  if(!is.na(covariate_is_categorical) && !covariate_is_categorical%in%c(TRUE,FALSE)) stop("covariate_is_categorical must be TRUE or FALSE")
 
   # Validation for new parameters
   if(!is.na(include_interaction)) {
     if (include_interaction && is.null(covariate)) {
-      print("Cannot include interaction when covariate is NULL")
-      return(NULL)
+      stop("Cannot include interaction when covariate is NULL")
     }
   }
 
   if (!is.null(random_slope_variable) &&
       !random_slope_variable %in% c("condition_column", condition_column, "covariate", covariate)) {
-    print("random_slope_variable should be 'condition_column', 'covariate' or the actual condition column name or covariate column name")
-    return(NULL)
+    stop("random_slope_variable should be 'condition_column', 'covariate' or the actual condition column name or covariate column name")
   }
 
   if(error_is_non_normal==TRUE){
@@ -111,8 +109,7 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
   # random slope should be allowed only with a continuous variable
   if(!is.null(random_slope_variable)) {
     if(!inherits(fixed_global_variable_data[,random_slope_variable], "numeric")) {
-      print("random_slope_variable should be a numeric variable")
-      return(NULL)
+      stop("random_slope_variable should be a numeric variable")
     }
   }
 
@@ -159,8 +156,7 @@ get_model_and_data <- function(data, condition_column, experimental_columns, res
     else if(random_slope_variable == covariate)
       random_slope_variable = "covariate"
     else{
-      print("random_slope_variable can only be 'condition_column', 'covariate' or the actual condition column name or covariate column name")
-      return(NULL)
+      stop("random_slope_variable can only be 'condition_column', 'covariate' or the actual condition column name or covariate column name")
     }
 
   }
