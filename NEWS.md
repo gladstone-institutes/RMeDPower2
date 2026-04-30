@@ -5,3 +5,10 @@
 * Supports linear mixed effects models via `lme4` and simulation-based power analysis via `simr`.
 * Handles normal and non-normal error distributions (binomial, Poisson, negative binomial).
 * Includes diagnostic tools for model assumption testing and outlier detection.
+
+# RMeDPower2 1.0.1
+
+* Revised CRAN submission.
+* Added references to the DESCRIPTION file
+* Replace print statements with error statements where appropriate and otherwise with message statements
+* Removed options(warn=-1) in the identified scripts

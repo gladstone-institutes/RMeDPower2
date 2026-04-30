@@ -28,7 +28,7 @@
 #' @param  alpha Threshold for Type I error
 #' @param  ICC Intra-Class Coefficients (ICC) for each parameter
 #' @param include_interaction Whether to include condition * covariate interaction
-#' @param random_slope_variable Variable for random slopes (typically "condition_column")
+#' @param random_slope_variable Variable for random slopes (typically one of "condition_column" or "covariate" and assuming that they are numeric variables). A random slope term is added for each of the variables specified in the experimental columns in addition to their corresponding random intercept terms. The random slope and intercept terms for each experimental_columns variable are assumed to be uncorrelated.
 #' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #'
 #'

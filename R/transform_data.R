@@ -16,7 +16,7 @@
 #' @param alpha numeric scalar between 0 and 1 indicating the Type I error associated with the test of outliers
 #' @param na.action "complete": missing data is not allowed in all columns (default), "unique": missing data is not allowed only in condition, experimental, and response columns. Selecting "complete" removes an entire row when there is one or more missing values, which may affect the distribution of other features.
 #' @param include_interaction logical - TRUE or FALSE - Whether to include condition * covariate interaction
-#' @param random_slope_variable Variable for random slopes (typically "condition_column")
+#' @param random_slope_variable Variable for random slopes (typically one of "condition_column" or "covariate" and assuming that they are numeric variables). A random slope term is added for each of the variables specified in the experimental columns in addition to their corresponding random intercept terms. The random slope and intercept terms for each experimental_columns variable are assumed to be uncorrelated.
 #' @param covariate_is_categorical Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.
 #'
 #' @return A list with four elements. 1) models: representing the names of the models

@@ -1,7 +1,7 @@
 Package: RMeDPower2
 Type: Package
 Title: Design and Modeling for Repeated Measures Studies
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
     person("Min-Gyoung", "Shin",
            email = "mingyoung.shin@gladstone.ucsf.edu",

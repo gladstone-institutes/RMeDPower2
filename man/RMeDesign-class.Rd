@@ -33,7 +33,7 @@
 
 \item{include_interaction}{logical - TRUE or FALSE - Whether to include condition * covariate interaction}
 
-\item{random_slope_variable}{Variable for random slopes (typically "condition_column")}
+\item{random_slope_variable}{Variable for random slopes (typically one of "condition_column" or "covariate" and assuming that they are numeric variables). A random slope term is added for each of the variables specified in the experimental columns in addition to their corresponding random intercept terms. The random slope and intercept terms for each experimental_columns variable are assumed to be uncorrelated.}
 
 \item{covariate_is_categorical}{Specify whether the covariate variable is categorical. TRUE: Categorical, FALSE: Continuous.}
 }
