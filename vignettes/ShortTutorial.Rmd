@@ -70,7 +70,7 @@ suppressPackageStartupMessages(library(RMeDPower2))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(magrittr))
-options(warn = -1)
+
 data <- plate_assay_pilot_data
 ```
 

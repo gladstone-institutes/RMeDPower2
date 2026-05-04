@@ -458,7 +458,7 @@ rosner_test<- function (trait, response_column, alpha, hist_text) {
   cutoff1=NA
   cutoff2=NA
 
-  #options(warn=-1)
+
   upper_bound <- median(trait) + 3 * mad(trait)
   upper_bound
 
@@ -471,9 +471,10 @@ rosner_test<- function (trait, response_column, alpha, hist_text) {
   if( outlierC >0 ){
 
     ###rosner's test
+    suppressWarnings(
     test <- EnvStats::rosnerTest(trait,
                                  k = outlierC, alpha=alpha)
-
+    )
     outliers=test$all.stats$Value[test$all.stats$Outlier]
 
     if(length(test$all.stats$Outlier) !=0  ){
