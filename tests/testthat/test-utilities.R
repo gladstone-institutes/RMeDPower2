@@ -111,7 +111,7 @@ test_that("getEstimatesOfInterest returns correct structure", {
   ))
 
   expect_type(result, "list")
-  expect_length(result, 2)
+  expect_length(result, 3)
 })
 
 test_that("getEstimatesOfInterest handles covariates", {

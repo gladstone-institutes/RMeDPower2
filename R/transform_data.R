@@ -381,7 +381,7 @@ generate_qc_plots <-  function(lms,
     plot_index <- plot_index + 3
 
   }else{
-    simulationOutput <- DHARMa::simulateResiduals(lms[[1]], plot = F)
+    simulationOutput <- DHARMa::simulateResiduals(lms[[1]], simulateREs = "user-specified", plot = F)
     residual = residuals(simulationOutput, quantileFunction = qnorm)
     # plot(simulationOutput)
     # DHARMa::plotResiduals(simulationOutput, form =  lms[[2]]$condition_column)

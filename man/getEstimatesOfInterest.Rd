@@ -16,9 +16,10 @@ getEstimatesOfInterest(data, design, model, print_plots = TRUE)
 \item{print_plots}{Whether or not to print the plots, irrespective of this argument ggplot versions of evaluated association between the response_column and the condition_column. TRUE - print the plot, FALSE - do not print the plot}
 }
 \value{
-a list with two elements - 1. an object of class summary.merMod and
+a list with three elements - 1. an object of class summary.merMod and
 2. the output from the get_residuals functions. This output consists of a list
 with 3 elements. 1. The updated input data with an additional column with the model residuals of the individual observations. 2. A plot representing the purported association between the response column and the condition column. 3. The corresponding caption for this figure.
+3. an object of class merMod
 }
 \description{
 This function performs the estimations of interest and also visualizes the resulting association
