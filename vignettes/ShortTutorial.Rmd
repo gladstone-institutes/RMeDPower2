@@ -292,21 +292,12 @@ model <- readProbabilityModel(file.path(template_dir,"prob_model.json"))
 power_param <- readPowerParams(file.path(template_dir,"power_param.json"))
 ```
 
-A visualization of the distribution of cell_size2 across experiments and cell-lines as box-plots and also in terms of empirical cumulative distribution plots suggests the observations have an extremely long tail. We will therefore filter out the top 5 percent of the observations to ensure the results are not skewed by these extreme observations. We also see that the observations in experiment 3 are in general lower than those in the other two experiments.
+A visualization of the distribution of cell_size2 across experiments and cell-lines as box-plots suggest that the observations in experiment 3 are in general lower than those in the other two experiments.
 ```{r echo=FALSE}
 print(ggplot(data, aes(x=experiment, y=cell_size2, color = line)) +
   geom_boxplot() +
   theme_bw() +
   theme(text = element_text(size = 16)))
-
-print(ggplot(data, aes(x=cell_size2, color = experiment)) +
-  stat_ecdf() +
-  theme_bw() +
-  theme(text = element_text(size = 16)))
-```
-
-```{r}
-data %<>% filter(cell_size2 < quantile(cell_size2, 0.95))
 ```
 
 We would like to estimate the difference in the mean cell-sizes across all the observations derived from all experimental batches between the ALS disease lines and the control cell lines (modeled by the _classification_ variable). The first step is run diagnosis on the data and model using the 'diagnoseDataModel' function. The Q-Q plot of the residuals of the LMM model fit to the log-transformed cell-sizes suggests a better fit than the one fit to the cell sizes in the natural scale , assuming that the data generating distribution is based on the Normal distribution. Therefore, we will hereafter model the log-transformed cell sizes. The reasonably horizontal best fit lines for the residuals from this versus the fitted values,  and the square-root of the absolute values of the residuals versus the fitted values, Figure 7e suggest both the LMM model assumptions of linearity and homoscedasticity are reasonable. There were no identified individual outlier observations based on the application of the Rosner’s test to the distribution of the residuals in.
@@ -375,7 +366,7 @@ We see normality assumption is better met with the log-transformed model (Figure
 The code also outputs Cook's distance measures for each experiment and cell-line that is intended to capture how influential each of these were in determining the final parameter estimates in the LMM model.
 
 
-The observations in experimental batch 3 and those for cell lines 4 and 9 were identified as outliers using a 4/n (where n is the number of replicates, n=3 for experimental batches and n=10 for cell-lines) threshold applied to the estimates of Cook’s distance for the estimated model parameters. This warranted further investigation on whether or not there was something unusual with the observations made in experimental batch 3 (example: the images from the microscope displayed low signal to noise and may have skewed the measurements) and also for cell line 4# and 9# (example: differentiation runs, genetic background was different from the other lines) that would suggest observations linked to this experiment and cell lines may need to be removed from the analysis. Our investigation did not indicate anything untoward and therefore we ran a sensitivity analysis where we dropped all observations linked to either experiment 3, cell line 4# or cell line 9#, refit the model and visualized the resulting change in ALS status associated mean soma perimeter value. There were only relatively slight changes in the estimated changes in the mean, so that the conclusions we would draw of an increase in the soma cell perimeter in ALS lines remains irrespective of whether or not we drop observations from the experimental batch or the two cell lines.
+The observations in experimental batch 3 and those for cell lines 4 and 9 were identified as outliers using a 4/n (where n is the number of replicates, n=3 for experimental batches and n=10 for cell-lines) threshold applied to the estimates of Cook’s distance for the estimated model parameters. This would warrant further investigation on whether or not there was something unusual with the observations made in experimental batch 3 (example: the images from the microscope displayed low signal to noise and may have skewed the measurements) and also for cell line 4# and 9# (example: differentiation runs, genetic background was different from the other lines) that would suggest observations linked to this experiment and cell lines may need to be removed from the analysis. Here we ran a sensitivity analysis where we dropped all observations linked to either experiment 3, cell line 4# or cell line 9#, refit the model and visualized the resulting change in ALS status associated mean soma perimeter value. There were only relatively slight changes in the estimated changes in the mean, so that the conclusions we would draw of an increase in the soma cell perimeter in ALS lines remains irrespective of whether or not we drop observations from the experimental batch or the two cell lines.
 
  We will use the log transformed cell_size2 data for parameter estimation using the following commands. 
 
@@ -423,8 +414,6 @@ Accordingly, we will now load data from 8 experimental batches and estimate our 
 ```{r}
 full_data <- plate_assay_full_data
 
-##filter the top 5% of the observations
-full_data %<>% filter(perim_2th_effect < quantile(perim_2th_effect, 0.95))
 
 design@response_column <- "perim_2th_effect"
 design@condition_column <- "classif"

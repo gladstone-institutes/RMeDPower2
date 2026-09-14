@@ -12,3 +12,13 @@
 * Added references to the DESCRIPTION file
 * Replace print statements with error statements where appropriate and otherwise with message statements
 * Removed options(warn=-1) in the identified scripts
+
+# RMeDPower2 1.0.2
+
+* Revised CRAN submission.
+* Added simulateREs = "user-specified" argument to the DHARMa::simulateResiduals() function to make it compatible with the updates to DHARMa
+* Added model fit to the output of getEstimatesOfInterest
+
+# RMeDPower2 1.0.3
+
+* Updated plate_assay_pilot_data and plate_assay_full_data data sets to simplify illustration of package details.
