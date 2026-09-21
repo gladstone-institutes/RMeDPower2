@@ -945,13 +945,13 @@ influence2 <-
           if(count == TRUE) {print(n.groups + 1 - i)}
 
           model.updated <- exclude.influence2(model=model, family_p, grouping=group, level=grouping.names[i], gf=gf, delete=delete)
-
-          altered.no.estex <- which(substr(names(fixef(model.updated)), 1,6) != "estex.")
-
-          alt.fixed[i,] 	<- as.matrix(fixef(model.updated)[altered.no.estex])
-          alt.se[i,] 		<- as.matrix(influence.ME::se.fixef(model.updated)[altered.no.estex])
-          alt.vcov[[i]] 	<- as.matrix(vcov(model.updated)[altered.no.estex, altered.no.estex])
-          alt.test[i,] 		<- as.matrix(coef(summary(model.updated))[,3][altered.no.estex])
+          # updated to include the possibility that removal of observations associated with one group level makes some estimates non-identifiable
+          altered.no.estex <- which(names(fixef(model)) %in% names(fixef(model.updated)))
+          alt.fixed[i,altered.no.estex] 	<- as.matrix(fixef(model.updated))
+          alt.se[i,altered.no.estex] 		<- as.matrix(influence.ME::se.fixef(model.updated))
+          alt.vcov[[i]] <- matrix(NA, nrow = n.pred, ncol = n.pred)
+          alt.vcov[[i]][altered.no.estex, altered.no.estex] 	<- as.matrix(vcov(model.updated))
+          alt.test[i,altered.no.estex] 		<- as.matrix(coef(summary(model.updated))[,3])
         }
 
 
