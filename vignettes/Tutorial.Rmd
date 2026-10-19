@@ -1,13 +1,14 @@
 ---
 title: '*RMeDPower2*: helping design and analyses of data from repeated measures experiments'
-author:
-- name: "Min-Gyoung Shin"
-  affiliation: Gladstone Institutes
-  email: mingyoung.shin@gladstone.ucsf.edu
-- name: Reuben Thomas
-  affiliation: Gladstone Institutes
-  email: reuben.thomas@gladstone.ucsf.edu
+author: |
+  | Reuben Thomas, Min-Gyoung Shin, Naufa Amirani, 
+  | Stephanie Lam, Noura Al Bistami, Edward Vertudes, 
+  | Krishna Raja, Julia A. Kaye and Steven Finkbeiner
+  |
+  | *Gladstone Institutes, San Francisco, CA, USA*
+  | Correspondence: [`reuben.thomas@gladstone.ucsf.edu`](mailto:reuben.thomas@gladstone.ucsf.edu)
 package: RMeDPower2
+urlcolor: blue
 output:
   pdf_document:
     latex_engine: xelatex
@@ -44,6 +45,10 @@ abstract: "Biomedical research very often involves data generated from repeated 
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+# Fit static images within the page in PDF output; HTML scales them already
+knitr::opts_template$set(img = if (knitr::is_latex_output())
+  list(out.width = "\\linewidth",
+       out.extra = "height=0.8\\textheight,keepaspectratio") else list())
 options(warn = -1)
 ```
 
@@ -262,14 +267,19 @@ This string estimates parameter of interest and also plots the resulting associa
 
 An overview of the anticipated usage of the functionality of this package is shown in the figure below.
 
-```{r flowchart, echo=FALSE, fig.align = "center", fig.cap="Flowchart illustrating the functionality of the package", fig.small=TRUE, echo=FALSE}
-knitr::include_graphics(system.file("figures/package_structure.png", package = "RMeDPower2"))
+```{r flowchart, echo=FALSE, fig.align = "center", opts.label = "img"}
+plot_no <- 1
+knitr::include_graphics(system.file("figures/package_structure.png", package = "RMeDPower2"), rel_path = FALSE)
+knitr::asis_output(sprintf("\n\n**Figure %d:** %s\n\n", plot_no, "Flowchart illustrating the functionality of the package"))
+plot_no <- plot_no + 1
 ```
 
 # Application examples
 Here we illustrate the application of RMeDPower2 using data derived from a range of domains in biomedical research.
-```{r applications, echo=FALSE, fig.align = "center", fig.cap="Flowchart illustrating the functionality of the package", fig.small=TRUE, echo=FALSE}
-knitr::include_graphics(system.file("figures/application_domains.png", package = "RMeDPower2"))
+```{r applications, echo=FALSE, fig.align = "center", opts.label = "img"}
+knitr::include_graphics(system.file("figures/application_domains.png", package = "RMeDPower2"), rel_path = FALSE)
+knitr::asis_output(sprintf("\n\n**Figure %d:** %s\n\n", plot_no, "Application domains of RMeDPower2: repeated measures designs from in vitro assays, single-cell RNA sequencing, behavioral assays in live animals and electrophysiology"))
+plot_no <- plot_no + 1
 ```
 
 
@@ -302,7 +312,7 @@ print(ggplot(data, aes(x=experiment, y=cell_size2, color = line)) +
 ```
 
 
-We would like to estimate the difference in the mean cell-sizes across all the observations derived from all experimental batches between the ALS disease lines and the control cell lines (modeled by the _classification_ variable). The first step is run diagnosis on the data and model using the 'diagnoseDataModel' function. The Q-Q plot of the residuals of the LMM model fit to the log-transformed cell-sizes suggests a better fit than the one fit to the cell sizes in the natural scale , assuming that the data generating distribution is based on the Normal distribution. Therefore, we will hereafter model the log-transformed cell sizes. The reasonably horizontal best fit lines for the residuals from this versus the fitted values,  and the square-root of the absolute values of the residuals versus the fitted values, Figure 7e suggest both the LMM model assumptions of linearity and homoscedasticity are reasonable. There were no identified individual outlier observations based on the application of the Rosner’s test to the distribution of the residuals in.
+We would like to estimate the difference in the mean cell-sizes across all the observations derived from all experimental batches between the ALS disease lines and the control cell lines (modeled by the _classification_ variable). The first step is run diagnosis on the data and model using the 'diagnoseDataModel' function. The Q-Q plot of the residuals of the LMM model fit to the log-transformed cell-sizes suggests a better fit than the one fit to the cell sizes in the natural scale , assuming that the data generating distribution is based on the Normal distribution. Therefore, we will hereafter model the log-transformed cell sizes. There were no identified individual outlier observations based on the application of the Rosner’s test to the distribution of the residuals in.
 
 
 ```{r}
@@ -317,8 +327,10 @@ print(diagnose_res$models)
 We see that two models were fit to this data - one in the natural scale of cell size and the other in the logarithmic scale. No individual observations were identified as outliers in each of these models.
 
 Let us look the basic QC plots for the models fit in the natural scale of the responses.
+```{r, include=FALSE}
+fig_cells_natural <- plot_no
+```
 ```{r output-plots1, results='asis'}
-plot_no <- 1
 plots <- diagnose_res$diagnostic_plots$natural_scale$plots
 captions <- diagnose_res$diagnostic_plots$natural_scale$captions
 for (i in seq_along(plots)) {
@@ -340,6 +352,9 @@ print(diagnose_res$inferred_outlier_groups$natural_scale)
 ```
 
 Now, let us look at the same set of QC plots for models on the log-transformed responses.
+```{r, include=FALSE}
+fig_cells_log <- plot_no
+```
 ```{r output-plots2, results='asis'}
 plots <- diagnose_res$diagnostic_plots$log_scale$plots
 captions <- diagnose_res$diagnostic_plots$log_scale$captions
@@ -363,7 +378,7 @@ print("Inferred outlier groups are")
 print(diagnose_res$inferred_outlier_groups$natural_scale)
 ```
 
-We see normality assumption is better met with the log-transformed model (Figure 6) compared to the model in the natural scale (Figure 1).
+We see normality assumption is better met with the log-transformed model (Figure `r fig_cells_log`) compared to the model in the natural scale (Figure `r fig_cells_natural`). The reasonably horizontal best fit lines for the residuals from the log-transformed model versus the fitted values (Figure `r fig_cells_log + 1`), and the square-root of the absolute values of the residuals versus the fitted values (Figure `r fig_cells_log + 2`), suggest both the LMM model assumptions of linearity and homoscedasticity are reasonable.
 
 The code also outputs Cook's distance measures for each experiment and cell-line that is intended to capture how influential each of these were in determining the final parameter estimates in the LMM model.
 
@@ -754,7 +769,7 @@ cat("\n\n\n")
 ```
 
 ## Behavior assays
-Morris Water Maze (MWM) is an assay used to test spatial learning in animal models of diseases like Alzheimer's disease. The time recorded by each mouse to reach a target region (in the MWM) over multiple trials denoted as latency is the response of interest. Mouse models deficient in spatial learning would demonstrate an increased latency to reach a target region (invisible platform in Figure \@ref(fig:MWM)) across the learning trials.
+Morris Water Maze (MWM) is an assay used to test spatial learning in animal models of diseases like Alzheimer's disease. The time recorded by each mouse to reach a target region (in the MWM) over multiple trials denoted as latency is the response of interest. Mouse models deficient in spatial learning would demonstrate an increased latency to reach a target region (an invisible platform in the MWM) across the learning trials.
 
 
 
@@ -779,6 +794,9 @@ print(diagnose_res$models)
 We see that three models were fit to this data - one in the natural scale of cell size, other in the logarithmic scale and the last one in log scale without outliers. 
 
 Let us look the basic QC plots for the models fit in the natural scale of the responses.
+```{r, include=FALSE}
+fig_mwm_natural <- plot_no
+```
 ```{r output-plots8, results='asis'}
 plots <- diagnose_res$diagnostic_plots$natural_scale$plots
 captions <- diagnose_res$diagnostic_plots$natural_scale$captions
@@ -802,6 +820,9 @@ print(diagnose_res$inferred_outlier_groups$natural_scale)
 ```
 
 Now, let us look at the same set of QC plots for models on the log-transformed responses.
+```{r, include=FALSE}
+fig_mwm_log <- plot_no
+```
 ```{r output-plots9, results='asis'}
 plots <- diagnose_res$diagnostic_plots$log_scale$plots
 captions <- diagnose_res$diagnostic_plots$log_scale$captions
@@ -826,7 +847,7 @@ print(diagnose_res$inferred_outlier_groups$natural_scale)
 ```
 
 
-We see normality assumption is better met with the log-transformed model (Figure 6) compared to the model in the natural scale (Figure 1).
+We see normality assumption is better met with the log-transformed model (Figure `r fig_mwm_log`) compared to the model in the natural scale (Figure `r fig_mwm_natural`).
 
 The code also outputs Cook's distance measures for each cohort and mouse that is intended to capture how influential each of these were in determining the final parameter estimates in the LMM model.
 
@@ -1084,15 +1105,17 @@ cat("\n\n\n")
 
 `RMeDPower2` is designed to simulate the effect of variability of the responses which could come from differences in the  processing batch, plates or cell lines on the responses of interest the cell assay data (described above for exampel). There are several ways to assess the impact of different choices for the experimental variables in this package as outlined below.
 
-First, a user can assess how increasing the number of independent experiments affects power. For example, if a user has a pilot dataset that consists of 3 experimental batches that each contain 2 plates, expanding this dataset two-fold would have the effect of simulating 6 experiments with a total of 12 plates (Figure \@ref(fig:exp) ). 
+First, a user can assess how increasing the number of independent experiments affects power. For example, if a user has a pilot dataset that consists of 3 experimental batches that each contain 2 plates, expanding this dataset two-fold would have the effect of simulating 6 experiments with a total of 12 plates (Figure `r plot_no`). 
 
-```{r exp, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of experimental variability for 'experiment' for the power analysis. If level=1 is set, RMeDPower simulates the effect of adding in additional experiments by inheriting the experimental design structure from the existing data. This describes the situation where the pilot study involves data from 3 experiments, with 2 plates used per experiment, 3 cell lines within each plate and 12 cells per cell line are assayed.", fig.small=TRUE, echo=FALSE}
+```{r exp, echo=FALSE, fig.align = "center", opts.label = "img"}
 knitr::include_graphics(
-  system.file("figures/Part5.png", package = "RMeDPower2")
+  system.file("figures/Part5.png", package = "RMeDPower2"), rel_path = FALSE
 )
+knitr::asis_output(sprintf("\n\n**Figure %d:** %s\n\n", plot_no, "Example of RMeDPower’s simulation of experimental variability for 'experiment' for the power analysis. If level=1 is set, RMeDPower simulates the effect of adding in additional experiments by inheriting the experimental design structure from the existing data. This describes the situation where the pilot study involves data from 3 experiments, with 2 plates used per experiment, 3 cell lines within each plate and 12 cells per cell line are assayed."))
+plot_no <- plot_no + 1
 ```
 
-In the code that tests power using the example data 'plate_assay_pilot_data', this scenario can be simulated by setting 'target_columns' to 'line' and 'levels' to 1 where 'line' corresponds to the cell line. The 'condition_column' of the data corresponds to 'classification' indicating the cell state, and there are two experimental variables: 'experiment' and 'line'. Since the same cell line may appear in multiple experiments,  "line" is treated as "crossed_column". "cell_size2" is used as 'response_column' for the simulation (Figure \@ref(fig:Sim1)).
+In the code that tests power using the example data 'plate_assay_pilot_data', this scenario can be simulated by setting 'target_columns' to 'line' and 'levels' to 1 where 'line' corresponds to the cell line. The 'condition_column' of the data corresponds to 'classification' indicating the cell state, and there are two experimental variables: 'experiment' and 'line'. Since the same cell line may appear in multiple experiments,  "line" is treated as "crossed_column". "cell_size2" is used as 'response_column' for the simulation (Figure `r plot_no`).
 
 ```{r}
 
@@ -1134,6 +1157,13 @@ power_res <- calculatePower(data_update, design_update, model, power_param)
 
 ```
 
+```{r,results="asis", echo = FALSE}
+print(power_res$plots)
+fig_sim_experiments <- plot_no
+knitr::asis_output(sprintf("\n\n\n**Figure %d:**\n\n", plot_no))
+plot_no <- plot_no + 1
+```
+
 
 In a similar context, users can evaluate power for a given number of experiments. To do this, we assign a value corresponding to the number of experiments to max_size and set 'power_curve' to 0. We can set the 'output' variable to specify the output file name.
 
@@ -1156,7 +1186,7 @@ power_res <- calculatePower(data_update, design_update, model, power_param)
 
 ```
 
-Consider the situation where a user has a specific difference of mean perimeters in mind based on prior information from related previous experiments, but the pilot data itself does not reflect the a priori assumed difference. For example, previously an experimenter found a significant difference comparing a given response between control cell lines “A”, “B”, “C”, and cell lines from patients with a disease, “D”, “E” and “F”, and there was a sufficient sample size to estimate the effect size reliably. The experimenter then performs another set of experiments comparing the same disease lines (“D”, “E” and “F”) but this time uses different control cell lines (“G” and “H”), and the data did not have a sufficient sample size in terms of the number of experimental batches. It seems reasonable to expect that the magnitude of the associations of the response variable between the new control lines and the original disease lines would be similar to the first set of experiments. In this case, the user can then run power simulations using the known difference instead of estimating it from the pilot data. For our illustration, in the pilot data set the observed difference in mean log-transformed perimeter was 0.031 units. The power analysis shows that the power to detect this specific association between ALS status and the cell perimeter using 8 experimental batches is 72.1% with a 95% confidence interval (69.2, 74.9) at type I error rate of 0.05 reflecting what we observed in Figure 10 while if we expect the difference of means to be equal to 0.02 then the corresponding power estimate is 38.7% with a 95% confidence interval (35.7, 41.8). 
+Consider the situation where a user has a specific difference of mean perimeters in mind based on prior information from related previous experiments, but the pilot data itself does not reflect the a priori assumed difference. For example, previously an experimenter found a significant difference comparing a given response between control cell lines “A”, “B”, “C”, and cell lines from patients with a disease, “D”, “E” and “F”, and there was a sufficient sample size to estimate the effect size reliably. The experimenter then performs another set of experiments comparing the same disease lines (“D”, “E” and “F”) but this time uses different control cell lines (“G” and “H”), and the data did not have a sufficient sample size in terms of the number of experimental batches. It seems reasonable to expect that the magnitude of the associations of the response variable between the new control lines and the original disease lines would be similar to the first set of experiments. In this case, the user can then run power simulations using the known difference instead of estimating it from the pilot data. For our illustration, in the pilot data set the observed difference in mean log-transformed perimeter was 0.031 units. The power analysis shows that the power to detect this specific association between ALS status and the cell perimeter using 8 experimental batches is 72.1% with a 95% confidence interval (69.2, 74.9) at type I error rate of 0.05 reflecting what we observed in Figure `r fig_sim_experiments` while if we expect the difference of means to be equal to 0.02 then the corresponding power estimate is 38.7% with a 95% confidence interval (35.7, 41.8). 
 
 
 ```{r}
@@ -1239,42 +1269,50 @@ power_res <- calculatePower(plate_assay_pilot_data_wo_repeats, design, model, po
 
 ```
 
-Alternatively, a user can assess how increasing the number of plates per experiment affects power. In the case where there are two experiments that each contain two plates, the user can double the number of plates used per experiment. In this way, the user can simulate how the statistical power changes as a result of increasing the number of plates used per experiment rather than increasing the number of experimental batches (Figure \@ref(fig:plate)). 
+Alternatively, a user can assess how increasing the number of plates per experiment affects power. In the case where there are two experiments that each contain two plates, the user can double the number of plates used per experiment. In this way, the user can simulate how the statistical power changes as a result of increasing the number of plates used per experiment rather than increasing the number of experimental batches (Figure `r plot_no`). 
 
 
-```{r plate, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of plate variability for ‘plate' power analysis. If level=1 is set, RMeDPower simulates new plates by inheriting the experimental design structure from the existing data."}
+```{r plate, echo=FALSE, fig.align = "center", opts.label = "img"}
 knitr::include_graphics(
-  system.file("figures/Part7.png", package = "RMeDPower2")
+  system.file("figures/Part7.png", package = "RMeDPower2"), rel_path = FALSE
 )
+knitr::asis_output(sprintf("\n\n**Figure %d:** %s\n\n", plot_no, "Example of RMeDPower’s simulation of plate variability for ‘plate' power analysis. If level=1 is set, RMeDPower simulates new plates by inheriting the experimental design structure from the existing data."))
+plot_no <- plot_no + 1
 
 ```
 
-In a third example, a user can examine the effect of expanding the number of cell lines within each experiment affects power (Figure \@ref(fig:line)). This would capture the effect of increasing the number of cells assayed as a consequence of having more cell lines. 
+In a third example, a user can examine the effect of expanding the number of cell lines within each experiment affects power (Figure `r plot_no`). This would capture the effect of increasing the number of cells assayed as a consequence of having more cell lines. 
 
-```{r line, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of cell line variability for ‘cell line' power analysis. If level=1 is set, RMeDPower simulates new cell lines by inheriting the experimental design structure from the existing data.", fig.wide=TRUE,  fig.topcaption=TRUE}
+```{r line, echo=FALSE, fig.align = "center", opts.label = "img"}
 knitr::include_graphics(
-  system.file("figures/Part9.png", package = "RMeDPower2")
+  system.file("figures/Part9.png", package = "RMeDPower2"), rel_path = FALSE
 )
+knitr::asis_output(sprintf("\n\n**Figure %d:** %s\n\n", plot_no, "Example of RMeDPower’s simulation of cell line variability for ‘cell line' power analysis. If level=1 is set, RMeDPower simulates new cell lines by inheriting the experimental design structure from the existing data."))
+plot_no <- plot_no + 1
 
 ```
 
-Alternatively, one might want to assess the effect of increasing the total number of cells by increasing the number of cells per cell line (Figure \@ref(fig:lineCell)). 
+Alternatively, one might want to assess the effect of increasing the total number of cells by increasing the number of cells per cell line (Figure `r plot_no`). 
 
-```{r lineCell, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of a sample size increase by increasing the number of cell line. If level=0 is set, RMeDPower multiplies the number of cells per cell line by M/N, where N is the maximum number of cells per cell line and M is a value assigned to the parameter maxsize.", fig.wide=TRUE, echo=FALSE, fig.topcaption=TRUE}
+```{r lineCell, echo=FALSE, fig.align = "center", opts.label = "img"}
 knitr::include_graphics(
-  system.file("figures/Part10.png", package = "RMeDPower2")
+  system.file("figures/Part10.png", package = "RMeDPower2"), rel_path = FALSE
 )
+knitr::asis_output(sprintf("\n\n**Figure %d:** %s\n\n", plot_no, "Example of RMeDPower’s simulation of a sample size increase by increasing the number of cell line. If level=0 is set, RMeDPower multiplies the number of cells per cell line by M/N, where N is the maximum number of cells per cell line and M is a value assigned to the parameter maxsize."))
+plot_no <- plot_no + 1
 
 ```
 
 Tables 1-3, in addition to the figures, show the change in cell number after variable expansion in experiment, plate or cell line, especially when the cell distribution is asymmetric.
 A user may want to examine the power of increasing the total number of cells measured from each experimental variable per experiment. For example, if there are 12 cells per cell line on plate 1, doubling the number of cells from each plate will result in assessing the effect in twice the number
-of cells per cell line, even if the number of experiments and cell lines remain the same (Figure \@ref(fig:plateCell)). 
+of cells per cell line, even if the number of experiments and cell lines remain the same (Figure `r plot_no`). 
 
-```{r plateCell, echo=FALSE, fig.align = "center", fig.cap="Example of RMeDPower’s simulation of a sample size increase for ‘plate' power analysis. If level=0 is set, RMeDPower multiplies the number of cells per plate by M/N, where N is the maximum number of cells per plate and M is a value assigned to the parameter maxsize.", fig.wide=TRUE, fig.topcaption=TRUE}
+```{r plateCell, echo=FALSE, fig.align = "center", opts.label = "img"}
 knitr::include_graphics(
-  system.file("figures/Part8.png", package = "RMeDPower2")
+  system.file("figures/Part8.png", package = "RMeDPower2"), rel_path = FALSE
 )
+knitr::asis_output(sprintf("\n\n**Figure %d:** %s\n\n", plot_no, "Example of RMeDPower’s simulation of a sample size increase for ‘plate' power analysis. If level=0 is set, RMeDPower multiplies the number of cells per plate by M/N, where N is the maximum number of cells per plate and M is a value assigned to the parameter maxsize."))
+plot_no <- plot_no + 1
 
 ```
 
@@ -1343,7 +1381,7 @@ knitr::kable(rbind(c("(A)", "Cell line 1", "Cell line 2"),
 )
 ```
 
-The type of variable expansion shown in Table 3 and 5  can be accomplished by setting 'target_columns' to 'line' and 'levels' to 0. In the code example, we modified the maximum number of cell lines by setting max_size to 700 (Figure \@ref(fig:Sim2)). 
+The type of variable expansion shown in Table 3 and 5  can be accomplished by setting 'target_columns' to 'line' and 'levels' to 0. In the code example, we modified the maximum number of cell lines by setting max_size to 700. 
 
 
 
